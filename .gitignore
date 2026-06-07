@@ -1,0 +1,56 @@
+# Dependencies - node_modules dan package manager files
+node_modules/
+node_modules/**/*
+
+# Build output - Hasil build Astro dan Vite
+dist/
+dist/**/*
+.build/
+.astro/
+.astro/**/*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Cache files
+.cache/
+.parcel-cache/
+.next/cache/
+.eslintcache
+
+# Local environment and configuration
+*.local
+*.dev
+*.development
+
+# OS generated files
+*~
+*.swp
+*.swo
+*%
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
