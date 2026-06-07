@@ -1,0 +1,377 @@
+/* ===== CMS LAYOUT ===== */
+.cms-body {
+  background-color: #f8fafc;
+  color: #1e293b;
+  font-family: 'Roboto', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.cms-navbar {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.cms-navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cms-logo-circle {
+  width: 32px;
+  height: 32px;
+  background: #0288d1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.cms-brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.cms-brand-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0288d1;
+}
+
+.cms-brand-subtitle {
+  font-size: 10px;
+  color: #64748b;
+}
+
+.cms-navbar-links {
+  display: flex;
+  height: 100%;
+}
+
+.cms-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.cms-nav-link:hover {
+  color: #0f172a;
+}
+
+.cms-nav-link.active {
+  color: #0288d1;
+  border-bottom-color: #0288d1;
+}
+
+.cms-navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cms-icon-btn {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cms-icon-btn:hover {
+  color: #0f172a;
+}
+
+.cms-user-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 12px;
+  padding-left: 20px;
+  border-left: 1px solid #e2e8f0;
+}
+
+.cms-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  overflow: hidden;
+}
+
+.cms-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cms-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* ===== CMS DASHBOARD CONTENT ===== */
+.cms-main {
+  flex: 1;
+  padding: 40px 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.cms-header {
+  margin-bottom: 32px;
+}
+
+.cms-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.cms-header p {
+  font-size: 15px;
+  color: #64748b;
+}
+
+/* STATS */
+.cms-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.cms-stat-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.cms-stat-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.cms-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.cms-stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0288d1;
+}
+
+.cms-stat-trend {
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cms-stat-trend.positive { color: #059669; }
+.cms-stat-trend.negative { color: #dc2626; }
+
+/* QUICK ACCESS */
+.cms-section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 16px;
+}
+
+.cms-quick-access-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.cms-qa-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.cms-qa-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.cms-qa-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background: #f1f5f9;
+  border-bottom-left-radius: 8px;
+}
+
+.cms-qa-icon {
+  color: #64748b;
+}
+
+.cms-qa-content h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.cms-qa-content p {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+/* RECENT ACTIVITY */
+.cms-activity-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.cms-activity-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cms-activity-header h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.cms-view-all {
+  font-size: 13px;
+  font-weight: 500;
+  color: #0288d1;
+  text-decoration: none;
+}
+
+.cms-activity-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.cms-activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.cms-activity-item:last-child {
+  border-bottom: none;
+}
+
+.cms-activity-icon {
+  width: 36px;
+  height: 36px;
+  background: #e0f2fe;
+  color: #0288d1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cms-activity-icon.update {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.cms-activity-icon.download {
+  background: #e0e7ff;
+  color: #4f46e5;
+}
+
+.cms-activity-text h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.cms-activity-text p {
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* FOOTER */
+.cms-footer {
+  border-top: 1px solid #e2e8f0;
+  padding: 24px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+}
+
+.cms-footer-text {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.cms-footer-links {
+  display: flex;
+  gap: 24px;
+}
+
+.cms-footer-links a {
+  font-size: 12px;
+  color: #64748b;
+  text-decoration: none;
+}
+
+.cms-footer-links a:hover {
+  color: #0f172a;
+}
