@@ -1,6 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function CMSNavbar() {
+  const [pathname, setPathname] = useState('');
+
+  useEffect(() => {
+    setPathname(window.location.pathname);
+  }, []);
+
+  const isDashboard = pathname.includes('/cms/dashboard');
+  const isSubmissions = pathname.includes('/cms/submissions');
+
   return (
     <nav className="cms-navbar">
       <div className="cms-navbar-brand">
@@ -12,7 +21,7 @@ export default function CMSNavbar() {
       </div>
 
       <div className="cms-navbar-links">
-        <a href="/cms/dashboard" className="cms-nav-link active">
+        <a href="/cms/dashboard" className={`cms-nav-link ${isDashboard ? 'active' : ''}`}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <rect x="3" y="3" width="7" height="7"></rect>
             <rect x="14" y="3" width="7" height="7"></rect>
@@ -21,7 +30,7 @@ export default function CMSNavbar() {
           </svg>
           Dashboard
         </a>
-        <a href="#" className="cms-nav-link">
+        <a href="/cms/submissions" className={`cms-nav-link ${isSubmissions ? 'active' : ''}`}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
             <polyline points="14 2 14 8 20 8"></polyline>
