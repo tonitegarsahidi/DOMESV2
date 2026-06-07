@@ -1,0 +1,40 @@
+import React from 'react';
+
+export default function HeroSection() {
+  const quickTags = ['COVID 19', 'Climate Change', 'Gender Equality', 'Economic Recovery'];
+
+  return (
+    <section className="hero-section" id="hero-section">
+      <div className="hero-content">
+        <h1 className="hero-title">
+          DOMES — <span>Document Repository</span>
+        </h1>
+        <p className="hero-subtitle">
+          The central ecosystem for UN Indonesia publications, policy reports, and data
+          snapshots. Empowering research and evidence-based decision making.
+        </p>
+
+        <div className="hero-search" id="hero-search">
+          <input
+            type="text"
+            placeholder="Search by title, agency or keywords..."
+          />
+          <button className="hero-search-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            Search Repository
+          </button>
+        </div>
+
+        <div className="hero-tags">
+          <span className="hero-tags-label">Quick Tags:</span>
+          {quickTags.map((tag) => (
+            <span key={tag} className="hero-tag">{tag}</span>
+          ))}
+          <span className="hero-tag advanced">Advanced Filters</span>
+        </div>
+      </div>
+    </section>
+  );
+}

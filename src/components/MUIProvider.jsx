@@ -5,14 +5,23 @@ const theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#1976d2',
+      main: '#0288d1',
+      light: '#5bc0f8',
+      dark: '#01579b',
     },
     secondary: {
-      main: '#dc004e',
+      main: '#1a3a5c',
+    },
+    background: {
+      default: '#f5f7fa',
+      paper: '#ffffff',
     },
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+  },
+  shape: {
+    borderRadius: 8,
   },
 });
 
