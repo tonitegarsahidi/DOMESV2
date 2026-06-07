@@ -264,98 +264,267 @@ a {
 }
 
 /* ===== FILTER SIDEBAR ===== */
-.filter-sidebar {
-  width: 240px;
+.new-filter-sidebar {
+  width: 250px;
   flex-shrink: 0;
-}
-
-.filter-section {
-  margin-bottom: 24px;
-}
-
-.filter-section-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: #1a2a3a;
-  margin-bottom: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #e0e7ef;
-}
-
-.filter-checkbox-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
 }
 
-.filter-checkbox {
+.filter-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  padding: 20px;
+  transition: all 0.2s;
+}
+
+.filter-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.filter-card-header h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.chevron-icon {
+  color: #94a3b8;
   display: flex;
   align-items: center;
-  gap: 8px;
+  transition: transform 0.2s;
+}
+
+.filter-card-body {
+  margin-top: 16px;
+}
+
+/* Checkbox group */
+.custom-checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+
+.checkbox-item input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkbox-box {
+  height: 18px;
+  width: 18px;
+  background-color: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 4px;
+  display: inline-block;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  position: relative;
+}
+
+.checkbox-item input[type="checkbox"]:checked ~ .checkbox-box {
+  background-color: #0288d1;
+  border-color: #0288d1;
+}
+
+.checkbox-item input[type="checkbox"]:checked ~ .checkbox-box::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2.2px 2.2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-label {
   font-size: 13px;
-  color: #444;
-  transition: color 0.15s;
-}
-
-.filter-checkbox:hover {
-  color: #0288d1;
-}
-
-.filter-checkbox input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  accent-color: #0288d1;
-  cursor: pointer;
-}
-
-.filter-checkbox .count {
-  color: #999;
-  font-size: 12px;
-  margin-left: auto;
-}
-
-.filter-show-more {
-  font-size: 12px;
-  color: #0288d1;
-  cursor: pointer;
-  margin-top: 6px;
   font-weight: 500;
+  color: #475569;
+  transition: color 0.2s;
+}
+
+.checkbox-item:hover .checkbox-label {
+  color: #1e293b;
+}
+
+.checkbox-item:hover .checkbox-box {
+  border-color: #94a3b8;
+}
+
+.checkbox-item input[type="checkbox"]:checked ~ .checkbox-label {
+  color: #1e293b;
+}
+
+/* SDG Indicators */
+.color-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
   display: inline-block;
 }
 
-.filter-show-more:hover {
+.sdg-green {
+  background-color: #43a047;
+}
+
+.sdg-orange {
+  background-color: #fb8c00;
+}
+
+/* Filter Link */
+.filter-link {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0288d1;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 12px;
+  transition: color 0.2s;
+}
+
+.filter-link:hover {
   text-decoration: underline;
+  color: #01579b;
 }
 
-/* SDG color dots */
-.sdg-dot {
-  width: 10px;
-  height: 10px;
+/* Publication Year Ranges */
+.filter-year-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.year-input-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.year-input-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+}
+
+.year-input-box input {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+  width: 100%;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.year-input-box input:focus {
+  border-color: #0288d1;
+}
+
+.year-range-dash {
+  color: #cbd5e1;
+  font-size: 12px;
+  margin-top: 16px;
+}
+
+/* Range Slider */
+.year-slider-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.year-slider-track {
+  height: 4px;
+  background-color: #e2e8f0;
+  border-radius: 2px;
+  position: relative;
+  margin: 10px 0;
+}
+
+.year-slider-fill {
+  height: 100%;
+  background-color: #0288d1;
+  position: absolute;
+  border-radius: 2px;
+}
+
+.slider-thumb-input {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  background: none;
+  pointer-events: none;
+  appearance: none;
+  -webkit-appearance: none;
+  top: 0;
+  left: 0;
+  margin: 0;
+}
+
+.slider-thumb-input::-webkit-slider-thumb {
+  height: 16px;
+  width: 16px;
   border-radius: 50%;
-  flex-shrink: 0;
+  background: #ffffff;
+  border: 2.5px solid #0288d1;
+  cursor: pointer;
+  pointer-events: auto;
+  appearance: none;
+  -webkit-appearance: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* Publication Year Slider */
-.filter-year-range {
-  padding: 8px 0;
+.slider-thumb-input::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2.5px solid #0288d1;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.filter-year-labels {
+.year-slider-labels {
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
-  color: #777;
-  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
 }
 
-.filter-year-slider {
-  width: 100%;
-  accent-color: #0288d1;
-  cursor: pointer;
-}
 
 /* ===== DOCUMENT LIST ===== */
 .document-list-area {
