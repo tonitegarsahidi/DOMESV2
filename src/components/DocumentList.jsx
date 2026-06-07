@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import DocumentCard from './DocumentCard';
 
 const documents = [
@@ -67,19 +67,101 @@ const documents = [
     agency: 'Indonesia',
     pages: 'PDF, 64 pages',
   },
+  {
+    id: 6,
+    image: '/images/doc-cover-sdg.png',
+    tags: [
+      { label: 'SDG', type: 'sdg' },
+      { label: 'UNEP', type: 'agency' },
+      { label: 'SEP 2023', type: 'date' },
+    ],
+    title: 'Global International Waters Assessment: Sulu-Celebes...',
+    description: 'A comprehensive assessment of the Sulu-Celebes Sea large marine ecosystem, covering biodiversity, pollution, and transboundary governance issues...',
+    agency: 'UNEP Indonesia',
+    pages: 'PDF, 88 pages',
+  },
+  {
+    id: 7,
+    image: '/images/doc-cover-ocean.png',
+    tags: [
+      { label: 'Goal 14', type: 'sdg' },
+      { label: 'UNEP', type: 'agency' },
+      { label: 'OCT 2023', type: 'date' },
+    ],
+    title: 'Global International Waters Assessment: Indonesian Sea...',
+    description: 'Assessment of Indonesian sea territories examining marine resource management, sustainable fisheries, and ocean governance frameworks...',
+    agency: 'UNEP',
+    pages: 'PDF, 72 pages',
+  },
+  {
+    id: 8,
+    image: '/images/doc-cover-children.png',
+    tags: [
+      { label: 'Goal 11', type: 'sdg' },
+      { label: 'UNEP', type: 'agency' },
+      { label: 'DEC 2022', type: 'date' },
+    ],
+    title: 'Sustainable Use of Natural Resources in the Context of...',
+    description: 'Exploring sustainable resource utilization practices across Indonesian provinces with focus on community-based natural resource management...',
+    agency: 'UNEP',
+    pages: 'PDF, 56 pages',
+  },
+  {
+    id: 9,
+    image: '/images/doc-cover-sdg.png',
+    tags: [
+      { label: 'SDG', type: 'sdg' },
+      { label: 'UNDP', type: 'agency' },
+      { label: 'NOV 2023', type: 'date' },
+    ],
+    title: 'Sustainable Development Report: Eastern Indonesia Region',
+    description: 'Regional analysis of sustainable development progress across eastern Indonesian provinces with policy recommendations...',
+    agency: 'UNDP Indonesia',
+    pages: 'PDF, 110 pages',
+  },
 ];
 
 export default function DocumentList() {
+  const [viewMode, setViewMode] = useState('list');
+
   return (
     <div className="document-list-area" id="document-list">
       <div className="document-list-header">
-        <h2 className="document-list-title">Latest Document</h2>
-        <span className="document-list-count">Showing 1-5 of 1,246 documents</span>
+        <div className="document-list-header-left">
+          <h2 className="document-list-title">Latest Document</h2>
+          <span className="document-list-count">
+            Showing 1-{viewMode === 'list' ? 5 : 9} of 1,246 documents
+          </span>
+        </div>
+        <div className="view-toggle" id="view-toggle">
+          <button
+            className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
+            onClick={() => setViewMode('grid')}
+            aria-label="Grid view"
+            title="Grid view"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 3h8v8H3V3zm0 10h8v8H3v-8zm10-10h8v8h-8V3zm10 10h-8v8h8v-8z"/>
+            </svg>
+          </button>
+          <button
+            className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
+            onClick={() => setViewMode('list')}
+            aria-label="List view"
+            title="List view"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 5h2v2H3V5zm4 0h14v2H7V5zM3 11h2v2H3v-2zm4 0h14v2H7v-2zm-4 6h2v2H3v-2zm4 0h14v2H7v-2z"/>
+            </svg>
+          </button>
+        </div>
       </div>
 
-      {documents.map((doc) => (
-        <DocumentCard key={doc.id} doc={doc} />
-      ))}
+      <div className={viewMode === 'grid' ? 'document-grid' : 'document-list'}>
+        {(viewMode === 'list' ? documents.slice(0, 5) : documents).map((doc) => (
+          <DocumentCard key={doc.id} doc={doc} viewMode={viewMode} />
+        ))}
+      </div>
 
       {/* Pagination */}
       <div className="pagination" id="pagination">

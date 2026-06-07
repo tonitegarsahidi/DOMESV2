@@ -1,40 +1,16 @@
 import React from 'react';
 
-const UNEmblem = ({ size = 42, color = '#ffffff' }) => (
-  <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="50" cy="50" r="48" stroke={color} strokeWidth="2" fill="none"/>
-    <circle cx="50" cy="50" r="18" stroke={color} strokeWidth="1.5" fill="none"/>
-    <ellipse cx="50" cy="50" rx="34" ry="18" stroke={color} strokeWidth="1.2" fill="none" transform="rotate(0 50 50)"/>
-    <ellipse cx="50" cy="50" rx="34" ry="18" stroke={color} strokeWidth="1.2" fill="none" transform="rotate(60 50 50)"/>
-    <ellipse cx="50" cy="50" rx="34" ry="18" stroke={color} strokeWidth="1.2" fill="none" transform="rotate(120 50 50)"/>
-    <line x1="50" y1="8" x2="50" y2="20" stroke={color} strokeWidth="1.5"/>
-    <line x1="50" y1="80" x2="50" y2="92" stroke={color} strokeWidth="1.5"/>
-    {/* Olive branches (simplified) */}
-    <path d="M18 75 Q25 60 30 50 Q25 40 18 25" stroke={color} strokeWidth="1.2" fill="none"/>
-    <path d="M82 75 Q75 60 70 50 Q75 40 82 25" stroke={color} strokeWidth="1.2" fill="none"/>
-    {/* Leaves */}
-    <path d="M18 70 Q22 65 20 60" stroke={color} strokeWidth="1" fill="none"/>
-    <path d="M20 60 Q24 55 22 50" stroke={color} strokeWidth="1" fill="none"/>
-    <path d="M22 50 Q26 45 24 40" stroke={color} strokeWidth="1" fill="none"/>
-    <path d="M24 40 Q28 35 22 30" stroke={color} strokeWidth="1" fill="none"/>
-    <path d="M82 70 Q78 65 80 60" stroke={color} strokeWidth="1" fill="none"/>
-    <path d="M80 60 Q76 55 78 50" stroke={color} strokeWidth="1" fill="none"/>
-    <path d="M78 50 Q74 45 76 40" stroke={color} strokeWidth="1" fill="none"/>
-    <path d="M76 40 Q72 35 78 30" stroke={color} strokeWidth="1" fill="none"/>
-  </svg>
-);
-
 export default function Navbar() {
   return (
     <nav className="navbar" id="main-navbar">
       <div className="navbar-brand">
-        <div className="un-emblem">
-          <UNEmblem size={42} color="#5bc0f8" />
-        </div>
-        <div className="navbar-brand-text">
-          <span className="title">UNITED NATIONS INDONESIA</span>
-          <span className="subtitle">Document Repository</span>
-        </div>
+        <a href="/">
+          <img 
+            src="/images/un-logo.png" 
+            alt="United Nations Indonesia" 
+            className="navbar-logo" 
+          />
+        </a>
       </div>
 
       <div className="navbar-links">
@@ -60,3 +36,4 @@ export default function Navbar() {
     </nav>
   );
 }
+

@@ -1,6 +1,28 @@
 import React from 'react';
 
-export default function DocumentCard({ doc }) {
+export default function DocumentCard({ doc, viewMode = 'list' }) {
+  if (viewMode === 'grid') {
+    return (
+      <article className="document-card-grid" id={`doc-card-${doc.id}`}>
+        <div className="document-card-grid-image">
+          <img src={doc.image} alt={doc.title} loading="lazy" />
+        </div>
+        <div className="document-card-grid-content">
+          <div className="document-card-tags">
+            {doc.tags.map((tag, i) => (
+              <span key={i} className={`doc-tag ${tag.type}`}>{tag.label}</span>
+            ))}
+          </div>
+          <h3 className="document-card-grid-title">{doc.title}</h3>
+          <div className="document-card-grid-bottom">
+            <span className="document-card-grid-agency">{doc.agency}</span>
+            <button className="btn-view-details">View Details</button>
+          </div>
+        </div>
+      </article>
+    );
+  }
+
   return (
     <article className="document-card" id={`doc-card-${doc.id}`}>
       <div className="document-card-image">
