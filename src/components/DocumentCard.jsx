@@ -3,7 +3,12 @@ import React from 'react';
 export default function DocumentCard({ doc, viewMode = 'list' }) {
   if (viewMode === 'grid') {
     return (
-      <article className="document-card-grid" id={`doc-card-${doc.id}`}>
+      <article 
+        className="document-card-grid" 
+        id={`doc-card-${doc.id}`}
+        style={{ cursor: 'pointer' }}
+        onClick={() => window.location.href = `/document/detail/${doc.id}`}
+      >
         <div className="document-card-grid-image">
           <img src={doc.image} alt={doc.title} loading="lazy" />
         </div>
@@ -24,7 +29,15 @@ export default function DocumentCard({ doc, viewMode = 'list' }) {
   }
 
   return (
-    <article className="document-card" id={`doc-card-${doc.id}`}>
+    <article 
+      className="document-card" 
+      id={`doc-card-${doc.id}`}
+      style={{ cursor: 'pointer' }}
+      onClick={(e) => {
+        if (e.target.closest('.btn-download')) return;
+        window.location.href = `/document/detail/${doc.id}`;
+      }}
+    >
       <div className="document-card-image">
         <img src={doc.image} alt={doc.title} loading="lazy" />
       </div>

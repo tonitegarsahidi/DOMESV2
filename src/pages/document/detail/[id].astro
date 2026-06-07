@@ -1,0 +1,39 @@
+---
+import DocumentDetail from '../../../components/DocumentDetail.jsx';
+import '../../../styles/global.css';
+
+export function getStaticPaths() {
+  return [
+    { params: { id: '1' } },
+    { params: { id: '2' } },
+    { params: { id: '3' } },
+    { params: { id: '4' } },
+    { params: { id: '5' } },
+    { params: { id: '6' } },
+    { params: { id: '7' } },
+    { params: { id: '8' } },
+    { params: { id: '9' } },
+    { params: { id: 'UNIDO-2015-001' } }
+  ];
+}
+
+const { id } = Astro.params;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="DOMES - Document Management & Electronic System. Document details." />
+    <title>Document Details - DOMES V2</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+    />
+  </head>
+  <body>
+    <DocumentDetail client:load id={id} />
+  </body>
+</html>
