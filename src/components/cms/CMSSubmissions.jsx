@@ -1,7 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import CMSLayout from './CMSLayout.jsx';
 
 export default function CMSSubmissions() {
+  const [notification, setNotification] = useState(null);
+
+  useEffect(() => {
+    // Check search params
+    const params = new URLSearchParams(window.location.search);
+    const successDoc = params.get('success');
+    if (successDoc) {
+      setNotification(`dokumen ${decodeURIComponent(successDoc)} telah disimpan, dan akan direview oleh admin sebelum dipublikasi`);
+      // Clean up URL parameter without page reload
+      window.history.replaceState({}, document.title, window.location.pathname);
+      return;
+    }
+
+    // Fallback/alternative: check sessionStorage
+    const storedMessage = sessionStorage.getItem('cms_success_message');
+    if (storedMessage) {
+      setNotification(storedMessage);
+      sessionStorage.removeItem('cms_success_message');
+    }
+  }, []);
+
   const submissionsData = [
     {
       id: 1,
@@ -36,6 +57,26 @@ export default function CMSSubmissions() {
   return (
     <CMSLayout>
       <main className="cms-main">
+        {notification && (
+          <div className="cms-notification-success">
+            <div className="cms-notification-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <div className="cms-notification-content">
+              {notification}
+            </div>
+            <button className="cms-notification-close" onClick={() => setNotification(null)}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        )}
+
         <header className="cms-submissions-header">
           <div className="cms-header-left">
             <h1>Submissions</h1>

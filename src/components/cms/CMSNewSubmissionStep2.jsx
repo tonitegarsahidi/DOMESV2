@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CMSLayout from './CMSLayout.jsx';
 
 export default function CMSNewSubmissionStep2() {
   const currentStep = 2;
+
+  const [title, setTitle] = useState('Annual Progress Report on Sustainable Development Goals in the Asia-Pacific Region');
+  const [languages, setLanguages] = useState({ english: true, bahasa: false, others: false });
+  const [pubDate, setPubDate] = useState('');
+  const [summary, setSummary] = useState(
+    'This report outlines the progress made across the Asia-Pacific region towards achieving the Sustainable Development Goals (SDGs) established by the United Nations. It highlights key areas of success, identifies ongoing challenges, and proposes strategic recommendations for accelerating implementation over the next decade.'
+  );
+  const [summaryEditing, setSummaryEditing] = useState(false);
+  const [shortSummary, setShortSummary] = useState('');
+  const [tags, setTags] = useState('');
+  const [pubStatus, setPubStatus] = useState('');
 
   const sidebarSteps = [
     { num: 1, label: 'Files', icon: 'file' },
@@ -31,9 +42,22 @@ export default function CMSNewSubmissionStep2() {
     }
   };
 
+  const AiSparkle = () => (
+    <span className="wiz-ai-sparkle" title="AI pre-filled">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+      </svg>
+    </span>
+  );
+
+  const handleLangChange = (lang) => {
+    setLanguages((prev) => ({ ...prev, [lang]: !prev[lang] }));
+  };
+
   return (
     <CMSLayout>
       <div className="wiz-page">
+        {/* ===== LEFT SIDEBAR ===== */}
         <aside className="wiz-sidebar">
           {sidebarSteps.map((s) => (
             <a
@@ -47,7 +71,9 @@ export default function CMSNewSubmissionStep2() {
           ))}
         </aside>
 
+        {/* ===== MAIN AREA ===== */}
         <div className="wiz-main">
+          {/* Progress bar */}
           <div className="wiz-progress-bar">
             {progressSteps.map((ps, idx) => (
               <React.Fragment key={ps.num}>
@@ -55,32 +81,178 @@ export default function CMSNewSubmissionStep2() {
                   <span className="wiz-progress-num">{ps.num}</span>
                   <span className="wiz-progress-label">{ps.label}</span>
                 </div>
-                {idx < progressSteps.length - 1 && <div className={`wiz-progress-connector ${ps.num < 2 ? 'active' : ''}`} />}
+                {idx < progressSteps.length - 1 && (
+                  <div className={`wiz-progress-connector ${ps.num < 2 ? 'active' : ''}`} />
+                )}
               </React.Fragment>
             ))}
           </div>
 
-          <div className="wiz-placeholder-content">
-            <div className="wiz-placeholder-icon">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M12 20h9" />
-                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-              </svg>
+          {/* Single-column content */}
+          <div className="wiz-step2-content">
+            {/* AI pre-fill notice banner */}
+            <div className="wiz-prefill-banner">
+              <AiSparkle />
+              <p>Some fields have been pre-filled by AI based on your initial document upload. Please review them carefully.</p>
             </div>
-            <h2>Step 2 — Document Details</h2>
-            <p>This step will contain document metadata fields such as title, description, publication date, language, and more. Coming soon.</p>
+
+            {/* Title */}
+            <div className="wiz-s2-field">
+              <label className="wiz-s2-label">
+                Title of report/document <span className="wiz-required">*</span> <AiSparkle />
+              </label>
+              <input
+                type="text"
+                className="wiz-s2-input-underline"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </div>
+
+            {/* Languages */}
+            <div className="wiz-s2-field">
+              <label className="wiz-s2-label">
+                Languages (Select all that apply) <span className="wiz-required">*</span> <AiSparkle />
+              </label>
+              <div className="wiz-s2-checkbox-row">
+                <label className="wiz-s2-checkbox-item">
+                  <input
+                    type="checkbox"
+                    checked={languages.english}
+                    onChange={() => handleLangChange('english')}
+                  />
+                  <span className="wiz-s2-checkmark" />
+                  <span>English</span>
+                </label>
+                <label className="wiz-s2-checkbox-item">
+                  <input
+                    type="checkbox"
+                    checked={languages.bahasa}
+                    onChange={() => handleLangChange('bahasa')}
+                  />
+                  <span className="wiz-s2-checkmark" />
+                  <span>Bahasa Indonesia</span>
+                </label>
+                <label className="wiz-s2-checkbox-item">
+                  <input
+                    type="checkbox"
+                    checked={languages.others}
+                    onChange={() => handleLangChange('others')}
+                  />
+                  <span className="wiz-s2-checkmark" />
+                  <span>Others</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Date of publication */}
+            <div className="wiz-s2-field">
+              <label className="wiz-s2-label">
+                Date of publication <span className="wiz-required">*</span>
+              </label>
+              <input
+                type="date"
+                className="wiz-s2-input-underline wiz-s2-date"
+                value={pubDate}
+                onChange={(e) => setPubDate(e.target.value)}
+              />
+            </div>
+
+            {/* Summary */}
+            <div className="wiz-s2-summary-card">
+              <div className="wiz-s2-summary-header">
+                <strong>Summary</strong> <AiSparkle />
+              </div>
+              {summaryEditing ? (
+                <textarea
+                  className="wiz-s2-summary-textarea"
+                  value={summary}
+                  onChange={(e) => setSummary(e.target.value)}
+                  rows={5}
+                />
+              ) : (
+                <p className="wiz-s2-summary-text">{summary}</p>
+              )}
+              <div className="wiz-s2-summary-footer">
+                <button
+                  className="wiz-s2-edit-link"
+                  onClick={() => setSummaryEditing(!summaryEditing)}
+                >
+                  {summaryEditing ? 'Done Editing' : 'Edit Summary'}
+                </button>
+              </div>
+            </div>
+
+            {/* Short Summary */}
+            <div className="wiz-s2-short-summary-card">
+              <div className="wiz-s2-summary-header">
+                <strong>Short Summary</strong> <AiSparkle />
+              </div>
+              <p className="wiz-s2-short-hint">Concise version for search results (max 3 sentences)</p>
+              <textarea
+                className="wiz-s2-short-textarea"
+                placeholder="Enter a brief overview..."
+                value={shortSummary}
+                onChange={(e) => setShortSummary(e.target.value)}
+                rows={3}
+              />
+            </div>
+
+            {/* Tags / Keywords */}
+            <div className="wiz-s2-field">
+              <label className="wiz-s2-label">Tags / Keywords</label>
+              <input
+                type="text"
+                className="wiz-s2-input-underline"
+                placeholder="e.g. environment, sustainability, report"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+              />
+            </div>
+
+            {/* Publication Status */}
+            <div className="wiz-s2-field">
+              <label className="wiz-s2-label">
+                Publication Status <span className="wiz-required">*</span>
+              </label>
+              <div className="wiz-s2-radio-row">
+                <label className="wiz-s2-radio-item">
+                  <input
+                    type="radio"
+                    name="pubStatus"
+                    value="published"
+                    checked={pubStatus === 'published'}
+                    onChange={(e) => setPubStatus(e.target.value)}
+                  />
+                  <span className="wiz-s2-radio-circle" />
+                  <span>Officially Published</span>
+                </label>
+                <label className="wiz-s2-radio-item">
+                  <input
+                    type="radio"
+                    name="pubStatus"
+                    value="draft"
+                    checked={pubStatus === 'draft'}
+                    onChange={(e) => setPubStatus(e.target.value)}
+                  />
+                  <span className="wiz-s2-radio-circle" />
+                  <span>Draft / Internal</span>
+                </label>
+              </div>
+            </div>
           </div>
 
+          {/* Footer */}
           <div className="wiz-footer">
             <a href="/cms/submissions/new/step-1" className="wiz-btn-back">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <line x1="19" y1="12" x2="5" y2="12" />
                 <polyline points="12 19 5 12 12 5" />
               </svg>
-              BACK
+              Back
             </a>
             <a href="/cms/submissions/new/step-3" className="wiz-btn-next">
-              NEXT
+              Next Step
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <line x1="5" y1="12" x2="19" y2="12" />
                 <polyline points="12 5 19 12 12 19" />
