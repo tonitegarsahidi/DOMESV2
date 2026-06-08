@@ -448,12 +448,55 @@ a {
 }
 
 /* SDG Indicators & Icons */
+.sdg-icon-wrapper {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
 .sdg-icon-small {
   width: 40px;
   height: 40px;
   object-fit: contain;
-  flex-shrink: 0;
-  display: inline-block;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.sdg-icon-wrapper:hover .sdg-icon-small {
+  transform: scale(1.05);
+}
+
+.sdg-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #1e293b;
+  color: #ffffff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.sdg-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #1e293b;
+}
+
+.sdg-icon-wrapper:hover .sdg-tooltip {
+  opacity: 1;
+  visibility: visible;
 }
 
 .color-indicator {

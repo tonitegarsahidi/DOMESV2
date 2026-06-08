@@ -160,11 +160,14 @@ export default function FilterSidebar() {
                     onChange={() => toggleSdg(sdg.key)} 
                   />
                   <span className="checkbox-box"></span>
-                  <img 
-                    src={sdg.icon} 
-                    alt={`SDG ${sdg.number}`} 
-                    className="sdg-icon-small" 
-                  />
+                  <div className="sdg-icon-wrapper">
+                    <img 
+                      src={sdg.icon} 
+                      alt={`SDG ${sdg.number}`} 
+                      className="sdg-icon-small" 
+                    />
+                    <span className="sdg-tooltip">Goal {sdg.number}: {sdg.name}</span>
+                  </div>
                   <span className="checkbox-label">{sdg.name}</span>
                 </label>
               ))}
