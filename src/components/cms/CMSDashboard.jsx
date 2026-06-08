@@ -56,7 +56,7 @@ export default function CMSDashboard() {
         {/* Quick Access */}
         <h2 className="cms-section-title">Quick Access</h2>
         <div className="cms-quick-access-grid">
-          <div className="cms-qa-card">
+          <a href="/cms/submissions" className="cms-qa-card">
             <div className="cms-qa-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -70,8 +70,8 @@ export default function CMSDashboard() {
               <h3>Manage Submissions</h3>
               <p>Review and edit pending documents.</p>
             </div>
-          </div>
-          <div className="cms-qa-card">
+          </a>
+          <a href="/cms/analytics" className="cms-qa-card">
             <div className="cms-qa-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -83,8 +83,8 @@ export default function CMSDashboard() {
               <h3>View Analytics</h3>
               <p>Detailed insights on document performance.</p>
             </div>
-          </div>
-          <div className="cms-qa-card">
+          </a>
+          <a href="/cms/settings" className="cms-qa-card">
             <div className="cms-qa-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -97,7 +97,7 @@ export default function CMSDashboard() {
               <h3>Account Settings</h3>
               <p>Update your profile and preferences.</p>
             </div>
-          </div>
+          </a>
         </div>
 
         {/* Recent Activity */}
