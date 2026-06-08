@@ -91,6 +91,33 @@ const relatedDocs = [
   { id: 9, image: '/images/doc-cover-ocean.png', date: 'JANUARY 2022', title: 'Three South Java Villages Getting Tsunami Ready -...', agency: 'UNESCO' }
 ];
 
+// SDG list with icons (same as FilterSidebar)
+const sdgList = [
+  { id: 'g1', key: 'g1', number: 1, name: 'No Poverty', icon: '/images/SDG-logos/SDG-1_no-poverty.png', fullName: 'Goal 1: No Poverty' },
+  { id: 'g2', key: 'g2', number: 2, name: 'Zero Hunger', icon: '/images/SDG-logos/SDG-2_zero-hunger.png', fullName: 'Goal 2: Zero Hunger' },
+  { id: 'g3', key: 'g3', number: 3, name: 'Good Health', icon: '/images/SDG-logos/SDG-3_good-health-and-well-being.png', fullName: 'Goal 3: Good Health and Well-being' },
+  { id: 'g4', key: 'g4', number: 4, name: 'Quality Education', icon: '/images/SDG-logos/SDG-4_quality-education.png', fullName: 'Goal 4: Quality Education' },
+  { id: 'g5', key: 'g5', number: 5, name: 'Gender Equality', icon: '/images/SDG-logos/SDG-5_gender-equality.png', fullName: 'Goal 5: Gender Equality' },
+  { id: 'g6', key: 'g6', number: 6, name: 'Clean Water', icon: '/images/SDG-logos/SDG-6_clean-water-and-sanitation.png', fullName: 'Goal 6: Clean Water and Sanitation' },
+  { id: 'g7', key: 'g7', number: 7, name: 'Affordable Clean Energy', icon: '/images/SDG-logos/SDG-7_affordable-and-clean-energy.png', fullName: 'Goal 7: Affordable and Clean Energy' },
+  { id: 'g8', key: 'g8', number: 8, name: 'Decent Work', icon: '/images/SDG-logos/SDG-8_decent-work-and-economic-growth.png', fullName: 'Goal 8: Decent Work and Economic Growth' },
+  { id: 'g9', key: 'g9', number: 9, name: 'Industry Innovation', icon: '/images/SDG-logos/SDG-9_industry-innovation-and-infrastructure.png', fullName: 'Goal 9: Industry, Innovation and Infrastructure' },
+  { id: 'g10', key: 'g10', number: 10, name: 'Reduced Inequalities', icon: '/images/SDG-logos/SDG-10_reduced-inequalities.png', fullName: 'Goal 10: Reduced Inequalities' },
+  { id: 'g11', key: 'g11', number: 11, name: 'Sustainable Cities', icon: '/images/SDG-logos/SDG-11_sustainable-cities-and-communities.png', fullName: 'Goal 11: Sustainable Cities and Communities' },
+  { id: 'g12', key: 'g12', number: 12, name: 'Responsible Consumption', icon: '/images/SDG-logos/SDG-12_responsible-consumption-and-production.png', fullName: 'Goal 12: Responsible Consumption and Production' },
+  { id: 'g13', key: 'g13', number: 13, name: 'Climate Action', icon: '/images/SDG-logos/SDG-13_climate-action.png', fullName: 'Goal 13: Climate Action' },
+  { id: 'g14', key: 'g14', number: 14, name: 'Life Below Water', icon: '/images/SDG-logos/SDG-14_life-below-water.png', fullName: 'Goal 14: Life Below Water' },
+  { id: 'g15', key: 'g15', number: 15, name: 'Life on Land', icon: '/images/SDG-logos/SDG-15_life-on-land.png', fullName: 'Goal 15: Life on Land' },
+  { id: 'g16', key: 'g16', number: 16, name: 'Peace & Justice', icon: '/images/SDG-logos/SDG-16_peace-justice-and-strong-institutions.png', fullName: 'Goal 16: Peace, Justice and Strong Institutions' },
+  { id: 'g17', key: 'g17', number: 17, name: 'Partnerships', icon: '/images/SDG-logos/SDG-17_partnership-for-the-goals.png', fullName: 'Goal 17: Partnerships for the Goals' },
+];
+
+// Function to get SDG data from goal string (e.g. "GOAL 1" → sdg object)
+const getSdgData = (goalStr) => {
+  const num = parseInt(goalStr.replace('GOAL ', ''));
+  return sdgList.find(s => s.number === num);
+};
+
 // Map SDG names to specific colors to make them look nice and vibrant
 const getSdgClass = (goal) => {
   const goalNum = parseInt(goal.replace('GOAL ', ''));
@@ -246,11 +273,19 @@ export default function DocumentDetail({ id }) {
             <div className="detail-section">
               <h3 className="detail-sub-title">RELATED SDGS</h3>
               <div className="detail-sdg-grid">
-                {doc.sdgs.map((goal, i) => (
-                  <span key={i} className={`detail-sdg-badge ${getSdgClass(goal)}`}>
-                    {goal}
-                  </span>
-                ))}
+                {doc.sdgs.map((goal, i) => {
+                  const sdg = getSdgData(goal);
+                  return sdg ? (
+                    <div key={i} className="sdg-icon-wrapper detail-sdg-icon">
+                      <img 
+                        src={sdg.icon} 
+                        alt={sdg.fullName} 
+                        className="sdg-icon-detail" 
+                      />
+                      <span className="sdg-tooltip">{sdg.fullName}</span>
+                    </div>
+                  ) : null;
+                })}
               </div>
             </div>
 
