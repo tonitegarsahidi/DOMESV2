@@ -64,12 +64,30 @@ const SDG_ICONS = {
 };
 
 const SECTORS = [
-  'Agriculture & Food Security',
-  'Climate Change & Environment',
-  'Economic Growth & Trade',
-  'Education & Skills Development',
-  'Governance & Human Rights',
-  'Health & Nutrition',
+  'Agriculture and Food',
+  'Business and Investment',
+  'Conflict, Violence, and Radicalism',
+  'COVID-19',
+  'Disability and Vulnerability and Social Welfare',
+  'Disaster and Emergency',
+  'Economic Development',
+  'Education and Culture',
+  'Energy and Natural Resources',
+  'Environment and Climate Change',
+  'Fishery and Maritime',
+  'Gender and Child Protection',
+  'Governance and Corruption',
+  'Health and Nutrition',
+  'Infrastructure Development',
+  'Innovation and Technology',
+  'Livelihood and Employment',
+  'Population and Migration',
+  'Poverty and Social Exclusion',
+  'Public Finance, Tax, and Fiscal Policy',
+  'Rural and Regional Development',
+  'Social Security and Protection',
+  'Urban Development',
+  'Water and Sanitation',
 ];
 
 const AGENCIES = [
