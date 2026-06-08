@@ -2708,6 +2708,26 @@ input:checked + .cms-toggle-slider:before {
   box-shadow: 0 0 0 3px rgba(2, 136, 209, 0.08);
 }
 
+/* Text Input with same styling as select, without dropdown arrow */
+.wiz-s3-text-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #1e293b;
+  outline: none;
+  background: #ffffff;
+  font-family: 'Roboto', sans-serif;
+  transition: border-color 0.2s;
+  cursor: text;
+}
+
+.wiz-s3-text-input:focus {
+  border-color: #0288d1;
+  box-shadow: 0 0 0 3px rgba(2, 136, 209, 0.08);
+}
+
 /* Checkbox lists (Thematic, LNOB) */
 .wiz-s3-checkbox-list {
   display: flex;

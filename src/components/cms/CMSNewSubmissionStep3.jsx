@@ -360,7 +360,7 @@ export default function CMSNewSubmissionStep3() {
                       <div className="wiz-s3-field" style={{ marginBottom: '0', display: 'flex', gap: '8px' }}>
                         <input 
                           type="text" 
-                          className="wiz-s3-select" 
+                          className="wiz-s3-text-input"
                           style={{ flex: '1' }}
                           placeholder="Partner name"
                           value={partner.name}
