@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 export default function FilterSidebar() {
   const [agenciesExpanded, setAgenciesExpanded] = useState(true);
   const [sdgExpanded, setSdgExpanded] = useState(true);
+  const [sdgShowAll, setSdgShowAll] = useState(false); // New state for showing all SDGs
   const [yearExpanded, setYearExpanded] = useState(true);
   const [langExpanded, setLangExpanded] = useState(true);
   const [sectorExpanded, setSectorExpanded] = useState(false);
@@ -28,6 +29,27 @@ export default function FilterSidebar() {
     english: true,
     others: false
   });
+
+  // SDG Full list with icons
+  const sdgList = [
+    { id: 'g1', key: 'g1', number: 1, name: 'No Poverty', icon: '/images/SDG-logos/SDG-1_no-poverty.png' },
+    { id: 'g2', key: 'g2', number: 2, name: 'Zero Hunger', icon: '/images/SDG-logos/SDG-2_zero-hunger.png' },
+    { id: 'g3', key: 'g3', number: 3, name: 'Good Health', icon: '/images/SDG-logos/SDG-3_good-health-and-well-being.png' },
+    { id: 'g4', key: 'g4', number: 4, name: 'Quality Education', icon: '/images/SDG-logos/SDG-4_quality-education.png' },
+    { id: 'g5', key: 'g5', number: 5, name: 'Gender Equality', icon: '/images/SDG-logos/SDG-5_gender-equality.png' },
+    { id: 'g6', key: 'g6', number: 6, name: 'Clean Water', icon: '/images/SDG-logos/SDG-6_clean-water-and-sanitation.png' },
+    { id: 'g7', key: 'g7', number: 7, name: 'Affordable Clean Energy', icon: '/images/SDG-logos/SDG-7_affordable-and-clean-energy.png' },
+    { id: 'g8', key: 'g8', number: 8, name: 'Decent Work', icon: '/images/SDG-logos/SDG-8_decent-work-and-economic-growth.png' },
+    { id: 'g9', key: 'g9', number: 9, name: 'Industry Innovation', icon: '/images/SDG-logos/SDG-9_industry-innovation-and-infrastructure.png' },
+    { id: 'g10', key: 'g10', number: 10, name: 'Reduced Inequalities', icon: '/images/SDG-logos/SDG-10_reduced-inequalities.png' },
+    { id: 'g11', key: 'g11', number: 11, name: 'Sustainable Cities', icon: '/images/SDG-logos/SDG-11_sustainable-cities-and-communities.png' },
+    { id: 'g12', key: 'g12', number: 12, name: 'Responsible Consumption', icon: '/images/SDG-logos/SDG-12_responsible-consumption-and-production.png' },
+    { id: 'g13', key: 'g13', number: 13, name: 'Climate Action', icon: '/images/SDG-logos/SDG-13_climate-action.png' },
+    { id: 'g14', key: 'g14', number: 14, name: 'Life Below Water', icon: '/images/SDG-logos/SDG-14_life-below-water.png' },
+    { id: 'g15', key: 'g15', number: 15, name: 'Life on Land', icon: '/images/SDG-logos/SDG-15_life-on-land.png' },
+    { id: 'g16', key: 'g16', number: 16, name: 'Peace & Justice', icon: '/images/SDG-logos/SDG-16_peace-justice-and-strong-institutions.png' },
+    { id: 'g17', key: 'g17', number: 17, name: 'Partnerships', icon: '/images/SDG-logos/SDG-17_partnership-for-the-goals.png' },
+  ];
 
   // Range Slider States
   const [yearFrom, setYearFrom] = useState(2014);
@@ -130,51 +152,35 @@ export default function FilterSidebar() {
         {sdgExpanded && (
           <div className="filter-card-body">
             <div className="custom-checkbox-list">
-              <label className="checkbox-item">
-                <input 
-                  type="checkbox" 
-                  checked={selectedSdgs.g13} 
-                  onChange={() => toggleSdg('g13')} 
-                />
-                <span className="checkbox-box"></span>
-                <span className="color-indicator sdg-green"></span>
-                <span className="checkbox-label">Goal 13: Climate Action</span>
-              </label>
-
-              <label className="checkbox-item">
-                <input 
-                  type="checkbox" 
-                  checked={selectedSdgs.g14} 
-                  onChange={() => toggleSdg('g14')} 
-                />
-                <span className="checkbox-box"></span>
-                <span className="color-indicator sdg-green"></span>
-                <span className="checkbox-label">Goal 14: Life Below Water</span>
-              </label>
-
-              <label className="checkbox-item">
-                <input 
-                  type="checkbox" 
-                  checked={selectedSdgs.g15} 
-                  onChange={() => toggleSdg('g15')} 
-                />
-                <span className="checkbox-box"></span>
-                <span className="color-indicator sdg-green"></span>
-                <span className="checkbox-label">Goal 15: Life on Land</span>
-              </label>
-
-              <label className="checkbox-item">
-                <input 
-                  type="checkbox" 
-                  checked={selectedSdgs.g11} 
-                  onChange={() => toggleSdg('g11')} 
-                />
-                <span className="checkbox-box"></span>
-                <span className="color-indicator sdg-orange"></span>
-                <span className="checkbox-label">Goal 11: Sustainable Cities</span>
-              </label>
+              {(sdgShowAll ? sdgList : sdgList.slice(0, 4)).map((sdg) => (
+                <label className="checkbox-item" key={sdg.id}>
+                  <input 
+                    type="checkbox" 
+                    checked={selectedSdgs[sdg.key] || false} 
+                    onChange={() => toggleSdg(sdg.key)} 
+                  />
+                  <span className="checkbox-box"></span>
+                  <img 
+                    src={sdg.icon} 
+                    alt={`SDG ${sdg.number}`} 
+                    className="sdg-icon-small" 
+                  />
+                  <span className="checkbox-label">{sdg.name}</span>
+                </label>
+              ))}
             </div>
-            <a href="#" className="filter-link" onClick={(e) => e.preventDefault()}>Show more (13)</a>
+            {!sdgShowAll && (
+              <a 
+                href="#" 
+                className="filter-link" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSdgShowAll(true);
+                }}
+              >
+                Show all 17 SDGs
+              </a>
+            )}
           </div>
         )}
       </div>

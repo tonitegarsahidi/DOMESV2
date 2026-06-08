@@ -447,7 +447,15 @@ a {
   color: #1e293b;
 }
 
-/* SDG Indicators */
+/* SDG Indicators & Icons */
+.sdg-icon-small {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
 .color-indicator {
   width: 12px;
   height: 12px;
