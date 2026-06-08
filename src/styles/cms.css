@@ -1119,6 +1119,9 @@
   align-items: center;
   gap: 10px;
   white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .wiz-progress-num {
@@ -1141,6 +1144,12 @@
   box-shadow: 0 2px 8px rgba(2, 136, 209, 0.3);
 }
 
+.wiz-progress-step.completed .wiz-progress-num {
+  background: #059669;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.2);
+}
+
 .wiz-progress-label {
   font-size: 13px;
   font-weight: 500;
@@ -1150,6 +1159,32 @@
 .wiz-progress-step.active .wiz-progress-label {
   color: #0288d1;
   font-weight: 600;
+}
+
+.wiz-progress-step.completed .wiz-progress-label {
+  color: #059669;
+  font-weight: 600;
+}
+
+/* Hover effects */
+.wiz-progress-step:hover .wiz-progress-label {
+  color: #0288d1;
+}
+
+.wiz-progress-step:hover .wiz-progress-num {
+  background: #e0f2fe;
+  color: #0288d1;
+}
+
+.wiz-progress-step.active:hover .wiz-progress-num {
+  background: #0288d1;
+  color: #ffffff;
+}
+
+.wiz-progress-step.completed:hover .wiz-progress-num {
+  background: #059669;
+  color: #ffffff;
+  color: #ffffff;
 }
 
 .wiz-progress-connector {
@@ -1162,7 +1197,7 @@
 }
 
 .wiz-progress-connector.active {
-  background: #0288d1;
+  background: #059669;
 }
 
 /* Content columns */

@@ -15,17 +15,11 @@ export default function CMSNewSubmissionStep2() {
   const [tags, setTags] = useState('');
   const [pubStatus, setPubStatus] = useState('');
 
-  const sidebarSteps = [
-    { num: 1, label: 'Files', icon: 'file' },
-    { num: 2, label: 'Details', icon: 'edit' },
-    { num: 3, label: 'Alignment', icon: 'target' },
-    { num: 4, label: 'Review', icon: 'check' },
-  ];
-
   const progressSteps = [
-    { num: 1, label: 'Initial Information' },
-    { num: 2, label: 'Document Details' },
-    { num: 3, label: 'Review & Submit' },
+    { num: 1, label: 'Files' },
+    { num: 2, label: 'Details' },
+    { num: 3, label: 'Alignment' },
+    { num: 4, label: 'Review' },
   ];
 
   const stepIcon = (type) => {
@@ -57,32 +51,21 @@ export default function CMSNewSubmissionStep2() {
   return (
     <CMSLayout>
       <div className="wiz-page">
-        {/* ===== LEFT SIDEBAR ===== */}
-        <aside className="wiz-sidebar">
-          {sidebarSteps.map((s) => (
-            <a
-              key={s.num}
-              href={`/cms/submissions/new/step-${s.num}`}
-              className={`wiz-sidebar-item ${s.num === currentStep ? 'active' : ''} ${s.num < currentStep ? 'completed' : ''}`}
-            >
-              <span className="wiz-sidebar-icon">{stepIcon(s.icon)}</span>
-              Step {s.num} - {s.label}
-            </a>
-          ))}
-        </aside>
-
         {/* ===== MAIN AREA ===== */}
         <div className="wiz-main">
           {/* Progress bar */}
           <div className="wiz-progress-bar">
             {progressSteps.map((ps, idx) => (
               <React.Fragment key={ps.num}>
-                <div className={`wiz-progress-step ${ps.num <= 2 ? 'active' : ''}`}>
+                <a
+                  href={`/cms/submissions/new/step-${ps.num}`}
+                  className={`wiz-progress-step ${ps.num === currentStep ? 'active' : ''} ${ps.num < currentStep ? 'completed' : ''}`}
+                >
                   <span className="wiz-progress-num">{ps.num}</span>
                   <span className="wiz-progress-label">{ps.label}</span>
-                </div>
+                </a>
                 {idx < progressSteps.length - 1 && (
-                  <div className={`wiz-progress-connector ${ps.num < 2 ? 'active' : ''}`} />
+                  <div className={`wiz-progress-connector ${ps.num < currentStep ? 'active' : ''}`} />
                 )}
               </React.Fragment>
             ))}
