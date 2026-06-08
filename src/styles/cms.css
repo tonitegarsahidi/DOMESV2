@@ -1035,6 +1035,10 @@
   display: flex;
   flex: 1;
   min-height: calc(100vh - 64px);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  background: #f8fafc;
 }
 
 /* Left sidebar */
@@ -1047,6 +1051,11 @@
   flex-direction: column;
   gap: 2px;
   flex-shrink: 0;
+  position: sticky;
+  top: 64px;
+  height: calc(100vh - 64px);
+  align-self: start;
+  overflow-y: auto;
 }
 
 .wiz-sidebar-item {
@@ -1089,9 +1098,10 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 28px 40px 0;
+  padding: 28px 40px 80px;
   min-width: 0;
   background: #f8fafc;
+  position: relative;
 }
 
 /* Progress bar */
@@ -1606,9 +1616,16 @@
   justify-content: flex-end;
   align-items: center;
   gap: 16px;
-  padding: 20px 0;
+  padding: 16px 40px;
   margin-top: auto;
   border-top: 1px solid #e2e8f0;
+  position: sticky;
+  bottom: 0;
+  background: #ffffff;
+  margin-left: -40px;
+  margin-right: -40px;
+  z-index: 100;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .wiz-btn-cancel {
@@ -1742,15 +1759,22 @@
 @media (max-width: 900px) {
   .wiz-page {
     flex-direction: column;
+    max-width: 100%;
+    margin: 0;
   }
 
   .wiz-sidebar {
     width: 100%;
+    height: auto;
+    align-self: auto;
     flex-direction: row;
     border-right: none;
     border-bottom: 1px solid #e2e8f0;
     padding: 0;
     overflow-x: auto;
+    position: sticky;
+    top: 64px;
+    z-index: 900;
   }
 
   .wiz-sidebar-item {
@@ -1774,11 +1798,17 @@
   }
 
   .wiz-main {
-    padding: 20px 16px 0;
+    padding: 20px 16px 80px;
   }
 
   .wiz-progress-bar {
     padding: 0;
+  }
+
+  .wiz-footer {
+    margin-left: -16px;
+    margin-right: -16px;
+    padding: 16px 16px;
   }
 }
 
