@@ -1,5 +1,29 @@
 import React, { useState } from 'react';
 import CMSLayout from './CMSLayout.jsx';
+import AgricultureIcon from '@mui/icons-material/Agriculture';
+import BusinessIcon from '@mui/icons-material/Business';
+import GavelIcon from '@mui/icons-material/Gavel';
+import CoronavirusIcon from '@mui/icons-material/Coronavirus';
+import AccessibilityIcon from '@mui/icons-material/Accessibility';
+import EmergencyIcon from '@mui/icons-material/Emergency';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import BoltIcon from '@mui/icons-material/Bolt';
+import PublicIcon from '@mui/icons-material/Public';
+import WatersIcon from '@mui/icons-material/Water';
+import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import ConstructionIcon from '@mui/icons-material/Construction';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import WorkIcon from '@mui/icons-material/Work';
+import GroupsIcon from '@mui/icons-material/Groups';
+import HandshakeIcon from '@mui/icons-material/Handshake';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import LandscapeIcon from '@mui/icons-material/Landscape';
+import ShieldIcon from '@mui/icons-material/Shield';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import OpacityIcon from '@mui/icons-material/Opacity';
 
 /* ── SDG data with icons ── */
 const sdgList = [
@@ -64,30 +88,30 @@ const SDG_ICONS = {
 };
 
 const SECTORS = [
-  'Agriculture and Food',
-  'Business and Investment',
-  'Conflict, Violence, and Radicalism',
-  'COVID-19',
-  'Disability and Vulnerability and Social Welfare',
-  'Disaster and Emergency',
-  'Economic Development',
-  'Education and Culture',
-  'Energy and Natural Resources',
-  'Environment and Climate Change',
-  'Fishery and Maritime',
-  'Gender and Child Protection',
-  'Governance and Corruption',
-  'Health and Nutrition',
-  'Infrastructure Development',
-  'Innovation and Technology',
-  'Livelihood and Employment',
-  'Population and Migration',
-  'Poverty and Social Exclusion',
-  'Public Finance, Tax, and Fiscal Policy',
-  'Rural and Regional Development',
-  'Social Security and Protection',
-  'Urban Development',
-  'Water and Sanitation',
+  { name: 'Agriculture and Food', icon: <AgricultureIcon fontSize="large" /> },
+  { name: 'Business and Investment', icon: <BusinessIcon fontSize="large" /> },
+  { name: 'Conflict, Violence, and Radicalism', icon: <GavelIcon fontSize="large" /> },
+  { name: 'COVID-19', icon: <CoronavirusIcon fontSize="large" /> },
+  { name: 'Disability and Vulnerability and Social Welfare', icon: <AccessibilityIcon fontSize="large" /> },
+  { name: 'Disaster and Emergency', icon: <EmergencyIcon fontSize="large" /> },
+  { name: 'Economic Development', icon: <TrendingUpIcon fontSize="large" /> },
+  { name: 'Education and Culture', icon: <MenuBookIcon fontSize="large" /> },
+  { name: 'Energy and Natural Resources', icon: <BoltIcon fontSize="large" /> },
+  { name: 'Environment and Climate Change', icon: <PublicIcon fontSize="large" /> },
+  { name: 'Fishery and Maritime', icon: <WatersIcon fontSize="large" /> },
+  { name: 'Gender and Child Protection', icon: <FamilyRestroomIcon fontSize="large" /> },
+  { name: 'Governance and Corruption', icon: <AccountBalanceIcon fontSize="large" /> },
+  { name: 'Health and Nutrition', icon: <LocalHospitalIcon fontSize="large" /> },
+  { name: 'Infrastructure Development', icon: <ConstructionIcon fontSize="large" /> },
+  { name: 'Innovation and Technology', icon: <LightbulbIcon fontSize="large" /> },
+  { name: 'Livelihood and Employment', icon: <WorkIcon fontSize="large" /> },
+  { name: 'Population and Migration', icon: <GroupsIcon fontSize="large" /> },
+  { name: 'Poverty and Social Exclusion', icon: <HandshakeIcon fontSize="large" /> },
+  { name: 'Public Finance, Tax, and Fiscal Policy', icon: <AttachMoneyIcon fontSize="large" /> },
+  { name: 'Rural and Regional Development', icon: <LandscapeIcon fontSize="large" /> },
+  { name: 'Social Security and Protection', icon: <ShieldIcon fontSize="large" /> },
+  { name: 'Urban Development', icon: <ApartmentIcon fontSize="large" /> },
+  { name: 'Water and Sanitation', icon: <OpacityIcon fontSize="large" /> },
 ];
 
 const AGENCIES = [
@@ -181,20 +205,23 @@ export default function CMSNewSubmissionStep3() {
             <div className="wiz-s3-card">
               <h3 className="wiz-s3-card-title">Sector classification <span className="wiz-required">*</span></h3>
               <div className="wiz-s3-sector-grid">
-                {SECTORS.map((s) => {
-                  const active = selectedSectors.includes(s);
+                {SECTORS.map((sector) => {
+                  const active = selectedSectors.includes(sector.name);
                   return (
                     <button
-                      key={s}
+                      key={sector.name}
                       className={`wiz-s3-sector-chip ${active ? 'active' : ''}`}
-                      onClick={() => toggleItem(selectedSectors, setSelectedSectors, s)}
+                      onClick={() => toggleItem(selectedSectors, setSelectedSectors, sector.name)}
                     >
+                      <span className="wiz-s3-chip-icon" style={{ marginRight: '8px', display: 'flex', alignItems: 'center' }}>
+                        {React.cloneElement(sector.icon, { style: { fontSize: '20px' } })}
+                      </span>
                       <span className="wiz-s3-chip-check">
                         {active ? (
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
                         ) : null}
                       </span>
-                      {s}
+                      {sector.name}
                     </button>
                   );
                 })}
