@@ -19,7 +19,7 @@ const sdgList = [
   { id: 'g14', key: 'g14', number: 14, name: 'Life Below Water', icon: '/images/SDG-logos/SDG-14_life-below-water.png', fullName: 'Goal 14: Life Below Water', color: '#0A97D9' },
   { id: 'g15', key: 'g15', number: 15, name: 'Life on Land', icon: '/images/SDG-logos/SDG-15_life-on-land.png', fullName: 'Goal 15: Life on Land', color: '#56C02B' },
   { id: 'g16', key: 'g16', number: 16, name: 'Peace & Justice', icon: '/images/SDG-logos/SDG-16_peace-justice-and-strong-institutions.png', fullName: 'Goal 16: Peace, Justice and Strong Institutions', color: '#00689D' },
-  { id: 'g17', key: 'g17', number: 17, name: 'Partnerships', icon: '/images/SDG-logos/SDG-17_partnerships-for-the-goals.png', fullName: 'Goal 17: Partnerships for the Goals', color: '#19486A' },
+  { id: 'g17', key: 'g17', number: 17, name: 'Partnerships', icon: '/images/SDG-logos/SDG-17_partnership-for-the-goals.png', fullName: 'Goal 17: Partnerships for the Goals', color: '#19486A' },
 ];
 
 /* ── SDG data ── */
