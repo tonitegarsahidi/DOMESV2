@@ -1,6 +1,27 @@
 import React, { useState } from 'react';
 import CMSLayout from './CMSLayout.jsx';
 
+/* ── SDG data with icons ── */
+const sdgList = [
+  { id: 'g1', key: 'g1', number: 1, name: 'No Poverty', icon: '/images/SDG-logos/SDG-1_no-poverty.png', fullName: 'Goal 1: No Poverty', color: '#E5243B' },
+  { id: 'g2', key: 'g2', number: 2, name: 'Zero Hunger', icon: '/images/SDG-logos/SDG-2_zero-hunger.png', fullName: 'Goal 2: Zero Hunger', color: '#DDA63A' },
+  { id: 'g3', key: 'g3', number: 3, name: 'Good Health', icon: '/images/SDG-logos/SDG-3_good-health-and-well-being.png', fullName: 'Goal 3: Good Health and Well-being', color: '#4C9F38' },
+  { id: 'g4', key: 'g4', number: 4, name: 'Quality Education', icon: '/images/SDG-logos/SDG-4_quality-education.png', fullName: 'Goal 4: Quality Education', color: '#C5192D' },
+  { id: 'g5', key: 'g5', number: 5, name: 'Gender Equality', icon: '/images/SDG-logos/SDG-5_gender-equality.png', fullName: 'Goal 5: Gender Equality', color: '#FF3A21' },
+  { id: 'g6', key: 'g6', number: 6, name: 'Clean Water', icon: '/images/SDG-logos/SDG-6_clean-water-and-sanitation.png', fullName: 'Goal 6: Clean Water and Sanitation', color: '#26BDE2' },
+  { id: 'g7', key: 'g7', number: 7, name: 'Affordable Clean Energy', icon: '/images/SDG-logos/SDG-7_affordable-and-clean-energy.png', fullName: 'Goal 7: Affordable and Clean Energy', color: '#FCC30B' },
+  { id: 'g8', key: 'g8', number: 8, name: 'Decent Work', icon: '/images/SDG-logos/SDG-8_decent-work-and-economic-growth.png', fullName: 'Goal 8: Decent Work and Economic Growth', color: '#A21942' },
+  { id: 'g9', key: 'g9', number: 9, name: 'Industry Innovation', icon: '/images/SDG-logos/SDG-9_industry-innovation-and-infrastructure.png', fullName: 'Goal 9: Industry, Innovation and Infrastructure', color: '#FD6925' },
+  { id: 'g10', key: 'g10', number: 10, name: 'Reduced Inequalities', icon: '/images/SDG-logos/SDG-10_reduced-inequalities.png', fullName: 'Goal 10: Reduced Inequalities', color: '#DD1367' },
+  { id: 'g11', key: 'g11', number: 11, name: 'Sustainable Cities', icon: '/images/SDG-logos/SDG-11_sustainable-cities-and-communities.png', fullName: 'Goal 11: Sustainable Cities and Communities', color: '#FD9D24' },
+  { id: 'g12', key: 'g12', number: 12, name: 'Responsible Consumption', icon: '/images/SDG-logos/SDG-12_responsible-consumption-and-production.png', fullName: 'Goal 12: Responsible Consumption and Production', color: '#BF8B2E' },
+  { id: 'g13', key: 'g13', number: 13, name: 'Climate Action', icon: '/images/SDG-logos/SDG-13_climate-action.png', fullName: 'Goal 13: Climate Action', color: '#3F7E44' },
+  { id: 'g14', key: 'g14', number: 14, name: 'Life Below Water', icon: '/images/SDG-logos/SDG-14_life-below-water.png', fullName: 'Goal 14: Life Below Water', color: '#0A97D9' },
+  { id: 'g15', key: 'g15', number: 15, name: 'Life on Land', icon: '/images/SDG-logos/SDG-15_life-on-land.png', fullName: 'Goal 15: Life on Land', color: '#56C02B' },
+  { id: 'g16', key: 'g16', number: 16, name: 'Peace & Justice', icon: '/images/SDG-logos/SDG-16_peace-justice-and-strong-institutions.png', fullName: 'Goal 16: Peace, Justice and Strong Institutions', color: '#00689D' },
+  { id: 'g17', key: 'g17', number: 17, name: 'Partnerships', icon: '/images/SDG-logos/SDG-17_partnerships-for-the-goals.png', fullName: 'Goal 17: Partnerships for the Goals', color: '#19486A' },
+];
+
 /* ── SDG data ── */
 const SDG_GOALS = [
   { num: 1, label: 'No Poverty', color: '#E5243B' },
@@ -167,21 +188,19 @@ export default function CMSNewSubmissionStep3() {
               <h3 className="wiz-s3-card-title">Sustainable Development Goals (SDGs) <span className="wiz-required">*</span></h3>
               <p className="wiz-s3-card-desc">Select all primary goals that align with this submission.</p>
               <div className="wiz-s3-sdg-grid">
-                {SDG_GOALS.map((g) => {
-                  const active = selectedSDGs.includes(g.num);
+                {sdgList.map((sdg) => {
+                  const active = selectedSDGs.includes(sdg.number);
                   return (
                     <button
-                      key={g.num}
+                      key={sdg.number}
                       className={`wiz-s3-sdg-card ${active ? 'active' : ''}`}
-                      style={active ? { borderColor: g.color, boxShadow: `0 0 0 2px ${g.color}30` } : {}}
-                      onClick={() => toggleNum(selectedSDGs, setSelectedSDGs, g.num)}
+                      style={active ? { borderColor: sdg.color, boxShadow: `0 0 0 2px ${sdg.color}30` } : {}}
+                      onClick={() => toggleNum(selectedSDGs, setSelectedSDGs, sdg.number)}
                     >
-                      <div className="wiz-s3-sdg-icon" style={{ backgroundColor: `${g.color}15`, color: g.color }}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                          {SDG_ICONS[g.num](g.color)}
-                        </svg>
+                      <div className="wiz-s3-sdg-icon" style={{ backgroundColor: `${sdg.color}15`, padding: '8px' }}>
+                        <img src={sdg.icon} alt={sdg.fullName} className="wiz-s3-sdg-img" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
                       </div>
-                      <span className="wiz-s3-sdg-num">{g.num}. {g.label}</span>
+                      <span className="wiz-s3-sdg-num">{sdg.number}. {sdg.name}</span>
                     </button>
                   );
                 })}
