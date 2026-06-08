@@ -115,9 +115,30 @@ const SECTORS = [
 ];
 
 const AGENCIES = [
-  'UNDP', 'FAO', 'ILO', 'IOM', 'ITU',
-  'OHCHR', 'UNESCO', 'UNFPA', 'UNICEF', 'UNIDO',
-  'WFP', 'WHO', 'UN Women',
+  'FAO',
+  'Global Pulse/ PLJ',
+  'IFAD',
+  'ILO',
+  'IMF',
+  'IOM',
+  'ITU',
+  'RCO',
+  'UNAIDS',
+  'UN Women',
+  'UNDP',
+  'UNEP',
+  'UNESCO',
+  'UNFPA',
+  'UN-HABITAT',
+  'UNHCR',
+  'UNICEF',
+  'UNIDO',
+  'UNOCHA',
+  'UNODC',
+  'UNOPS',
+  'WFP',
+  'WHO',
+  'World Bank',
 ];
 
 const THEMATIC_AREAS = [
@@ -139,11 +160,35 @@ export default function CMSNewSubmissionStep3() {
   const [selectedSectors, setSelectedSectors] = useState(['Economic Growth & Trade', 'Governance & Human Rights']);
   const [selectedSDGs, setSelectedSDGs] = useState([2, 5]);
   const [selectedAgencies, setSelectedAgencies] = useState([]);
-  const [isJointProgramme, setIsJointProgramme] = useState('');
-  const [leadAgency, setLeadAgency] = useState('');
-  const [primaryProgramme, setPrimaryProgramme] = useState('');
-  const [geoScope, setGeoScope] = useState('');
-  const [agencyName, setAgencyName] = useState('');
+  const [worksWithNonUNPartners, setWorksWithNonUNPartners] = useState('');
+  const [nonUNPartners, setNonUNPartners] = useState([{ type: '', name: '' }]);
+  
+  const nonUNPartnerTypes = [
+    'Government',
+    'Universities',
+    'Billateral Agency',
+    'Consulting Firm',
+    'Think Tank / Research Institute',
+    'International NGO',
+    'Local NGO',
+    'Others'
+  ];
+  
+  const addNonUNPartner = () => {
+    setNonUNPartners([...nonUNPartners, { type: '', name: '' }]);
+  };
+  
+  const removeNonUNPartner = (index) => {
+    const updated = [...nonUNPartners];
+    updated.splice(index, 1);
+    setNonUNPartners(updated);
+  };
+  
+  const updateNonUNPartner = (index, field, value) => {
+    const updated = [...nonUNPartners];
+    updated[index][field] = value;
+    setNonUNPartners(updated);
+  };
   const [selectedThematic, setSelectedThematic] = useState(['Inclusive Economic Transformation']);
   const [selectedLNOB, setSelectedLNOB] = useState(['Youth and Children']);
   const [otherLNOB, setOtherLNOB] = useState('');
@@ -277,69 +322,71 @@ export default function CMSNewSubmissionStep3() {
                 </div>
               </div>
 
-              {/* Joint Programme + Lead Agency row */}
-              <div className="wiz-s3-row-2col">
-                <div className="wiz-s3-field">
-                  <label className="wiz-s3-label">
-                    Joint Programme (is this a joint initiative with multiple agencies?) <span className="wiz-required">*</span>
-                  </label>
-                  <div className="wiz-s2-radio-row">
-                    <label className="wiz-s2-radio-item">
-                      <input type="radio" name="jointProg" value="yes" checked={isJointProgramme === 'yes'} onChange={(e) => setIsJointProgramme(e.target.value)} />
-                      <span className="wiz-s2-radio-circle" />
-                      <span>Yes</span>
-                    </label>
-                    <label className="wiz-s2-radio-item">
-                      <input type="radio" name="jointProg" value="no" checked={isJointProgramme === 'no'} onChange={(e) => setIsJointProgramme(e.target.value)} />
-                      <span className="wiz-s2-radio-circle" />
-                      <span>No</span>
-                    </label>
-                  </div>
-                </div>
-                <div className="wiz-s3-field">
-                  <label className="wiz-s3-label">Lead UN Agency <span className="wiz-required">*</span></label>
-                  <select className="wiz-s3-select" value={leadAgency} onChange={(e) => setLeadAgency(e.target.value)}>
-                    <option value="">Pick Lead Agency</option>
-                    {AGENCIES.map((a) => <option key={a} value={a}>{a}</option>)}
-                  </select>
-                </div>
-              </div>
-
-              {/* Primary Programme + Geographic Scope row */}
-              <div className="wiz-s3-row-2col">
-                <div className="wiz-s3-field">
-                  <label className="wiz-s3-label">Primary Programme / Pillar <span className="wiz-required">*</span></label>
-                  <select className="wiz-s3-select" value={primaryProgramme} onChange={(e) => setPrimaryProgramme(e.target.value)}>
-                    <option value="">Please select the program/pillar that corresponds to the document</option>
-                    <option value="governance">Governance & Rule of Law</option>
-                    <option value="resilience">Resilience & Climate</option>
-                    <option value="inclusive">Inclusive Growth</option>
-                    <option value="human_capital">Human Capital Development</option>
-                  </select>
-                </div>
-                <div className="wiz-s3-field">
-                  <label className="wiz-s3-label">Geographic Scope <span className="wiz-required">*</span></label>
-                  <select className="wiz-s3-select" value={geoScope} onChange={(e) => setGeoScope(e.target.value)}>
-                    <option value="">Pick Region (choose multiple)</option>
-                    <option value="national">National</option>
-                    <option value="java">Java</option>
-                    <option value="sumatra">Sumatra</option>
-                    <option value="kalimantan">Kalimantan</option>
-                    <option value="sulawesi">Sulawesi</option>
-                    <option value="papua">Papua</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Agency Name */}
+              {/* Non-UN Partner question (full width) */}
               <div className="wiz-s3-field">
-                <select className="wiz-s3-select" value={agencyName} onChange={(e) => setAgencyName(e.target.value)}>
-                  <option value="">Pick Name of Agency / Office / Region / Rural</option>
-                  <option value="jakarta">UN Jakarta Office</option>
-                  <option value="field">Field Office</option>
-                  <option value="regional">Regional Office</option>
-                </select>
+                <label className="wiz-s3-label">
+                  Does the agency/agencies work with non-UN partner institutions in this assessment / research / report/ document? <span className="wiz-required">*</span>
+                </label>
+                <div className="wiz-s2-radio-row">
+                  <label className="wiz-s2-radio-item">
+                    <input type="radio" name="nonUNPartners" value="yes" checked={worksWithNonUNPartners === 'yes'} onChange={(e) => setWorksWithNonUNPartners(e.target.value)} />
+                    <span className="wiz-s2-radio-circle" />
+                    <span>Yes</span>
+                  </label>
+                  <label className="wiz-s2-radio-item">
+                    <input type="radio" name="nonUNPartners" value="no" checked={worksWithNonUNPartners === 'no'} onChange={(e) => setWorksWithNonUNPartners(e.target.value)} />
+                    <span className="wiz-s2-radio-circle" />
+                    <span>No</span>
+                  </label>
+                </div>
               </div>
+
+              {/* Non-UN Partners input fields (only show if user answered Yes) */}
+              {worksWithNonUNPartners === 'yes' && (
+                <div className="wiz-s3-field">
+                  <label className="wiz-s3-label">Choose Non UN Partner Institution</label>
+                  {nonUNPartners.map((partner, index) => (
+                    <div key={index} className="wiz-s3-row-2col" style={{ marginBottom: '12px', alignItems: 'flex-end' }}>
+                      <div className="wiz-s3-field" style={{ marginBottom: '0' }}>
+                        <select 
+                          className="wiz-s3-select" 
+                          value={partner.type} 
+                          onChange={(e) => updateNonUNPartner(index, 'type', e.target.value)}
+                        >
+                          <option value="">Select Type</option>
+                          {nonUNPartnerTypes.map((type) => <option key={type} value={type}>{type}</option>)}
+                        </select>
+                      </div>
+                      <div className="wiz-s3-field" style={{ marginBottom: '0', display: 'flex', gap: '8px' }}>
+                        <input 
+                          type="text" 
+                          className="wiz-s3-select" 
+                          style={{ flex: '1' }}
+                          placeholder="Partner name"
+                          value={partner.name}
+                          onChange={(e) => updateNonUNPartner(index, 'name', e.target.value)}
+                        />
+                        {nonUNPartners.length > 1 && (
+                          <button 
+                            type="button"
+                            onClick={() => removeNonUNPartner(index)}
+                            style={{ padding: '8px 12px', backgroundColor: '#ef4444', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                  <button 
+                    type="button"
+                    onClick={addNonUNPartner}
+                    style={{ padding: '8px 16px', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', marginTop: '8px' }}
+                  >
+                    + Add Another Partner
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* ── THEMATIC + LNOB row ── */}
