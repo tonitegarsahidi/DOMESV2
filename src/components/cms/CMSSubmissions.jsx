@@ -41,13 +41,13 @@ export default function CMSSubmissions() {
             <h1>Submissions</h1>
             <p>Manage and track all document submissions.</p>
           </div>
-          <button className="cms-btn-primary cms-new-doc-btn">
+          <a href="/cms/submissions/new/step-1" className="cms-btn-primary cms-new-doc-btn" style={{textDecoration: 'none'}}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{marginRight: '8px'}}>
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
             New Document
-          </button>
+          </a>
         </header>
 
         <div className="cms-table-container">
