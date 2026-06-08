@@ -831,9 +831,11 @@ a {
 
 .document-card-grid-image {
   width: 100%;
-  height: 200px;
+  aspect-ratio: 2/3;
+  height: auto;
   overflow: hidden;
   position: relative;
+  background: var(--neutral-100);
 }
 
 .document-card-grid-image img {

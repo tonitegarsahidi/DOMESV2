@@ -119,6 +119,45 @@ const documents = [
     agency: 'UNDP Indonesia',
     pages: 'PDF, 110 pages',
   },
+  {
+    id: 10,
+    image: '/images/doc-cover-ocean.png',
+    tags: [
+      { label: 'Goal 14', type: 'sdg' },
+      { label: 'FAO', type: 'agency' },
+      { label: 'JAN 2024', type: 'date' },
+    ],
+    title: 'Marine Conservation Strategy: Coral Triangle Initiative',
+    description: 'Strategic framework for protecting the Coral Triangle marine biodiversity through cross-border collaboration and sustainable fishing practices...',
+    agency: 'FAO Indonesia',
+    pages: 'PDF, 96 pages',
+  },
+  {
+    id: 11,
+    image: '/images/doc-cover-children.png',
+    tags: [
+      { label: 'Goal 4', type: 'sdg' },
+      { label: 'UNICEF', type: 'agency' },
+      { label: 'FEB 2024', type: 'date' },
+    ],
+    title: 'Education For All: Remote Learning Accessibility Report',
+    description: 'Assessment of digital learning infrastructure in remote areas of Papua and West Papua, with recommendations to bridge the educational divide...',
+    agency: 'UNICEF Indonesia',
+    pages: 'PDF, 84 pages',
+  },
+  {
+    id: 12,
+    image: '/images/doc-cover-sdg.png',
+    tags: [
+      { label: 'Goal 13', type: 'sdg' },
+      { label: 'UNEP', type: 'agency' },
+      { label: 'MAR 2024', type: 'date' },
+    ],
+    title: 'Climate Change Adaptation: National Action Plan 2024',
+    description: 'Comprehensive national strategy to address climate change impacts, focusing on disaster risk reduction and low-carbon development pathways...',
+    agency: 'UNEP Indonesia',
+    pages: 'PDF, 142 pages',
+  },
 ];
 
 export default function DocumentList() {
@@ -130,7 +169,7 @@ export default function DocumentList() {
         <div className="document-list-header-left">
           <h2 className="document-list-title">Latest Document</h2>
           <span className="document-list-count">
-            Showing 1-{viewMode === 'list' ? 5 : 9} of 1,246 documents
+            Showing 1-{viewMode === 'list' ? 5 : 12} of 1,257 documents
           </span>
         </div>
         <div className="view-toggle" id="view-toggle">
