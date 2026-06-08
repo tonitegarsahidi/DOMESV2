@@ -1,7 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 export default function HeroSection() {
   const quickTags = ['COVID 19', 'Climate Change', 'Gender Equality', 'Economic Recovery'];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const logo = document.querySelector('.un-logo-background');
+      if (logo) {
+        const scrollY = window.scrollY;
+        // Parallax effect: logo bergerak 0.3x dari kecepatan scroll
+        logo.style.transform = `translateY(${scrollY * 0.3}px)`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <section className="hero-section" id="hero-section">
@@ -35,6 +49,9 @@ export default function HeroSection() {
           <span className="hero-tag advanced">Advanced Filters</span>
         </div>
       </div>
+      <div className="un-logo-background">
+         <img src="/images/UN Logo_Horizontal_White_English.png" alt="UN Logo Background" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+       </div>
     </section>
   );
 }
