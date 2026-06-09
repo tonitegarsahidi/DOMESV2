@@ -179,67 +179,150 @@ export default function DocumentList({ searchQuery }) {
   const [viewMode, setViewMode] = useState('list');
   
   const isClimateSearch = searchQuery && searchQuery.toLowerCase().includes('climate');
-  const displayDocuments = isClimateSearch ? climateChangeDocuments : documents;
+  
+  let displayDocuments = documents;
+  if (searchQuery) {
+    if (isClimateSearch) {
+      displayDocuments = climateChangeDocuments;
+    } else {
+      displayDocuments = []; // Simulate empty state for any other query
+    }
+  }
 
   return (
     <div className="document-list-area" id="document-list">
-      <div className="document-list-header">
+      <div className="document-list-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div className="document-list-header-left">
           <h2 className="document-list-title">
             {searchQuery ? `Search Results` : 'Latest Document'}
           </h2>
           <span className="document-list-count">
-            Showing 1-12 of {isClimateSearch ? '1,257' : '1,257'} documents
+            Showing {displayDocuments.length > 0 ? `1-${displayDocuments.length} of ${displayDocuments.length}` : '0'} documents
           </span>
         </div>
-        <div className="view-toggle" id="view-toggle">
-          <button
-            className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
-            onClick={() => setViewMode('grid')}
-            aria-label="Grid view"
-            title="Grid view"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M3 3h8v8H3V3zm0 10h8v8H3v-8zm10-10h8v8h-8V3zm10 10h-8v8h8v-8z"/>
-            </svg>
-          </button>
-          <button
-            className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
-            onClick={() => setViewMode('list')}
-            aria-label="List view"
-            title="List view"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M3 5h2v2H3V5zm4 0h14v2H7V5zM3 11h2v2H3v-2zm4 0h14v2H7v-2zm-4 6h2v2H3v-2zm4 0h14v2H7v-2z"/>
-            </svg>
-          </button>
+        
+        <div className="view-toggle" id="view-toggle" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          {/* Sort Dropdown */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '13px', color: '#64748b' }}>Sort by:</span>
+            <select style={{ 
+              padding: '6px 12px', 
+              borderRadius: '6px', 
+              border: '1px solid #cbd5e1', 
+              color: '#334155',
+              fontSize: '14px',
+              outline: 'none',
+              cursor: 'pointer',
+              background: 'white'
+            }}>
+              <option>Relevance</option>
+              <option>Newest First</option>
+              <option>Oldest First</option>
+              <option>Most Popular</option>
+            </select>
+          </div>
+
+          {/* Grid/List Toggles */}
+          <div style={{ display: 'flex', border: '1px solid #cbd5e1', borderRadius: '6px', overflow: 'hidden' }}>
+            <button
+              className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
+              onClick={() => setViewMode('grid')}
+              aria-label="Grid view"
+              title="Grid view"
+              style={{ border: 'none', borderRadius: 0, padding: '6px 8px' }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 3h8v8H3V3zm0 10h8v8H3v-8zm10-10h8v8h-8V3zm10 10h-8v8h8v-8z"/>
+              </svg>
+            </button>
+            <button
+              className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
+              onClick={() => setViewMode('list')}
+              aria-label="List view"
+              title="List view"
+              style={{ border: 'none', borderRadius: 0, padding: '6px 8px', borderLeft: '1px solid #cbd5e1' }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 5h2v2H3V5zm4 0h14v2H7V5zM3 11h2v2H3v-2zm4 0h14v2H7v-2zm-4 6h2v2H3v-2zm4 0h14v2H7v-2z"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className={viewMode === 'grid' ? 'document-grid' : 'document-list'}>
-        {displayDocuments.map((doc) => (
-          <DocumentCard key={doc.id} doc={doc} viewMode={viewMode} searchQuery={searchQuery} />
-        ))}
-      </div>
+      {displayDocuments.length > 0 ? (
+        <>
+          <div className={viewMode === 'grid' ? 'document-grid' : 'document-list'}>
+            {displayDocuments.map((doc) => (
+              <DocumentCard key={doc.id} doc={doc} viewMode={viewMode} searchQuery={searchQuery} />
+            ))}
+          </div>
 
-      {/* Pagination */}
-      <div className="pagination" id="pagination">
-        <button className="nav-btn" aria-label="Previous">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-          </svg>
-        </button>
-        <button className="active">1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>...</button>
-        <button>25</button>
-        <button className="nav-btn" aria-label="Next">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-          </svg>
-        </button>
-      </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '30px', flexWrap: 'wrap', gap: '16px' }}>
+            <div style={{ fontSize: '14px', color: '#64748b' }}>
+              Items per page: 
+              <select style={{ marginLeft: '8px', padding: '4px 8px', borderRadius: '4px', border: '1px solid #cbd5e1', outline: 'none', cursor: 'pointer', background: 'white' }}>
+                <option>12</option>
+                <option>24</option>
+                <option>48</option>
+              </select>
+            </div>
+            {/* Pagination */}
+            <div className="pagination" id="pagination" style={{ marginTop: 0 }}>
+              <button className="nav-btn" aria-label="Previous">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                </svg>
+              </button>
+              <button className="active">1</button>
+              <button>2</button>
+              <button>3</button>
+              <button>...</button>
+              <button>25</button>
+              <button className="nav-btn" aria-label="Next">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </>
+      ) : (
+        /* Empty State */
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '80px 20px',
+          background: 'white',
+          borderRadius: '12px',
+          border: '1px dashed #cbd5e1',
+          textAlign: 'center',
+          marginTop: '20px'
+        }}>
+          <img src="/images/empty_state.png" alt="No results found" style={{ width: '160px', marginBottom: '24px', opacity: 0.8 }} />
+          <h3 style={{ fontSize: '20px', fontWeight: '600', color: '#1e293b', marginBottom: '8px' }}>We couldn't find anything matching your search</h3>
+          <p style={{ color: '#64748b', fontSize: '15px', maxWidth: '400px', marginBottom: '24px' }}>
+            Try adjusting your keywords, checking for typos, or clearing some filters to see more results.
+          </p>
+          <a href="/search-results" style={{
+            background: '#eff6ff',
+            color: '#3366cc',
+            padding: '10px 24px',
+            borderRadius: '8px',
+            fontWeight: '600',
+            textDecoration: 'none',
+            border: '1px solid #bfdbfe',
+            transition: 'all 0.2s'
+          }}
+          onMouseOver={(e) => { e.currentTarget.style.background = '#dbeafe'; }}
+          onMouseOut={(e) => { e.currentTarget.style.background = '#eff6ff'; }}
+          >
+            Clear all filters
+          </a>
+        </div>
+      )}
     </div>
   );
 }

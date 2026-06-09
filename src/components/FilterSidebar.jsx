@@ -170,6 +170,7 @@ export default function FilterSidebar() {
 
       const newUrl = `${window.location.pathname}?${params.toString()}`;
       window.history.pushState({}, '', newUrl);
+      window.dispatchEvent(new Event('urlchange'));
     }, 1000);
 
     return () => clearTimeout(handler);
