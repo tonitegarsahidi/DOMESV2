@@ -19,7 +19,7 @@ export default function HeroSection() {
   }, []);
 
   const handleSearch = () => {
-    const searchQuery = searchInputRef.current?.value || '';
+    const searchQuery = searchInputRef.current?.value || 'Climate Change';
     // Navigate to search results page with query parameter
     window.location.href = `/search-results?q=${encodeURIComponent(searchQuery)}`;
   };
