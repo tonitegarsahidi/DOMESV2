@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   AreaChart, Area, 
   BarChart, Bar, 
@@ -7,6 +7,12 @@ import {
 } from 'recharts';
 
 export default function AnalyticsDashboard() {
+  const [showUploadData, setShowUploadData] = useState(false);
+  const [showSdgData, setShowSdgData] = useState(false);
+  const [showAgencyData, setShowAgencyData] = useState(false);
+  const [showSectorData, setShowSectorData] = useState(false);
+  const [showLanguageData, setShowLanguageData] = useState(false);
+
   // Simulated Data Sets
   const uploadData = [
     { year: '2014', uploads: 240 },
@@ -90,12 +96,65 @@ export default function AnalyticsDashboard() {
     return null;
   };
 
+  // Reusable Data Table Component
+  const DataTable = ({ data, columns }) => (
+    <div style={{ marginTop: '16px', overflowX: 'auto', animation: 'fadeIn 0.3s ease-in-out' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+        <thead>
+          <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
+            {columns.map((col, i) => (
+              <th key={i} style={{ padding: '10px 12px', color: '#475569', textAlign: col.align || 'left', fontWeight: '600' }}>{col.label}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((row, i) => (
+            <tr key={i} style={{ borderBottom: '1px solid #e2e8f0' }}>
+              {columns.map((col, j) => (
+                <td key={j} style={{ padding: '10px 12px', color: '#1e293b', textAlign: col.align || 'left' }}>
+                  {row[col.key]} {col.suffix || ''}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+
+  const ToggleButton = ({ show, onClick }) => (
+    <div style={{ marginTop: '16px', textAlign: 'right', borderTop: '1px solid #e2e8f0', paddingTop: '16px' }}>
+      <button 
+        onClick={onClick}
+        style={{ background: '#f1f5f9', border: '1px solid #cbd5e1', padding: '6px 12px', borderRadius: '6px', color: '#334155', fontWeight: '600', cursor: 'pointer', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px', marginLeft: 'auto', transition: 'all 0.2s' }}
+        onMouseOver={(e) => { e.currentTarget.style.background = '#e2e8f0'; }}
+        onMouseOut={(e) => { e.currentTarget.style.background = '#f1f5f9'; }}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        {show ? 'Hide Data' : 'See Data'}
+      </button>
+    </div>
+  );
+
   return (
     <div style={{ padding: '40px 20px', maxWidth: '1400px', margin: '0 auto' }}>
       <div style={{ marginBottom: '40px' }}>
         <h1 style={{ fontSize: '32px', fontWeight: '700', color: '#1e293b', marginBottom: '12px' }}>Repository Analytics</h1>
         <p style={{ color: '#64748b', fontSize: '16px' }}>Real-time, interactive insights and distribution of documents across the DOMES platform.</p>
       </div>
+
+      <style>
+        {`
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+        `}
+      </style>
 
       {/* Key Metrics */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginBottom: '40px' }}>
@@ -120,7 +179,7 @@ export default function AnalyticsDashboard() {
 
       {/* Main Charts: Uploads & SDGs */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))', gap: '30px', marginBottom: '30px' }}>
-        {/* Uploads Over Time (Area Chart) */}
+        {/* Uploads Over Time */}
         <div style={{ background: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
           <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#1e293b', marginBottom: '20px' }}>Document Uploads Over Time</h3>
           <div style={{ height: '300px', width: '100%' }}>
@@ -140,9 +199,11 @@ export default function AnalyticsDashboard() {
               </AreaChart>
             </ResponsiveContainer>
           </div>
+          <ToggleButton show={showUploadData} onClick={() => setShowUploadData(!showUploadData)} />
+          {showUploadData && <DataTable data={uploadData} columns={[{ label: 'Year', key: 'year' }, { label: 'Total Uploads', key: 'uploads', align: 'right' }]} />}
         </div>
 
-        {/* SDG Distribution (Bar Chart Horizontal) */}
+        {/* SDG Distribution */}
         <div style={{ background: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
           <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#1e293b', marginBottom: '20px' }}>Top Documents by SDG</h3>
           <div style={{ height: '300px', width: '100%' }}>
@@ -160,12 +221,14 @@ export default function AnalyticsDashboard() {
               </BarChart>
             </ResponsiveContainer>
           </div>
+          <ToggleButton show={showSdgData} onClick={() => setShowSdgData(!showSdgData)} />
+          {showSdgData && <DataTable data={sdgData} columns={[{ label: 'SDG Goal', key: 'name' }, { label: 'Documents', key: 'value', align: 'right' }]} />}
         </div>
       </div>
 
       {/* Secondary Charts: Agencies, Sectors, Languages */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '30px' }}>
-        {/* Agencies Contribution (Bar Chart Vertical) */}
+        {/* Agencies Contribution */}
         <div style={{ background: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
           <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#1e293b', marginBottom: '20px' }}>Contributions by Agency</h3>
           <div style={{ height: '280px', width: '100%' }}>
@@ -179,9 +242,11 @@ export default function AnalyticsDashboard() {
               </BarChart>
             </ResponsiveContainer>
           </div>
+          <ToggleButton show={showAgencyData} onClick={() => setShowAgencyData(!showAgencyData)} />
+          {showAgencyData && <DataTable data={agencyData} columns={[{ label: 'Agency Name', key: 'name' }, { label: 'Total Documents', key: 'docs', align: 'right' }]} />}
         </div>
 
-        {/* Sectors Focus (Pie Chart) */}
+        {/* Sectors Focus */}
         <div style={{ background: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
           <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#1e293b', marginBottom: '20px' }}>Sector Focus Distribution</h3>
           <div style={{ height: '280px', width: '100%' }}>
@@ -197,9 +262,11 @@ export default function AnalyticsDashboard() {
               </PieChart>
             </ResponsiveContainer>
           </div>
+          <ToggleButton show={showSectorData} onClick={() => setShowSectorData(!showSectorData)} />
+          {showSectorData && <DataTable data={sectorData} columns={[{ label: 'Sector Name', key: 'name' }, { label: 'Percentage', key: 'value', align: 'right', suffix: '%' }]} />}
         </div>
 
-        {/* Languages Breakdown (Donut Chart) */}
+        {/* Languages Breakdown */}
         <div style={{ background: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
           <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#1e293b', marginBottom: '20px' }}>Documents by Language</h3>
           <div style={{ height: '280px', width: '100%' }}>
@@ -215,6 +282,8 @@ export default function AnalyticsDashboard() {
               </PieChart>
             </ResponsiveContainer>
           </div>
+          <ToggleButton show={showLanguageData} onClick={() => setShowLanguageData(!showLanguageData)} />
+          {showLanguageData && <DataTable data={languageData} columns={[{ label: 'Language', key: 'name' }, { label: 'Percentage', key: 'value', align: 'right', suffix: '%' }]} />}
         </div>
 
       </div>
