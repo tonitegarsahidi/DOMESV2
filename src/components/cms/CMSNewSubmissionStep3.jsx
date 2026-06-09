@@ -68,23 +68,23 @@ const SDG_GOALS = [
 ];
 
 const SDG_ICONS = {
-  1: (c) => <><circle cx="12" cy="10" r="3" stroke={c} fill="none" strokeWidth="1.5"/><path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke={c} fill="none" strokeWidth="1.5"/></>,
-  2: (c) => <><path d="M12 3C8 8 4 10 4 14a8 8 0 0 0 16 0c0-4-4-6-8-11z" stroke={c} fill="none" strokeWidth="1.5"/></>,
-  3: (c) => <><path d="M4.5 12h3l2-4 3 8 2-4h4.5" stroke={c} fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></>,
-  4: (c) => <><path d="M2 3h6a4 4 0 0 1 4 4v14" stroke={c} fill="none" strokeWidth="1.5"/><path d="M22 3h-6a4 4 0 0 0-4 4" stroke={c} fill="none" strokeWidth="1.5"/></>,
-  5: (c) => <><circle cx="12" cy="8" r="4" stroke={c} fill="none" strokeWidth="1.5"/><path d="M12 12v9M9 18h6" stroke={c} fill="none" strokeWidth="1.5"/></>,
-  6: (c) => <><path d="M12 2C8 7 4 9 4 13a8 8 0 0 0 16 0c0-4-4-6-8-11z" stroke={c} fill="none" strokeWidth="1.5"/><path d="M8 14l2 2 4-4" stroke={c} fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></>,
-  7: (c) => <><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" stroke={c} fill="none" strokeWidth="1.5" strokeLinejoin="round"/></>,
-  8: (c) => <><path d="M12 20V10" stroke={c} fill="none" strokeWidth="1.5"/><path d="M18 20V4" stroke={c} fill="none" strokeWidth="1.5"/><path d="M6 20v-4" stroke={c} fill="none" strokeWidth="1.5"/></>,
-  9: (c) => <><circle cx="12" cy="12" r="3" stroke={c} fill="none" strokeWidth="1.5"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke={c} fill="none" strokeWidth="1.5"/></>,
-  10: (c) => <><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5" stroke={c} fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></>,
-  11: (c) => <><rect x="3" y="11" width="7" height="10" rx="1" stroke={c} fill="none" strokeWidth="1.5"/><rect x="14" y="7" width="7" height="14" rx="1" stroke={c} fill="none" strokeWidth="1.5"/><path d="M6 3l4 4M14 3l4 4" stroke={c} fill="none" strokeWidth="1.5"/></>,
-  12: (c) => <><path d="M21 12a9 9 0 1 1-9-9" stroke={c} fill="none" strokeWidth="1.5"/><path d="M21 3v9h-9" stroke={c} fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></>,
-  13: (c) => <><circle cx="12" cy="12" r="10" stroke={c} fill="none" strokeWidth="1.5"/><path d="M12 6v6l4 2" stroke={c} fill="none" strokeWidth="1.5" strokeLinecap="round"/></>,
-  14: (c) => <><path d="M2 12c2-3 4-4 6-4s4 3 6 3 4-2 6-5" stroke={c} fill="none" strokeWidth="1.5" strokeLinecap="round"/><path d="M2 17c2-2 4-3 6-3s4 2 6 2 4-1 6-3" stroke={c} fill="none" strokeWidth="1.5" strokeLinecap="round"/></>,
-  15: (c) => <><path d="M12 22V8" stroke={c} fill="none" strokeWidth="1.5"/><path d="M5 12a7 7 0 0 1 14 0" stroke={c} fill="none" strokeWidth="1.5"/><path d="M8 22h8" stroke={c} fill="none" strokeWidth="1.5"/></>,
-  16: (c) => <><circle cx="12" cy="12" r="10" stroke={c} fill="none" strokeWidth="1.5"/><path d="M12 8v8M8 12h8" stroke={c} fill="none" strokeWidth="1.5" strokeLinecap="round"/></>,
-  17: (c) => <><circle cx="5" cy="6" r="3" stroke={c} fill="none" strokeWidth="1.5"/><circle cx="19" cy="6" r="3" stroke={c} fill="none" strokeWidth="1.5"/><circle cx="12" cy="18" r="3" stroke={c} fill="none" strokeWidth="1.5"/><path d="M7.5 8l3 7.5M16.5 8l-3 7.5" stroke={c} fill="none" strokeWidth="1.5"/></>,
+  1: (c) => <><circle cx="12" cy="10" r="3" stroke={c} fill="none" strokeWidth="1.5" /><path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke={c} fill="none" strokeWidth="1.5" /></>,
+  2: (c) => <><path d="M12 3C8 8 4 10 4 14a8 8 0 0 0 16 0c0-4-4-6-8-11z" stroke={c} fill="none" strokeWidth="1.5" /></>,
+  3: (c) => <><path d="M4.5 12h3l2-4 3 8 2-4h4.5" stroke={c} fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></>,
+  4: (c) => <><path d="M2 3h6a4 4 0 0 1 4 4v14" stroke={c} fill="none" strokeWidth="1.5" /><path d="M22 3h-6a4 4 0 0 0-4 4" stroke={c} fill="none" strokeWidth="1.5" /></>,
+  5: (c) => <><circle cx="12" cy="8" r="4" stroke={c} fill="none" strokeWidth="1.5" /><path d="M12 12v9M9 18h6" stroke={c} fill="none" strokeWidth="1.5" /></>,
+  6: (c) => <><path d="M12 2C8 7 4 9 4 13a8 8 0 0 0 16 0c0-4-4-6-8-11z" stroke={c} fill="none" strokeWidth="1.5" /><path d="M8 14l2 2 4-4" stroke={c} fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></>,
+  7: (c) => <><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" stroke={c} fill="none" strokeWidth="1.5" strokeLinejoin="round" /></>,
+  8: (c) => <><path d="M12 20V10" stroke={c} fill="none" strokeWidth="1.5" /><path d="M18 20V4" stroke={c} fill="none" strokeWidth="1.5" /><path d="M6 20v-4" stroke={c} fill="none" strokeWidth="1.5" /></>,
+  9: (c) => <><circle cx="12" cy="12" r="3" stroke={c} fill="none" strokeWidth="1.5" /><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke={c} fill="none" strokeWidth="1.5" /></>,
+  10: (c) => <><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5" stroke={c} fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></>,
+  11: (c) => <><rect x="3" y="11" width="7" height="10" rx="1" stroke={c} fill="none" strokeWidth="1.5" /><rect x="14" y="7" width="7" height="14" rx="1" stroke={c} fill="none" strokeWidth="1.5" /><path d="M6 3l4 4M14 3l4 4" stroke={c} fill="none" strokeWidth="1.5" /></>,
+  12: (c) => <><path d="M21 12a9 9 0 1 1-9-9" stroke={c} fill="none" strokeWidth="1.5" /><path d="M21 3v9h-9" stroke={c} fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></>,
+  13: (c) => <><circle cx="12" cy="12" r="10" stroke={c} fill="none" strokeWidth="1.5" /><path d="M12 6v6l4 2" stroke={c} fill="none" strokeWidth="1.5" strokeLinecap="round" /></>,
+  14: (c) => <><path d="M2 12c2-3 4-4 6-4s4 3 6 3 4-2 6-5" stroke={c} fill="none" strokeWidth="1.5" strokeLinecap="round" /><path d="M2 17c2-2 4-3 6-3s4 2 6 2 4-1 6-3" stroke={c} fill="none" strokeWidth="1.5" strokeLinecap="round" /></>,
+  15: (c) => <><path d="M12 22V8" stroke={c} fill="none" strokeWidth="1.5" /><path d="M5 12a7 7 0 0 1 14 0" stroke={c} fill="none" strokeWidth="1.5" /><path d="M8 22h8" stroke={c} fill="none" strokeWidth="1.5" /></>,
+  16: (c) => <><circle cx="12" cy="12" r="10" stroke={c} fill="none" strokeWidth="1.5" /><path d="M12 8v8M8 12h8" stroke={c} fill="none" strokeWidth="1.5" strokeLinecap="round" /></>,
+  17: (c) => <><circle cx="5" cy="6" r="3" stroke={c} fill="none" strokeWidth="1.5" /><circle cx="19" cy="6" r="3" stroke={c} fill="none" strokeWidth="1.5" /><circle cx="12" cy="18" r="3" stroke={c} fill="none" strokeWidth="1.5" /><path d="M7.5 8l3 7.5M16.5 8l-3 7.5" stroke={c} fill="none" strokeWidth="1.5" /></>,
 };
 
 const SECTORS = [
@@ -162,7 +162,7 @@ export default function CMSNewSubmissionStep3() {
   const [selectedAgencies, setSelectedAgencies] = useState([]);
   const [worksWithNonUNPartners, setWorksWithNonUNPartners] = useState('');
   const [nonUNPartners, setNonUNPartners] = useState([{ type: '', name: '' }]);
-  
+
   const nonUNPartnerTypes = [
     'Government',
     'Universities',
@@ -173,17 +173,17 @@ export default function CMSNewSubmissionStep3() {
     'Local NGO',
     'Others'
   ];
-  
+
   const addNonUNPartner = () => {
     setNonUNPartners([...nonUNPartners, { type: '', name: '' }]);
   };
-  
+
   const removeNonUNPartner = (index) => {
     const updated = [...nonUNPartners];
     updated.splice(index, 1);
     setNonUNPartners(updated);
   };
-  
+
   const updateNonUNPartner = (index, field, value) => {
     const updated = [...nonUNPartners];
     updated[index][field] = value;
@@ -211,13 +211,13 @@ export default function CMSNewSubmissionStep3() {
   const stepIcon = (type) => {
     switch (type) {
       case 'file':
-        return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>);
+        return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>);
       case 'edit':
-        return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>);
+        return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg>);
       case 'target':
-        return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>);
+        return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg>);
       case 'check':
-        return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>);
+        return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 11 12 14 22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg>);
       default: return null;
     }
   };
@@ -263,7 +263,7 @@ export default function CMSNewSubmissionStep3() {
                       </span>
                       <span className="wiz-s3-chip-check">
                         {active ? (
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
                         ) : null}
                       </span>
                       {sector.name}
@@ -300,7 +300,7 @@ export default function CMSNewSubmissionStep3() {
             {/* ── ADDITIONAL CLASSIFICATION ── */}
             <div className="wiz-s3-card">
               <h3 className="wiz-s3-card-title">Additional Classification</h3>
-              <p className="wiz-s3-card-desc">Please provide institutional and geographic details for this document.</p>
+
 
               {/* UN Agencies */}
               <div className="wiz-s3-field">
@@ -348,9 +348,9 @@ export default function CMSNewSubmissionStep3() {
                   {nonUNPartners.map((partner, index) => (
                     <div key={index} className="wiz-s3-row-2col" style={{ marginBottom: '12px', alignItems: 'flex-end' }}>
                       <div className="wiz-s3-field" style={{ marginBottom: '0' }}>
-                        <select 
-                          className="wiz-s3-select" 
-                          value={partner.type} 
+                        <select
+                          className="wiz-s3-select"
+                          value={partner.type}
                           onChange={(e) => updateNonUNPartner(index, 'type', e.target.value)}
                         >
                           <option value="">Select Type</option>
@@ -358,8 +358,8 @@ export default function CMSNewSubmissionStep3() {
                         </select>
                       </div>
                       <div className="wiz-s3-field" style={{ marginBottom: '0', display: 'flex', gap: '8px' }}>
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           className="wiz-s3-text-input"
                           style={{ flex: '1' }}
                           placeholder="Partner name"
@@ -367,7 +367,7 @@ export default function CMSNewSubmissionStep3() {
                           onChange={(e) => updateNonUNPartner(index, 'name', e.target.value)}
                         />
                         {nonUNPartners.length > 1 && (
-                          <button 
+                          <button
                             type="button"
                             onClick={() => removeNonUNPartner(index)}
                             style={{ padding: '8px 12px', backgroundColor: '#ef4444', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
@@ -378,7 +378,7 @@ export default function CMSNewSubmissionStep3() {
                       </div>
                     </div>
                   ))}
-                  <button 
+                  <button
                     type="button"
                     onClick={addNonUNPartner}
                     style={{ padding: '8px 16px', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', marginTop: '8px' }}
