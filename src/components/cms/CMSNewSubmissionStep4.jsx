@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CMSLayout from './CMSLayout.jsx';
 
 export default function CMSNewSubmissionStep4() {
   const currentStep = 4;
   const documentTitle = "Annual Progress Report on Sustainable Agriculture 2023";
+  const [consentChecked, setConsentChecked] = useState(false);
 
   const progressSteps = [
     { num: 1, label: 'Files' },
@@ -249,6 +250,40 @@ export default function CMSNewSubmissionStep4() {
             </div>
           </div>
 
+          {/* Consent */}
+          <div className="wiz-section-card" style={{ marginTop: '24px' }}>
+            <div className="wiz-section-header">
+              <span className="wiz-section-icon consent-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </span>
+              <h3>Consent</h3>
+            </div>
+
+            <div className="wiz-consent-box">
+              <p>
+                By submitting this document, you confirm that you have the authority to
+                share this information and consent to its automated processing by our AI
+                systems for classification and data extraction purposes. Data is stored
+                securely in compliance with UN data governance policies and applicable
+                international standards for data protection.
+              </p>
+            </div>
+
+            <label className="wiz-consent-check">
+              <input
+                type="checkbox"
+                checked={consentChecked}
+                onChange={(e) => setConsentChecked(e.target.checked)}
+              />
+              <span className="wiz-consent-checkmark" />
+              <span className="wiz-consent-label">
+                I have read and agree to the consent statement. <span className="wiz-required">*</span>
+              </span>
+            </label>
+          </div>
+
           {/* Footer */}
           <div className="wiz-footer">
             <a href="/cms/submissions/new/step-3" className="wiz-btn-back">
@@ -258,7 +293,12 @@ export default function CMSNewSubmissionStep4() {
               </svg>
               Back
             </a>
-            <button className="wiz-btn-submit" onClick={handleFinishSubmit}>
+            <button 
+              className="wiz-btn-submit" 
+              onClick={handleFinishSubmit}
+              disabled={!consentChecked}
+              style={{ opacity: consentChecked ? 1 : 0.6, cursor: consentChecked ? 'pointer' : 'not-allowed' }}
+            >
               Submit
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <polyline points="20 6 9 17 4 12" />

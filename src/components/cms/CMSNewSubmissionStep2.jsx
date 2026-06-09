@@ -14,6 +14,10 @@ export default function CMSNewSubmissionStep2() {
   const [shortSummary, setShortSummary] = useState('');
   const [tags, setTags] = useState('');
   const [pubStatus, setPubStatus] = useState('');
+  
+  const [focalName, setFocalName] = useState('');
+  const [focalEmail, setFocalEmail] = useState('');
+  const [focalDept, setFocalDept] = useState('');
 
   const progressSteps = [
     { num: 1, label: 'Files' },
@@ -179,6 +183,56 @@ export default function CMSNewSubmissionStep2() {
                 onChange={(e) => setShortSummary(e.target.value)}
                 rows={3}
               />
+            </div>
+
+            {/* Focal Point */}
+            <div className="wiz-s2-field" style={{ marginTop: '30px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px', gap: '8px' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: '#0ea5e9' }}>
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                <h3 style={{ margin: 0, fontSize: '18px', color: '#1e293b' }}>Focal Point</h3>
+              </div>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <label className="wiz-s2-label">
+                    FULL NAME <span className="wiz-required">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="wiz-s2-input-underline"
+                    placeholder="e.g. Jane Doe"
+                    value={focalName}
+                    onChange={(e) => setFocalName(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="wiz-s2-label">
+                    EMAIL ADDRESS <span className="wiz-required">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    className="wiz-s2-input-underline"
+                    placeholder="jane.doe@organization.org"
+                    value={focalEmail}
+                    onChange={(e) => setFocalEmail(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="wiz-s2-label">DEPARTMENT / UNIT</label>
+                  <input
+                    type="text"
+                    className="wiz-s2-input-underline"
+                    placeholder="Enter department..."
+                    value={focalDept}
+                    onChange={(e) => setFocalDept(e.target.value)}
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Tags / Keywords */}

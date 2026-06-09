@@ -5,10 +5,7 @@ export default function CMSNewSubmissionStep1() {
   const [dragActive, setDragActive] = useState(false);
   const [primaryFile, setPrimaryFile] = useState(null);
   const [externalUrl, setExternalUrl] = useState('');
-  const [focalName, setFocalName] = useState('');
-  const [focalEmail, setFocalEmail] = useState('');
-  const [focalDept, setFocalDept] = useState('');
-  const [consentChecked, setConsentChecked] = useState(false);
+
   const [supportingFiles, setSupportingFiles] = useState([]);
   const fileInputRef = useRef(null);
   const supportingInputRef = useRef(null);
@@ -266,92 +263,7 @@ export default function CMSNewSubmissionStep1() {
               </div>
             </div>
 
-            {/* RIGHT COLUMN */}
-            <div className="wiz-col-right">
-              {/* Focal Point */}
-              <div className="wiz-section-card">
-                <div className="wiz-section-header">
-                  <span className="wiz-section-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                      <circle cx="12" cy="7" r="4" />
-                    </svg>
-                  </span>
-                  <h3>Focal Point</h3>
-                </div>
 
-                <div className="wiz-field-group">
-                  <label className="wiz-field-label">
-                    FULL NAME <span className="wiz-required">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className="wiz-input"
-                    placeholder="e.g. Jane Doe"
-                    value={focalName}
-                    onChange={(e) => setFocalName(e.target.value)}
-                  />
-                </div>
-
-                <div className="wiz-field-group">
-                  <label className="wiz-field-label">
-                    EMAIL ADDRESS <span className="wiz-required">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    className="wiz-input"
-                    placeholder="jane.doe@organization.org"
-                    value={focalEmail}
-                    onChange={(e) => setFocalEmail(e.target.value)}
-                  />
-                </div>
-
-                <div className="wiz-field-group">
-                  <label className="wiz-field-label">DEPARTMENT / UNIT</label>
-                  <input
-                    type="text"
-                    className="wiz-input"
-                    placeholder="Enter department..."
-                    value={focalDept}
-                    onChange={(e) => setFocalDept(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              {/* Consent */}
-              <div className="wiz-section-card">
-                <div className="wiz-section-header">
-                  <span className="wiz-section-icon consent-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    </svg>
-                  </span>
-                  <h3>Consent</h3>
-                </div>
-
-                <div className="wiz-consent-box">
-                  <p>
-                    By submitting this document, you confirm that you have the authority to
-                    share this information and consent to its automated processing by our AI
-                    systems for classification and data extraction purposes. Data is stored
-                    securely in compliance with UN data governance policies and applicable
-                    international standards for data protection.
-                  </p>
-                </div>
-
-                <label className="wiz-consent-check">
-                  <input
-                    type="checkbox"
-                    checked={consentChecked}
-                    onChange={(e) => setConsentChecked(e.target.checked)}
-                  />
-                  <span className="wiz-consent-checkmark" />
-                  <span className="wiz-consent-label">
-                    I have read and agree to the consent statement. <span className="wiz-required">*</span>
-                  </span>
-                </label>
-              </div>
-            </div>
           </div>
 
           {/* Footer */}
