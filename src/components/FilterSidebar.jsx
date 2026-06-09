@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export default function FilterSidebar() {
   const [agenciesExpanded, setAgenciesExpanded] = useState(true);
@@ -66,28 +66,114 @@ export default function FilterSidebar() {
     'Water and Sanitation'
   ];
 
+  const [isRefining, setIsRefining] = useState(false);
+  const isInitialMount = useRef(true);
+  const [isReady, setIsReady] = useState(false);
+
   // States for checkbox values
-  const [selectedAgencies, setSelectedAgencies] = useState({
-    undp: true,
-    unep: false,
-    unicef: false,
-    who: false,
-    fao: false
-  });
-
-  const [selectedSdgs, setSelectedSdgs] = useState({
-    g13: false,
-    g14: false,
-    g15: false,
-    g11: false
-  });
-
+  const [selectedAgencies, setSelectedAgencies] = useState({});
+  const [selectedSdgs, setSelectedSdgs] = useState({});
   const [selectedSectors, setSelectedSectors] = useState({});
-  const [selectedLangs, setSelectedLangs] = useState({
-    indonesian: true,
-    english: true,
-    others: false
-  });
+  const [selectedLangs, setSelectedLangs] = useState({});
+  const [yearFrom, setYearFrom] = useState(2014);
+  const [yearTo, setYearTo] = useState(2024);
+
+  useEffect(() => {
+    // Parse URL on mount
+    const params = new URLSearchParams(window.location.search);
+    
+    // Agencies
+    const agenciesParam = params.get('agencies');
+    if (agenciesParam) {
+      const agenciesMap = {};
+      agenciesParam.split(',').forEach(a => agenciesMap[a] = true);
+      setSelectedAgencies(agenciesMap);
+    } else {
+      setSelectedAgencies({ undp: true });
+    }
+
+    // SDGs
+    const sdgParam = params.get('sdgs');
+    if (sdgParam) {
+      const sdgsMap = {};
+      sdgParam.split(',').forEach(s => sdgsMap[s] = true);
+      setSelectedSdgs(sdgsMap);
+    }
+
+    // Sectors
+    const sectorParam = params.get('sectors');
+    if (sectorParam) {
+      const sectorsMap = {};
+      sectorParam.split(',').forEach(s => sectorsMap[s] = true);
+      setSelectedSectors(sectorsMap);
+    }
+
+    // Langs
+    const langParam = params.get('langs');
+    if (langParam) {
+      const langsMap = {};
+      langParam.split(',').forEach(l => langsMap[l] = true);
+      setSelectedLangs(langsMap);
+    } else {
+      setSelectedLangs({ indonesian: true, english: true });
+    }
+
+    // Years
+    const yFrom = params.get('yearFrom');
+    if (yFrom) setYearFrom(parseInt(yFrom));
+    else setYearFrom(2014);
+
+    const yTo = params.get('yearTo');
+    if (yTo) setYearTo(parseInt(yTo));
+    else setYearTo(2024);
+
+    setIsReady(true);
+  }, []);
+
+  // Sync to URL
+  useEffect(() => {
+    if (!isReady) return;
+    
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    setIsRefining(true);
+
+    const handler = setTimeout(() => {
+      setIsRefining(false);
+
+      const params = new URLSearchParams(window.location.search);
+      
+      const agencies = Object.keys(selectedAgencies).filter(k => selectedAgencies[k]);
+      if (agencies.length > 0) params.set('agencies', agencies.join(','));
+      else params.delete('agencies');
+
+      const sdgs = Object.keys(selectedSdgs).filter(k => selectedSdgs[k]);
+      if (sdgs.length > 0) params.set('sdgs', sdgs.join(','));
+      else params.delete('sdgs');
+
+      const sectors = Object.keys(selectedSectors).filter(k => selectedSectors[k]);
+      if (sectors.length > 0) params.set('sectors', sectors.join(','));
+      else params.delete('sectors');
+
+      const langs = Object.keys(selectedLangs).filter(k => selectedLangs[k]);
+      if (langs.length > 0) params.set('langs', langs.join(','));
+      else params.delete('langs');
+
+      if (yearFrom !== 2014) params.set('yearFrom', yearFrom);
+      else params.delete('yearFrom');
+
+      if (yearTo !== 2024) params.set('yearTo', yearTo);
+      else params.delete('yearTo');
+
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.pushState({}, '', newUrl);
+    }, 1000);
+
+    return () => clearTimeout(handler);
+  }, [selectedAgencies, selectedSdgs, selectedSectors, selectedLangs, yearFrom, yearTo, isReady]);
 
   // SDG Full list with icons
   const sdgList = [
@@ -111,8 +197,7 @@ export default function FilterSidebar() {
   ];
 
   // Range Slider States
-  const [yearFrom, setYearFrom] = useState(2014);
-  const [yearTo, setYearTo] = useState(2024);
+  // (Moved yearFrom and yearTo up to avoid ReferenceError)
 
   const toggleAgency = (key) => {
     setSelectedAgencies(prev => ({ ...prev, [key]: !prev[key] }));
@@ -136,6 +221,7 @@ export default function FilterSidebar() {
   };
 
   return (
+    <>
     <aside className="new-filter-sidebar" id="filter-sidebar">
       {/* 1. Agencies Card */}
       <div className={`filter-card ${agenciesExpanded ? 'expanded' : 'collapsed'}`}>
@@ -408,5 +494,38 @@ export default function FilterSidebar() {
         )}
       </div>
     </aside>
+      {/* Refining Search Modal */}
+      {isRefining && (
+        <div style={{
+          position: 'fixed',
+          top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 9999
+        }}>
+          <div style={{
+            background: 'white',
+            padding: '24px 40px',
+            borderRadius: '12px',
+            boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px'
+          }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" style={{ animation: 'spin 1s linear infinite' }}>
+              <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+            </svg>
+            <style>
+              {`@keyframes spin { 100% { transform: rotate(360deg); } }`}
+            </style>
+            <span style={{ fontSize: '18px', fontWeight: '600', color: '#1e293b' }}>
+              Saya sedang refining search...
+            </span>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
