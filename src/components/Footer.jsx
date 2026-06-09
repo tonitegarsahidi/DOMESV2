@@ -6,15 +6,8 @@ export default function Footer() {
       <div className="footer-inner">
         {/* Brand column */}
         <div className="footer-brand">
-          <div className="footer-brand-logo">
-            <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
-              <circle cx="50" cy="50" r="48" stroke="#5bc0f8" strokeWidth="2" fill="none"/>
-              <circle cx="50" cy="50" r="18" stroke="#5bc0f8" strokeWidth="1.5" fill="none"/>
-              <ellipse cx="50" cy="50" rx="34" ry="18" stroke="#5bc0f8" strokeWidth="1.2" fill="none"/>
-              <ellipse cx="50" cy="50" rx="34" ry="18" stroke="#5bc0f8" strokeWidth="1.2" fill="none" transform="rotate(60 50 50)"/>
-              <ellipse cx="50" cy="50" rx="34" ry="18" stroke="#5bc0f8" strokeWidth="1.2" fill="none" transform="rotate(120 50 50)"/>
-            </svg>
-            <span>UNITED NATIONS</span>
+          <div className="footer-brand-logo" style={{ marginBottom: '12px' }}>
+            <img src="/images/UN Logo_white-with-text.png" alt="United Nations" style={{ height: '48px', objectFit: 'contain' }} />
           </div>
           <p>
             The Document Management & Electronic System
