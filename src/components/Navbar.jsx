@@ -1,6 +1,8 @@
 import React from 'react';
 
 export default function Navbar() {
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
+
   return (
     <nav className="navbar" id="main-navbar">
       <div className="navbar-brand">
@@ -14,10 +16,10 @@ export default function Navbar() {
       </div>
 
       <div className="navbar-links">
-        <a href="/" className="active">Home</a>
-        <a href="/documents">Documents</a>
-        <a href="/analytics">Analytics</a>
-        <a href="/about">About</a>
+        <a href="/" className={currentPath === '/' ? 'active' : ''}>Home</a>
+        <a href="/documents" className={currentPath === '/documents' || currentPath === '/search-results' ? 'active' : ''}>Documents</a>
+        <a href="/analytics" className={currentPath === '/analytics' ? 'active' : ''}>Analytics</a>
+        <a href="/about" className={currentPath === '/about' ? 'active' : ''}>About</a>
       </div>
 
       <div className="navbar-actions">

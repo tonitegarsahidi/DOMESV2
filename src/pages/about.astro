@@ -1,0 +1,29 @@
+---
+import MUIProvider from '../components/MUIProvider.jsx';
+import Navbar from '../components/Navbar.jsx';
+import AboutContent from '../components/AboutContent.jsx';
+import Footer from '../components/Footer.jsx';
+import '../styles/global.css';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About | DOMES</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+    />
+  </head>
+  <body style="margin: 0; padding: 0; background: white;">
+    <MUIProvider client:load>
+      <Navbar client:load />
+      <div style={{ paddingTop: '80px', minHeight: '100vh' }}>
+        <AboutContent client:load />
+      </div>
+      <Footer />
+    </MUIProvider>
+  </body>
+</html>
