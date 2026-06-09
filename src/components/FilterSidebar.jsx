@@ -3,10 +3,68 @@ import React, { useState } from 'react';
 export default function FilterSidebar() {
   const [agenciesExpanded, setAgenciesExpanded] = useState(true);
   const [sdgExpanded, setSdgExpanded] = useState(true);
-  const [sdgShowAll, setSdgShowAll] = useState(false); // New state for showing all SDGs
+  const [sdgShowAll, setSdgShowAll] = useState(false);
+  const [agenciesShowAll, setAgenciesShowAll] = useState(false); // Show all agencies
+  const [sectorsShowAll, setSectorsShowAll] = useState(false); // Show all sectors
   const [yearExpanded, setYearExpanded] = useState(true);
   const [langExpanded, setLangExpanded] = useState(true);
-  const [sectorExpanded, setSectorExpanded] = useState(false);
+  const [sectorExpanded, setSectorExpanded] = useState(true);
+
+  // Full list of agencies from CMS step-3
+  const agenciesList = [
+    'FAO',
+    'Global Pulse/ PLJ',
+    'IFAD',
+    'ILO',
+    'IMF',
+    'IOM',
+    'ITU',
+    'RCO',
+    'UNAIDS',
+    'UN Women',
+    'UNDP',
+    'UNEP',
+    'UNESCO',
+    'UNFPA',
+    'UN-HABITAT',
+    'UNHCR',
+    'UNICEF',
+    'UNIDO',
+    'UNOCHA',
+    'UNODC',
+    'UNOPS',
+    'WFP',
+    'WHO',
+    'World Bank'
+  ];
+
+  // Full list of sectors from CMS step-3
+  const sectorsList = [
+    'Agriculture and Food',
+    'Business and Investment',
+    'Conflict, Violence, and Radicalism',
+    'COVID-19',
+    'Disability and Vulnerability and Social Welfare',
+    'Disaster and Emergency',
+    'Economic Development',
+    'Education and Culture',
+    'Energy and Natural Resources',
+    'Environment and Climate Change',
+    'Fishery and Maritime',
+    'Gender and Child Protection',
+    'Governance and Corruption',
+    'Health and Nutrition',
+    'Infrastructure Development',
+    'Innovation and Technology',
+    'Livelihood and Employment',
+    'Population and Migration',
+    'Poverty and Social Exclusion',
+    'Public Finance, Tax, and Fiscal Policy',
+    'Rural and Regional Development',
+    'Social Security and Protection',
+    'Urban Development',
+    'Water and Sanitation'
+  ];
 
   // States for checkbox values
   const [selectedAgencies, setSelectedAgencies] = useState({
@@ -24,6 +82,7 @@ export default function FilterSidebar() {
     g11: false
   });
 
+  const [selectedSectors, setSelectedSectors] = useState({});
   const [selectedLangs, setSelectedLangs] = useState({
     indonesian: true,
     english: true,
@@ -67,6 +126,15 @@ export default function FilterSidebar() {
     setSelectedLangs(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
+  const toggleSector = (key) => {
+    setSelectedSectors(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  // Helper to create slug from agency/sector name
+  const createSlug = (str) => {
+    return str.toLowerCase().replace(/[^a-z0-9]+/g, '').replace(/(^-|-$)/g, '');
+  };
+
   return (
     <aside className="new-filter-sidebar" id="filter-sidebar">
       {/* 1. Agencies Card */}
@@ -83,57 +151,33 @@ export default function FilterSidebar() {
         {agenciesExpanded && (
           <div className="filter-card-body">
             <div className="custom-checkbox-list">
-              <label className="checkbox-item">
-                <input 
-                  type="checkbox" 
-                  checked={selectedAgencies.undp} 
-                  onChange={() => toggleAgency('undp')} 
-                />
-                <span className="checkbox-box"></span>
-                <span className="checkbox-label">UNDP (45)</span>
-              </label>
-
-              <label className="checkbox-item">
-                <input 
-                  type="checkbox" 
-                  checked={selectedAgencies.unep} 
-                  onChange={() => toggleAgency('unep')} 
-                />
-                <span className="checkbox-box"></span>
-                <span className="checkbox-label">UNEP (32)</span>
-              </label>
-
-              <label className="checkbox-item">
-                <input 
-                  type="checkbox" 
-                  checked={selectedAgencies.unicef} 
-                  onChange={() => toggleAgency('unicef')} 
-                />
-                <span className="checkbox-box"></span>
-                <span className="checkbox-label">UNICEF (28)</span>
-              </label>
-
-              <label className="checkbox-item">
-                <input 
-                  type="checkbox" 
-                  checked={selectedAgencies.who} 
-                  onChange={() => toggleAgency('who')} 
-                />
-                <span className="checkbox-box"></span>
-                <span className="checkbox-label">WHO (15)</span>
-              </label>
-
-              <label className="checkbox-item">
-                <input 
-                  type="checkbox" 
-                  checked={selectedAgencies.fao} 
-                  onChange={() => toggleAgency('fao')} 
-                />
-                <span className="checkbox-box"></span>
-                <span className="checkbox-label">FAO (12)</span>
-              </label>
+              {(agenciesShowAll ? agenciesList : agenciesList.slice(0, 5)).map((agency) => {
+                const slug = createSlug(agency);
+                return (
+                  <label className="checkbox-item" key={slug}>
+                    <input 
+                      type="checkbox" 
+                      checked={selectedAgencies[slug] || false} 
+                      onChange={() => toggleAgency(slug)} 
+                    />
+                    <span className="checkbox-box"></span>
+                    <span className="checkbox-label">{agency}</span>
+                  </label>
+                );
+              })}
             </div>
-            <a href="#" className="filter-link" onClick={(e) => e.preventDefault()}>Show more (8)</a>
+            {!agenciesShowAll && (
+              <a 
+                href="#" 
+                className="filter-link" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  setAgenciesShowAll(true);
+                }}
+              >
+                Show all {agenciesList.length} agencies
+              </a>
+            )}
           </div>
         )}
       </div>
@@ -332,7 +376,34 @@ export default function FilterSidebar() {
 
         {sectorExpanded && (
           <div className="filter-card-body">
-            {/* Collapsed by default */}
+            <div className="custom-checkbox-list">
+              {(sectorsShowAll ? sectorsList : sectorsList.slice(0, 5)).map((sector) => {
+                const slug = createSlug(sector);
+                return (
+                  <label className="checkbox-item" key={slug}>
+                    <input 
+                      type="checkbox" 
+                      checked={selectedSectors[slug] || false} 
+                      onChange={() => toggleSector(slug)} 
+                    />
+                    <span className="checkbox-box"></span>
+                    <span className="checkbox-label">{sector}</span>
+                  </label>
+                );
+              })}
+            </div>
+            {!sectorsShowAll && (
+              <a 
+                href="#" 
+                className="filter-link" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSectorsShowAll(true);
+                }}
+              >
+                Show all {sectorsList.length} sectors
+              </a>
+            )}
           </div>
         )}
       </div>
