@@ -813,7 +813,7 @@ input:checked + .cms-toggle-slider:before {
 
 .cms-table th {
   background: linear-gradient(135deg, var(--neutral-50) 0%, #ffffff 100%);
-  padding: 20px 32px;
+  padding: 16px 20px;
   font-size: 12px;
   font-weight: 700;
   color: var(--neutral-600);
@@ -823,7 +823,7 @@ input:checked + .cms-toggle-slider:before {
 }
 
 .cms-table td {
-  padding: 24px 32px;
+  padding: 16px 20px;
   font-size: 14px;
   color: var(--neutral-700);
   border-bottom: 1px solid var(--neutral-100);
@@ -833,7 +833,7 @@ input:checked + .cms-toggle-slider:before {
 
 .cms-table tr:hover td {
   background: var(--un-primary-light);
-  padding-left: 40px;
+  padding-left: 24px;
 }
 
 .cms-doc-title-link {
@@ -873,6 +873,11 @@ input:checked + .cms-toggle-slider:before {
 .cms-status-badge.draft {
   background: var(--neutral-100);
   color: var(--neutral-600);
+}
+
+.cms-status-badge.approved--unpublished {
+  background: #fef3c7;
+  color: #d97706;
 }
 
 /* Row draft style (Archived/Draft is greyed out) */

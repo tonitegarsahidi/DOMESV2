@@ -29,6 +29,7 @@ export default function CMSSubmissions() {
       title: 'Annual Report 2023 - Q4',
       description: 'Comprehensive overview of Q4 initiatives and budget allocations for regional operations.',
       status: 'Published',
+      pubDate: '2024-01-15',
       actions: ['edit', 'view', 'delete']
     },
     {
@@ -36,21 +37,56 @@ export default function CMSSubmissions() {
       title: 'Emergency Response Protocol v2',
       description: 'Updated guidelines for rapid deployment and resource management during unforeseen crises.',
       status: 'Published',
+      pubDate: '2024-02-20',
       actions: ['edit', 'view', 'delete']
     },
     {
       id: 3,
-      title: 'Stakeholder Engagement Draft',
-      description: 'Preliminary framework for improving communication channels with local community leaders.',
-      status: 'Published',
+      title: 'Stakeholder Engagement Framework',
+      description: 'Framework for improving communication channels with local community leaders.',
+      status: 'Approved - Unpublished',
+      pubDate: null,
       actions: ['edit', 'view', 'delete']
     },
     {
       id: 4,
+      title: 'Sustainable Development Goals Report',
+      description: 'Progress report on SDG achievement across Southeast Asia region.',
+      status: 'Approved - Unpublished',
+      pubDate: null,
+      actions: ['edit', 'view', 'delete']
+    },
+    {
+      id: 5,
+      title: 'Climate Action Plan 2024',
+      description: 'Strategic plan for carbon reduction and sustainability initiatives.',
+      status: 'Draft',
+      pubDate: null,
+      actions: ['view', 'edit', 'delete']
+    },
+    {
+      id: 6,
+      title: 'Humanitarian Aid Guidelines',
+      description: 'Updated standards for humanitarian aid distribution in conflict zones.',
+      status: 'Draft',
+      pubDate: null,
+      actions: ['view', 'edit', 'delete']
+    },
+    {
+      id: 7,
       title: 'Archived Policy Document 2021',
       description: 'Historical record of internal compliance standards prior to the 2022 overhaul.',
       status: 'Draft',
-      actions: ['view', 'edit', 'delete'] // In the image, row 4 has View then Edit then Delete
+      pubDate: '2021-06-10',
+      actions: ['view', 'edit', 'delete']
+    },
+    {
+      id: 8,
+      title: 'Gender Equality Strategy',
+      description: "Initiatives to promote gender parity and women's empowerment programs.",
+      status: 'Approved - Unpublished',
+      pubDate: null,
+      actions: ['edit', 'view', 'delete']
     }
   ];
 
@@ -113,48 +149,46 @@ export default function CMSSubmissions() {
           <table className="cms-table">
             <thead>
               <tr>
-                <th style={{width: '25%'}}>TITLE</th>
-                <th style={{width: '45%'}}>SHORT DESCRIPTION</th>
+                <th style={{width: '5%', textAlign: 'center'}}>#</th>
+                <th style={{width: '20%'}}>TITLE</th>
+                <th style={{width: '30%'}}>SHORT DESCRIPTION</th>
+                <th style={{width: '13%'}}>DATE OF PUBLICATION</th>
                 <th style={{width: '15%'}}>STATUS</th>
-                <th style={{width: '15%', textAlign: 'right'}}>ACTIONS</th>
+                <th style={{width: '8%', textAlign: 'center'}}>ACTIONS</th>
+                <th style={{width: '9%', textAlign: 'center'}}>MANAGE</th>
               </tr>
             </thead>
             <tbody>
-              {submissionsData.map((row) => (
+              {submissionsData.map((row, index) => (
                 <tr key={row.id} className={row.status === 'Draft' ? 'cms-row-draft' : ''}>
+                  <td style={{textAlign: 'center', color: '#64748b', fontWeight: '500'}}>{index + 1}</td>
                   <td className="cms-col-title">
                     <span className="cms-doc-title-link">{row.title}</span>
                   </td>
                   <td className="cms-col-desc">{row.description}</td>
+                  <td className="cms-col-pubdate">
+                    {row.pubDate ? new Date(row.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '-'}
+                  </td>
                   <td className="cms-col-status">
-                    <span className={`cms-status-badge ${row.status.toLowerCase()}`}>
+                    <span className={`cms-status-badge ${row.status.toLowerCase().replace(/\s+/g, '-')}`}>
                       {row.status}
                     </span>
                   </td>
-                  <td className="cms-col-actions">
-                    <div className="cms-actions-group">
-                      {row.actions.map((act, index) => {
+                  <td style={{textAlign: 'center'}}>
+                    <div className="cms-actions-group" style={{justifyContent: 'center'}}>
+                      {row.actions.map((act, actIndex) => {
                         if (act === 'edit') {
                           return (
-                            <button key={index} className="cms-action-btn-icon" aria-label="Edit">
+                            <button key={actIndex} className="cms-action-btn-icon" aria-label="Edit">
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <path d="M12 20h9"></path>
                                 <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
                               </svg>
                             </button>
                           );
-                        } else if (act === 'view') {
-                          return (
-                            <button key={index} className="cms-action-btn-icon" aria-label="View">
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                              </svg>
-                            </button>
-                          );
                         } else if (act === 'delete') {
                           return (
-                            <button key={index} className="cms-action-btn-icon cms-delete" aria-label="Delete">
+                            <button key={actIndex} className="cms-action-btn-icon cms-delete" aria-label="Delete">
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <polyline points="3 6 5 6 21 6"></polyline>
                                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -166,6 +200,43 @@ export default function CMSSubmissions() {
                       })}
                     </div>
                   </td>
+                  <td style={{textAlign: 'center'}}>
+                    {row.status === 'Published' ? (
+                      <button 
+                        className="cms-btn-small"
+                        style={{
+                          background: '#fef3c7',
+                          color: '#d97706',
+                          border: 'none',
+                          padding: '6px 14px',
+                          borderRadius: '6px',
+                          fontSize: '12px',
+                          fontWeight: '600',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Unpublish
+                      </button>
+                    ) : row.status === 'Approved - Unpublished' ? (
+                      <button 
+                        className="cms-btn-small"
+                        style={{
+                          background: '#dcfce7',
+                          color: '#16a34a',
+                          border: 'none',
+                          padding: '6px 14px',
+                          borderRadius: '6px',
+                          fontSize: '12px',
+                          fontWeight: '600',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Publish
+                      </button>
+                    ) : (
+                      <span style={{color: '#9ca3af', fontSize: '12px'}}>-</span>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -173,18 +244,15 @@ export default function CMSSubmissions() {
 
           {/* Table Footer */}
           <div className="cms-table-footer">
-            <span className="cms-entries-info">Showing 1 to 4 of 24 entries</span>
+            <span className="cms-entries-info">Showing 1 to {submissionsData.length} of {submissionsData.length} entries</span>
             <div className="cms-table-pagination">
-              <button className="cms-pag-nav" aria-label="Previous">
+              <button className="cms-pag-nav" aria-label="Previous" disabled>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
               </button>
               <button className="cms-pag-num active">1</button>
-              <button className="cms-pag-num">2</button>
-              <button className="cms-pag-num">3</button>
-              <span className="cms-pag-dots">...</span>
-              <button className="cms-pag-nav" aria-label="Next">
+              <button className="cms-pag-nav" aria-label="Next" disabled>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
