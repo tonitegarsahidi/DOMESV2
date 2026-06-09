@@ -1,6 +1,21 @@
 import React from 'react';
 
-export default function DocumentCard({ doc, viewMode = 'list' }) {
+export default function DocumentCard({ doc, viewMode = 'list', searchQuery = '' }) {
+  const highlightText = (text, query) => {
+    if (!query) return text;
+    const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const parts = text.split(new RegExp(`(${safeQuery})`, 'gi'));
+    return (
+      <>
+        {parts.map((part, i) => 
+          part.toLowerCase() === query.toLowerCase() 
+            ? <mark key={i} style={{ backgroundColor: '#fef08a', color: '#1e293b', padding: '0 2px', borderRadius: '2px' }}>{part}</mark> 
+            : part
+        )}
+      </>
+    );
+  };
+
   if (viewMode === 'grid') {
     return (
       <article 
@@ -18,7 +33,7 @@ export default function DocumentCard({ doc, viewMode = 'list' }) {
               <span key={i} className={`doc-tag ${tag.type}`}>{tag.label}</span>
             ))}
           </div>
-          <h3 className="document-card-grid-title">{doc.title}</h3>
+          <h3 className="document-card-grid-title">{highlightText(doc.title, searchQuery)}</h3>
           <div className="document-card-grid-bottom">
             <span className="document-card-grid-agency">{doc.agency}</span>
             <button className="btn-view-details">View Details</button>
@@ -47,8 +62,8 @@ export default function DocumentCard({ doc, viewMode = 'list' }) {
             <span key={i} className={`doc-tag ${tag.type}`}>{tag.label}</span>
           ))}
         </div>
-        <h3 className="document-card-title">{doc.title}</h3>
-        <p className="document-card-desc">{doc.description}</p>
+        <h3 className="document-card-title">{highlightText(doc.title, searchQuery)}</h3>
+        <p className="document-card-desc">{highlightText(doc.description, searchQuery)}</p>
         <div className="document-card-bottom">
           <div className="document-card-meta">
             <span>
