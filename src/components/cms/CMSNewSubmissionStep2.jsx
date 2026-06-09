@@ -75,206 +75,217 @@ export default function CMSNewSubmissionStep2() {
             ))}
           </div>
 
-          {/* Single-column content */}
-          <div className="wiz-step2-content">
-            {/* AI pre-fill notice banner */}
-            <div className="wiz-prefill-banner">
-              <AiSparkle />
-              <p>Some fields have been pre-filled by AI based on your initial document upload. Please review them carefully.</p>
-            </div>
+          {/* Content columns */}
+          <div className="wiz-content-cols">
+            <div className="wiz-col-left">
+              {/* AI pre-fill notice banner */}
+              <div className="wiz-ai-banner">
+                <div className="wiz-ai-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                  </svg>
+                </div>
+                <div className="wiz-ai-text">
+                  <h3>AI-Powered Pre-fill</h3>
+                  <p>Some fields have been pre-filled by AI based on your initial document upload. Please review them carefully.</p>
+                </div>
+              </div>
 
-            {/* Title */}
-            <div className="wiz-s2-field">
-              <label className="wiz-s2-label">
-                Title of report/document <span className="wiz-required">*</span> <AiSparkle />
-              </label>
-              <input
-                type="text"
-                className="wiz-s2-input-underline"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </div>
+              {/* Document Details Card */}
+              <div className="wiz-section-card">
+                <div className="wiz-section-header">
+                  <span className="wiz-section-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                      <line x1="16" y1="13" x2="8" y2="13" />
+                      <line x1="16" y1="17" x2="8" y2="17" />
+                      <polyline points="10 9 9 9 8 9" />
+                    </svg>
+                  </span>
+                  <h3>Document Details</h3>
+                </div>
 
-            {/* Languages */}
-            <div className="wiz-s2-field">
-              <label className="wiz-s2-label">
-                Languages (Select all that apply) <span className="wiz-required">*</span> <AiSparkle />
-              </label>
-              <div className="wiz-s2-checkbox-row">
-                <label className="wiz-s2-checkbox-item">
+                <div className="wiz-field-group">
+                  <label className="wiz-field-label">
+                    TITLE OF REPORT/DOCUMENT <span className="wiz-required">*</span> <AiSparkle />
+                  </label>
                   <input
-                    type="checkbox"
-                    checked={languages.english}
-                    onChange={() => handleLangChange('english')}
+                    type="text"
+                    className="wiz-input"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                   />
-                  <span className="wiz-s2-checkmark" />
-                  <span>English</span>
-                </label>
-                <label className="wiz-s2-checkbox-item">
+                </div>
+
+                <div className="wiz-field-group">
+                  <label className="wiz-field-label">
+                    DATE OF PUBLICATION <span className="wiz-required">*</span>
+                  </label>
                   <input
-                    type="checkbox"
-                    checked={languages.bahasa}
-                    onChange={() => handleLangChange('bahasa')}
+                    type="date"
+                    className="wiz-input"
+                    value={pubDate}
+                    onChange={(e) => setPubDate(e.target.value)}
                   />
-                  <span className="wiz-s2-checkmark" />
-                  <span>Bahasa Indonesia</span>
-                </label>
-                <label className="wiz-s2-checkbox-item">
+                </div>
+
+                <div className="wiz-field-group">
+                  <label className="wiz-field-label">
+                    LANGUAGES (SELECT ALL THAT APPLY) <span className="wiz-required">*</span> <AiSparkle />
+                  </label>
+                  <div className="wiz-s2-checkbox-row">
+                    <label className="wiz-s2-checkbox-item">
+                      <input type="checkbox" checked={languages.english} onChange={() => handleLangChange('english')} />
+                      <span className="wiz-s2-checkmark" />
+                      <span>English</span>
+                    </label>
+                    <label className="wiz-s2-checkbox-item">
+                      <input type="checkbox" checked={languages.bahasa} onChange={() => handleLangChange('bahasa')} />
+                      <span className="wiz-s2-checkmark" />
+                      <span>Bahasa Indonesia</span>
+                    </label>
+                    <label className="wiz-s2-checkbox-item">
+                      <input type="checkbox" checked={languages.others} onChange={() => handleLangChange('others')} />
+                      <span className="wiz-s2-checkmark" />
+                      <span>Others</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="wiz-field-group">
+                  <label className="wiz-field-label">
+                    PUBLICATION STATUS <span className="wiz-required">*</span>
+                  </label>
+                  <div className="wiz-s2-radio-row">
+                    <label className="wiz-s2-radio-item">
+                      <input type="radio" name="pubStatus" value="published" checked={pubStatus === 'published'} onChange={(e) => setPubStatus(e.target.value)} />
+                      <span className="wiz-s2-radio-circle" />
+                      <span>Officially Published</span>
+                    </label>
+                    <label className="wiz-s2-radio-item">
+                      <input type="radio" name="pubStatus" value="draft" checked={pubStatus === 'draft'} onChange={(e) => setPubStatus(e.target.value)} />
+                      <span className="wiz-s2-radio-circle" />
+                      <span>Draft / Internal</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Content Summaries Card */}
+              <div className="wiz-section-card">
+                <div className="wiz-section-header">
+                  <span className="wiz-section-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                  </span>
+                  <h3>Content Summaries</h3>
+                </div>
+
+                <div className="wiz-field-group">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <label className="wiz-field-label" style={{ marginBottom: 0 }}>
+                      SUMMARY <AiSparkle />
+                    </label>
+                    <button
+                      className="wiz-s2-edit-link"
+                      onClick={() => setSummaryEditing(!summaryEditing)}
+                      style={{ background: 'none', border: 'none', color: '#0ea5e9', cursor: 'pointer', fontSize: '13px', fontWeight: '500' }}
+                    >
+                      {summaryEditing ? 'Done Editing' : 'Edit Summary'}
+                    </button>
+                  </div>
+                  {summaryEditing ? (
+                    <textarea
+                      className="wiz-input"
+                      value={summary}
+                      onChange={(e) => setSummary(e.target.value)}
+                      rows={5}
+                      style={{ resize: 'vertical' }}
+                    />
+                  ) : (
+                    <div style={{ padding: '16px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', color: '#334155', lineHeight: '1.6' }}>
+                      {summary}
+                    </div>
+                  )}
+                </div>
+
+                <div className="wiz-field-group">
+                  <label className="wiz-field-label">
+                    SHORT SUMMARY <AiSparkle />
+                  </label>
+                  <p style={{ fontSize: '13px', color: '#64748b', margin: '-4px 0 10px 0' }}>Concise version for search results (max 3 sentences)</p>
+                  <textarea
+                    className="wiz-input"
+                    placeholder="Enter a brief overview..."
+                    value={shortSummary}
+                    onChange={(e) => setShortSummary(e.target.value)}
+                    rows={3}
+                    style={{ resize: 'vertical' }}
+                  />
+                </div>
+
+                <div className="wiz-field-group">
+                  <label className="wiz-field-label">TAGS / KEYWORDS</label>
                   <input
-                    type="checkbox"
-                    checked={languages.others}
-                    onChange={() => handleLangChange('others')}
+                    type="text"
+                    className="wiz-input"
+                    placeholder="e.g. environment, sustainability, report"
+                    value={tags}
+                    onChange={(e) => setTags(e.target.value)}
                   />
-                  <span className="wiz-s2-checkmark" />
-                  <span>Others</span>
-                </label>
+                </div>
               </div>
-            </div>
 
-            {/* Date of publication */}
-            <div className="wiz-s2-field">
-              <label className="wiz-s2-label">
-                Date of publication <span className="wiz-required">*</span>
-              </label>
-              <input
-                type="date"
-                className="wiz-s2-input-underline wiz-s2-date"
-                value={pubDate}
-                onChange={(e) => setPubDate(e.target.value)}
-              />
-            </div>
+              {/* Focal Point Card */}
+              <div className="wiz-section-card">
+                <div className="wiz-section-header">
+                  <span className="wiz-section-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                  </span>
+                  <h3>Focal Point</h3>
+                </div>
 
-            {/* Summary */}
-            <div className="wiz-s2-summary-card">
-              <div className="wiz-s2-summary-header">
-                <strong>Summary</strong> <AiSparkle />
-              </div>
-              {summaryEditing ? (
-                <textarea
-                  className="wiz-s2-summary-textarea"
-                  value={summary}
-                  onChange={(e) => setSummary(e.target.value)}
-                  rows={5}
-                />
-              ) : (
-                <p className="wiz-s2-summary-text">{summary}</p>
-              )}
-              <div className="wiz-s2-summary-footer">
-                <button
-                  className="wiz-s2-edit-link"
-                  onClick={() => setSummaryEditing(!summaryEditing)}
-                >
-                  {summaryEditing ? 'Done Editing' : 'Edit Summary'}
-                </button>
-              </div>
-            </div>
-
-            {/* Short Summary */}
-            <div className="wiz-s2-short-summary-card">
-              <div className="wiz-s2-summary-header">
-                <strong>Short Summary</strong> <AiSparkle />
-              </div>
-              <p className="wiz-s2-short-hint">Concise version for search results (max 3 sentences)</p>
-              <textarea
-                className="wiz-s2-short-textarea"
-                placeholder="Enter a brief overview..."
-                value={shortSummary}
-                onChange={(e) => setShortSummary(e.target.value)}
-                rows={3}
-              />
-            </div>
-
-            {/* Focal Point */}
-            <div className="wiz-s2-field" style={{ marginTop: '30px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px', gap: '8px' }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: '#0ea5e9' }}>
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
-                <h3 style={{ margin: 0, fontSize: '18px', color: '#1e293b' }}>Focal Point</h3>
-              </div>
-              
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                <div style={{ gridColumn: '1 / -1' }}>
-                  <label className="wiz-s2-label">
+                <div className="wiz-field-group">
+                  <label className="wiz-field-label">
                     FULL NAME <span className="wiz-required">*</span>
                   </label>
                   <input
                     type="text"
-                    className="wiz-s2-input-underline"
+                    className="wiz-input"
                     placeholder="e.g. Jane Doe"
                     value={focalName}
                     onChange={(e) => setFocalName(e.target.value)}
                   />
                 </div>
 
-                <div>
-                  <label className="wiz-s2-label">
+                <div className="wiz-field-group">
+                  <label className="wiz-field-label">
                     EMAIL ADDRESS <span className="wiz-required">*</span>
                   </label>
                   <input
                     type="email"
-                    className="wiz-s2-input-underline"
+                    className="wiz-input"
                     placeholder="jane.doe@organization.org"
                     value={focalEmail}
                     onChange={(e) => setFocalEmail(e.target.value)}
                   />
                 </div>
 
-                <div>
-                  <label className="wiz-s2-label">DEPARTMENT / UNIT</label>
+                <div className="wiz-field-group">
+                  <label className="wiz-field-label">DEPARTMENT / UNIT</label>
                   <input
                     type="text"
-                    className="wiz-s2-input-underline"
+                    className="wiz-input"
                     placeholder="Enter department..."
                     value={focalDept}
                     onChange={(e) => setFocalDept(e.target.value)}
                   />
                 </div>
-              </div>
-            </div>
-
-            {/* Tags / Keywords */}
-            <div className="wiz-s2-field">
-              <label className="wiz-s2-label">Tags / Keywords</label>
-              <input
-                type="text"
-                className="wiz-s2-input-underline"
-                placeholder="e.g. environment, sustainability, report"
-                value={tags}
-                onChange={(e) => setTags(e.target.value)}
-              />
-            </div>
-
-            {/* Publication Status */}
-            <div className="wiz-s2-field">
-              <label className="wiz-s2-label">
-                Publication Status <span className="wiz-required">*</span>
-              </label>
-              <div className="wiz-s2-radio-row">
-                <label className="wiz-s2-radio-item">
-                  <input
-                    type="radio"
-                    name="pubStatus"
-                    value="published"
-                    checked={pubStatus === 'published'}
-                    onChange={(e) => setPubStatus(e.target.value)}
-                  />
-                  <span className="wiz-s2-radio-circle" />
-                  <span>Officially Published</span>
-                </label>
-                <label className="wiz-s2-radio-item">
-                  <input
-                    type="radio"
-                    name="pubStatus"
-                    value="draft"
-                    checked={pubStatus === 'draft'}
-                    onChange={(e) => setPubStatus(e.target.value)}
-                  />
-                  <span className="wiz-s2-radio-circle" />
-                  <span>Draft / Internal</span>
-                </label>
               </div>
             </div>
           </div>
