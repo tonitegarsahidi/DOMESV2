@@ -43,28 +43,28 @@ const documents = [
   },
   {
     id: 4,
-    image: '/images/doc-cover-children.png',
+    image: '/images/doc-cover-sdg.png',
     tags: [
       { label: 'Goal 5', type: 'sdg' },
-      { label: 'UNFCF', type: 'agency' },
-      { label: 'JUL 2023', type: 'date' },
+      { label: 'UN Women', type: 'agency' },
+      { label: 'MAY 2023', type: 'date' },
     ],
-    title: 'Children in Focus: Socio-Economic Protection Systems',
-    description: 'Analyzing the efficacy of social safety nets for vulnerable families across the outer islands of Indonesia, with policy recommendations for enhanced coverage and efficiency...',
-    agency: 'Indonesia',
-    pages: 'PDF, Chosen',
+    title: 'Gender Equality in the Workplace: Progress and Challenges',
+    description: 'A national survey on female labor force participation, wage gaps, and policy interventions needed to foster inclusive economic growth and empower women in rural and urban areas...',
+    agency: 'UN Women Indonesia',
+    pages: 'PDF, 45 pages',
   },
   {
     id: 5,
     image: '/images/doc-cover-ocean.png',
     tags: [
-      { label: 'Goal 14', type: 'sdg' },
+      { label: 'Goal 2', type: 'sdg' },
       { label: 'FAO', type: 'agency' },
-      { label: 'JUL 2023', type: 'date' },
+      { label: 'JUN 2023', type: 'date' },
     ],
-    title: 'Children in Focus: Socio-Economic Protection Systems',
-    description: 'Analyzing the efficacy of social safety nets for vulnerable families across the outer islands of Indonesia, with policy recommendations for enhanced coverage and efficiency...',
-    agency: 'Indonesia',
+    title: 'Sustainable Agriculture and Food Security Resilience',
+    description: 'Examining the impact of climate smart agriculture practices on crop yields and food security for smallholder farmers amidst changing weather patterns in Southeast Asia...',
+    agency: 'FAO Indonesia',
     pages: 'PDF, 64 pages',
   },
   {
@@ -169,7 +169,7 @@ export default function DocumentList() {
         <div className="document-list-header-left">
           <h2 className="document-list-title">Latest Document</h2>
           <span className="document-list-count">
-            Showing 1-{viewMode === 'list' ? 5 : 12} of 1,257 documents
+            Showing 1-12 of 1,257 documents
           </span>
         </div>
         <div className="view-toggle" id="view-toggle">
@@ -197,7 +197,7 @@ export default function DocumentList() {
       </div>
 
       <div className={viewMode === 'grid' ? 'document-grid' : 'document-list'}>
-        {(viewMode === 'list' ? documents.slice(0, 5) : documents).map((doc) => (
+        {documents.map((doc) => (
           <DocumentCard key={doc.id} doc={doc} viewMode={viewMode} />
         ))}
       </div>
