@@ -6,8 +6,13 @@ export default function CMSNewSubmissionStep1() {
   const [primaryFile, setPrimaryFile] = useState(null);
   const [externalUrl, setExternalUrl] = useState('');
 
+  const [coverDragActive, setCoverDragActive] = useState(false);
+  const [coverFile, setCoverFile] = useState(null);
+  const [coverUrl, setCoverUrl] = useState('');
+
   const [supportingFiles, setSupportingFiles] = useState([]);
   const fileInputRef = useRef(null);
+  const coverInputRef = useRef(null);
   const supportingInputRef = useRef(null);
 
   const currentStep = 1;
@@ -42,10 +47,45 @@ export default function CMSNewSubmissionStep1() {
     }
   };
 
+  const handleCoverDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === 'dragenter' || e.type === 'dragover') setCoverDragActive(true);
+    else if (e.type === 'dragleave') setCoverDragActive(false);
+  };
+
+  const handleCoverDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCoverDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      setCoverFile(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleCoverFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setCoverFile(e.target.files[0]);
+    }
+  };
+
   const handleSupportingFileChange = (e) => {
     if (e.target.files) {
-      setSupportingFiles((prev) => [...prev, ...Array.from(e.target.files)]);
+      const newFiles = Array.from(e.target.files).map(f => ({
+        file: f,
+        type: 'Additional document',
+        description: ''
+      }));
+      setSupportingFiles((prev) => [...prev, ...newFiles]);
     }
+  };
+
+  const updateSupportingFile = (index, field, value) => {
+    setSupportingFiles(prev => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
   };
 
   const removeSupportingFile = (index) => {
@@ -216,6 +256,93 @@ export default function CMSNewSubmissionStep1() {
                 </div>
               </div>
 
+              {/* Cover Document/Image */}
+              <div className="wiz-section-card">
+                <div className="wiz-section-header">
+                  <span className="wiz-section-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                  </span>
+                  <h3>Cover Image / Document</h3>
+                </div>
+
+                {/* Upload zone */}
+                <div
+                  className={`wiz-upload-zone ${coverDragActive ? 'drag-active' : ''} ${coverFile ? 'has-file' : ''}`}
+                  onDragEnter={handleCoverDrag}
+                  onDragLeave={handleCoverDrag}
+                  onDragOver={handleCoverDrag}
+                  onDrop={handleCoverDrop}
+                  onClick={() => coverInputRef.current?.click()}
+                >
+                  <input
+                    ref={coverInputRef}
+                    type="file"
+                    accept="image/*,.pdf"
+                    style={{ display: 'none' }}
+                    onChange={handleCoverFileChange}
+                  />
+                  {coverFile ? (
+                    <div className="wiz-file-attached">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                      </svg>
+                      <span className="wiz-file-name">{coverFile.name}</span>
+                      <span className="wiz-file-size">({(coverFile.size / 1024 / 1024).toFixed(2)} MB)</span>
+                      <button
+                        className="wiz-file-remove"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCoverFile(null);
+                        }}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="wiz-upload-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                          <circle cx="8.5" cy="8.5" r="1.5"/>
+                          <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                      </div>
+                      <p className="wiz-upload-text">Click to upload or drag and drop</p>
+                      <p className="wiz-upload-hint">Supported formats: JPG, PNG, PDF (Max 10MB)</p>
+                    </>
+                  )}
+                </div>
+
+                {/* OR divider */}
+                <div className="wiz-or-divider">
+                  <span>OR</span>
+                </div>
+
+                {/* External URL */}
+                <div className="wiz-field-group">
+                  <label className="wiz-field-label">
+                    Cover Image URL
+                  </label>
+                  <div className="wiz-input-with-icon">
+                    <svg className="wiz-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                    </svg>
+                    <input
+                      type="url"
+                      placeholder="https://example.com/cover.jpg"
+                      value={coverUrl}
+                      onChange={(e) => setCoverUrl(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
               {/* Supporting Materials */}
               <div className="wiz-section-card">
                 <div className="wiz-section-header">
@@ -246,16 +373,50 @@ export default function CMSNewSubmissionStep1() {
                     <p>No supporting files added yet.</p>
                   </div>
                 ) : (
-                  <div className="wiz-supporting-list">
-                    {supportingFiles.map((f, i) => (
-                      <div key={i} className="wiz-supporting-item">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                          <polyline points="14 2 14 8 20 8" />
-                        </svg>
-                        <span className="wiz-supporting-name">{f.name}</span>
-                        <span className="wiz-supporting-size">({(f.size / 1024 / 1024).toFixed(2)} MB)</span>
-                        <button className="wiz-file-remove" onClick={() => removeSupportingFile(i)}>✕</button>
+                  <div className="wiz-supporting-list" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {supportingFiles.map((item, i) => (
+                      <div key={i} className="wiz-supporting-item-extended" style={{ background: '#f8fafc', padding: '16px', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: '#64748b' }}>
+                              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                              <polyline points="14 2 14 8 20 8" />
+                            </svg>
+                            <span className="wiz-supporting-name" style={{ fontWeight: '500', color: '#334155' }}>{item.file.name}</span>
+                            <span className="wiz-supporting-size" style={{ color: '#94a3b8', fontSize: '13px' }}>({(item.file.size / 1024 / 1024).toFixed(2)} MB)</span>
+                          </div>
+                          <button className="wiz-file-remove" onClick={() => removeSupportingFile(i)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '16px', padding: '4px' }}>✕</button>
+                        </div>
+                        
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '12px' }}>
+                          <div>
+                            <label className="wiz-field-label" style={{ fontSize: '12px', marginBottom: '4px', display: 'block' }}>TYPE</label>
+                            <select 
+                              className="wiz-input" 
+                              style={{ width: '100%', padding: '8px', fontSize: '14px' }}
+                              value={item.type}
+                              onChange={(e) => updateSupportingFile(i, 'type', e.target.value)}
+                            >
+                              <option value="Main document">Main document</option>
+                              <option value="Annex">Annex (Lampiran)</option>
+                              <option value="Raw data">Raw data (Data Asli)</option>
+                              <option value="Data collection tools">Data collection tools (Kuesioner)</option>
+                              <option value="ToR">ToR (Kerangka Acuan Kerja)</option>
+                              <option value="Additional document">Additional document</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="wiz-field-label" style={{ fontSize: '12px', marginBottom: '4px', display: 'block' }}>DESCRIPTION</label>
+                            <input 
+                              type="text" 
+                              className="wiz-input" 
+                              style={{ width: '100%', padding: '8px', fontSize: '14px' }}
+                              placeholder="Add a brief description..." 
+                              value={item.description}
+                              onChange={(e) => updateSupportingFile(i, 'description', e.target.value)}
+                            />
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
