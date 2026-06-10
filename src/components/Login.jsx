@@ -20,12 +20,12 @@ export default function Login() {
         <form className="auth-form" onSubmit={handleLogin}>
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
-            <input type="email" id="email" required placeholder="name@un.org" />
+            <input type="email" id="email" placeholder="name@un.org" />
           </div>
           
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <input type="password" id="password" required placeholder="••••••••" />
+            <input type="password" id="password" placeholder="••••••••" />
           </div>
 
           <div className="form-row flex-between">

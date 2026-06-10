@@ -22,57 +22,73 @@ export default function Register() {
           <div className="form-row">
             <div className="form-group form-group-half">
               <label htmlFor="firstName">First Name</label>
-              <input type="text" id="firstName" required placeholder="John" />
+              <input type="text" id="firstName" placeholder="John" />
             </div>
             <div className="form-group form-group-half">
               <label htmlFor="lastName">Last Name</label>
-              <input type="text" id="lastName" required placeholder="Doe" />
+              <input type="text" id="lastName" placeholder="Doe" />
             </div>
           </div>
           
           <div className="form-group">
             <label htmlFor="position">Position</label>
-            <input type="text" id="position" required placeholder="Your position" />
+            <input type="text" id="position" placeholder="Your position" />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="organization">Organization</label>
+            <select id="organization">
+              <option value="">Other Organization</option>
+              <option value="fao">FAO - Food and Agriculture Organization</option>
+              <option value="globalpulse">Global Pulse/ PLJ</option>
+              <option value="ifad">IFAD - International Fund for Agricultural Development</option>
+              <option value="ilo">ILO - International Labour Organization</option>
+              <option value="imf">IMF - International Monetary Fund</option>
+              <option value="iom">IOM - International Organization for Migration</option>
+              <option value="itu">ITU - International Telecommunication Union</option>
+              <option value="rco">RCO - Resident Coordinator's Office</option>
+              <option value="unaids">UNAIDS - Joint United Nations Programme on HIV/AIDS</option>
+              <option value="unwomen">UN Women - United Nations Entity for Gender Equality and the Empowerment of Women</option>
+              <option value="undp">UNDP - United Nations Development Programme</option>
+              <option value="unep">UNEP - United Nations Environment Programme</option>
+              <option value="unesco">UNESCO - United Nations Educational, Scientific and Cultural Organization</option>
+              <option value="unfpa">UNFPA - United Nations Population Fund</option>
+              <option value="unhabitat">UN-HABITAT - United Nations Human Settlements Programme</option>
+              <option value="unhcr">UNHCR - United Nations Refugee Agency</option>
+              <option value="unicef">UNICEF - United Nations Children's Fund</option>
+              <option value="unido">UNIDO - United Nations Industrial Development Organization</option>
+              <option value="unocha">UNOCHA - United Nations Office for the Coordination of Humanitarian Affairs</option>
+              <option value="unodc">UNODC - United Nations Office on Drugs and Crime</option>
+              <option value="unops">UNOPS - United Nations Office for Project Services</option>
+              <option value="wfp">WFP - World Food Programme</option>
+              <option value="who">WHO - World Health Organization</option>
+              <option value="worldbank">World Bank</option>
+            </select>
           </div>
           
           <div className="form-group">
             <label htmlFor="phone">Phone Number</label>
-            <input type="tel" id="phone" required placeholder="+62 812 xxx xxxx" />
+            <input type="tel" id="phone" placeholder="+62 812 xxx xxxx" />
           </div>
           
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
-            <input type="email" id="email" required placeholder="name@un.org" />
+            <input type="email" id="email" placeholder="name@un.org" />
           </div>
           
           <div className="form-row">
             <div className="form-group form-group-half">
               <label htmlFor="password">Password</label>
-              <input type="password" id="password" required placeholder="••••••••" />
+              <input type="password" id="password" placeholder="••••••••" />
             </div>
             <div className="form-group form-group-half">
               <label htmlFor="confirmPassword">Confirm Password</label>
-              <input type="password" id="confirmPassword" required placeholder="••••••••" />
+              <input type="password" id="confirmPassword" placeholder="••••••••" />
             </div>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="organization">Organization</label>
-            <select id="organization" required>
-              <option value="">Select an organization</option>
-              <option value="unDP">UNDP - United Nations Development Programme</option>
-              <option value="unicef">UNICEF - United Nations Children's Fund</option>
-              <option value="who">WHO - World Health Organization</option>
-              <option value="unhcr">UNHCR - United Nations Refugee Agency</option>
-              <option value="wfp">WFP - World Food Programme</option>
-              <option value="unfpa">UNFPA - United Nations Population Fund</option>
-              <option value="ilo">ILO - International Labour Organization</option>
-              <option value="unesco">UNESCO - United Nations Educational, Scientific and Cultural Organization</option>
-            </select>
-          </div>
-
           <label className="checkbox-label terms-label">
-            <input type="checkbox" id="terms" required />
+            <input type="checkbox" id="terms" />
             <span>I accept the <a href="#" className="terms-link">terms and conditions</a></span>
           </label>
 
@@ -88,7 +104,7 @@ export default function Register() {
             </div>
           </div>
 
-          <button type="submit" className="btn-primary full-width">Register / Sign Up</button>
+          <button type="submit" className="btn-primary full-width">Sign Up</button>
         </form>
 
         <div className="auth-footer">
