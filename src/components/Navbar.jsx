@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function Navbar() {
-  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
+  const [currentPath, setCurrentPath] = useState('/');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCurrentPath(window.location.pathname);
+    }
+  }, []);
 
   return (
     <nav className="navbar" id="main-navbar">
@@ -17,18 +23,13 @@ export default function Navbar() {
 
       <div className="navbar-links">
         <a href="/" className={currentPath === '/' ? 'active' : ''}>Home</a>
-        <a href="/documents" className={currentPath === '/documents' || currentPath === '/search-results' ? 'active' : ''}>Documents</a>
-        <a href="/analytics" className={currentPath === '/analytics' ? 'active' : ''}>Analytics</a>
+        {/* <a href="/documents" className={currentPath === '/documents' || currentPath === '/search-results' ? 'active' : ''}>Documents</a> */}
         <a href="/about" className={currentPath === '/about' ? 'active' : ''}>About</a>
         <a href="/faq" className={currentPath === '/faq' ? 'active' : ''}>FAQ</a>
+        <a href="/analytics" className={currentPath === '/analytics' ? 'active' : ''}>Statistics</a>
       </div>
 
       <div className="navbar-actions">
-        <button className="navbar-search-btn" aria-label="Search">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-          </svg>
-        </button>
         <button className="navbar-login-btn" onClick={() => window.location.href = '/login'}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
