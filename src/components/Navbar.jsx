@@ -20,6 +20,7 @@ export default function Navbar() {
         <a href="/documents" className={currentPath === '/documents' || currentPath === '/search-results' ? 'active' : ''}>Documents</a>
         <a href="/analytics" className={currentPath === '/analytics' ? 'active' : ''}>Analytics</a>
         <a href="/about" className={currentPath === '/about' ? 'active' : ''}>About</a>
+        <a href="/faq" className={currentPath === '/faq' ? 'active' : ''}>FAQ</a>
       </div>
 
       <div className="navbar-actions">

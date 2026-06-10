@@ -1,6 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function Login() {
+  const [showSuccessMsg, setShowSuccessMsg] = useState(false);
+  
+  useEffect(() => {
+    // Check if user came from register page
+    const params = new URLSearchParams(window.location.search);
+    const registered = params.get('registered');
+    if (registered) {
+      setShowSuccessMsg(true);
+      // Clean up URL parameter
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
+
   const handleLogin = (e) => {
     e.preventDefault();
     window.location.href = '/cms/dashboard';
@@ -16,6 +29,22 @@ export default function Login() {
           <h2>Sign in to DOMES</h2>
           <p>Document Management & Electronic System</p>
         </div>
+
+        {/* Success notification for registration */}
+        {showSuccessMsg && (
+          <div className="success-alert" style={{
+            background: '#dcfce7',
+            border: '1px solid #22c55e',
+            borderRadius: '6px',
+            padding: '12px 16px',
+            marginBottom: '20px',
+            color: '#166534',
+            fontSize: '14px'
+          }}>
+            <span style={{ marginRight: '8px' }}>✓</span>
+            Registrasi sukses, silakan login
+          </div>
+        )}
         
         <form className="auth-form" onSubmit={handleLogin}>
           <div className="form-group">
@@ -33,7 +62,7 @@ export default function Login() {
               <input type="checkbox" id="remember" />
               <span>Remember me</span>
             </label>
-            <a href="#" className="forgot-link">Forgot password?</a>
+            <a href="/forgot-password" className="forgot-link">Forgot password?</a>
           </div>
 
           {/* Dummy reCAPTCHA */}

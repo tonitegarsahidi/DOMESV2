@@ -3,8 +3,8 @@ import React from 'react';
 export default function Register() {
   const handleRegister = (e) => {
     e.preventDefault();
-    // Redirect ke login setelah register berhasil
-    window.location.href = '/login';
+    // Redirect ke login setelah register berhasil dengan parameter success
+    window.location.href = '/login?registered=true';
   };
 
   return (
