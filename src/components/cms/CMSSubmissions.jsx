@@ -2,28 +2,7 @@ import React, { useState, useEffect } from 'react';
 import CMSLayout from './CMSLayout.jsx';
 
 export default function CMSSubmissions() {
-  const [notification, setNotification] = useState(null);
-
-  useEffect(() => {
-    // Check search params
-    const params = new URLSearchParams(window.location.search);
-    const successDoc = params.get('success');
-    if (successDoc) {
-      setNotification(`dokumen ${decodeURIComponent(successDoc)} telah disimpan, dan akan direview oleh admin sebelum dipublikasi`);
-      // Clean up URL parameter without page reload
-      window.history.replaceState({}, document.title, window.location.pathname);
-      return;
-    }
-
-    // Fallback/alternative: check sessionStorage
-    const storedMessage = sessionStorage.getItem('cms_success_message');
-    if (storedMessage) {
-      setNotification(storedMessage);
-      sessionStorage.removeItem('cms_success_message');
-    }
-  }, []);
-
-  const submissionsData = [
+  const [submissions, setSubmissions] = useState([
     {
       id: 1,
       title: 'Annual Report 2023 - Q4',
@@ -88,13 +67,94 @@ export default function CMSSubmissions() {
       pubDate: null,
       actions: ['edit', 'view', 'delete']
     }
-  ];
+  ]);
+
+  const [notification, setNotification] = useState(null);
+  
+  // Modal states
+  const [isActionModalOpen, setIsActionModalOpen] = useState(false);
+  const [actionType, setActionType] = useState(''); // 'delete', 'publish', 'unpublish'
+  const [selectedDoc, setSelectedDoc] = useState(null);
+
+  useEffect(() => {
+    // Check search params
+    const params = new URLSearchParams(window.location.search);
+    const successDoc = params.get('success');
+    if (successDoc) {
+      setNotification(`Dokumen ${decodeURIComponent(successDoc)} telah disimpan, dan akan direview oleh admin sebelum dipublikasi`);
+      // Clean up URL parameter without page reload
+      window.history.replaceState({}, document.title, window.location.pathname);
+      return;
+    }
+
+    // Fallback/alternative: check sessionStorage
+    const storedMessage = sessionStorage.getItem('cms_success_message');
+    if (storedMessage) {
+      setNotification(storedMessage);
+      sessionStorage.removeItem('cms_success_message');
+    }
+  }, []);
+
+  const showNotification = (msg) => {
+    setNotification(msg);
+    setTimeout(() => {
+      setNotification(null);
+    }, 4000);
+  };
+
+  const handleActionClick = (type, doc) => {
+    setActionType(type);
+    setSelectedDoc(doc);
+    setIsActionModalOpen(true);
+  };
+
+  const confirmAction = () => {
+    if (!selectedDoc) return;
+
+    if (actionType === 'delete') {
+      setSubmissions(submissions.filter(doc => doc.id !== selectedDoc.id));
+      showNotification(`Document "${selectedDoc.title}" has been successfully deleted.`);
+    } else if (actionType === 'publish') {
+      const updated = submissions.map(doc => 
+        doc.id === selectedDoc.id 
+          ? { ...doc, status: 'Published', pubDate: new Date().toISOString().split('T')[0] } 
+          : doc
+      );
+      setSubmissions(updated);
+      showNotification(`Document "${selectedDoc.title}" has been successfully published.`);
+    } else if (actionType === 'unpublish') {
+      const updated = submissions.map(doc => 
+        doc.id === selectedDoc.id 
+          ? { ...doc, status: 'Approved - Unpublished', pubDate: null } 
+          : doc
+      );
+      setSubmissions(updated);
+      showNotification(`Document "${selectedDoc.title}" has been successfully unpublished.`);
+    }
+
+    setIsActionModalOpen(false);
+    setSelectedDoc(null);
+  };
 
   return (
     <CMSLayout>
       <main className="cms-main">
+        <header className="cms-submissions-header">
+          <div className="cms-header-left">
+            <h1>Submissions</h1>
+            <p>Manage and track all document submissions.</p>
+          </div>
+          <a href="/cms/submissions/new/step-1" className="cms-btn-primary cms-new-doc-btn" style={{textDecoration: 'none'}}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{marginRight: '8px'}}>
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            New Document
+          </a>
+        </header>
+
         {notification && (
-          <div className="cms-notification-success">
+          <div className="cms-notification-success" style={{ marginBottom: '20px' }}>
             <div className="cms-notification-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
@@ -112,20 +172,6 @@ export default function CMSSubmissions() {
             </button>
           </div>
         )}
-
-        <header className="cms-submissions-header">
-          <div className="cms-header-left">
-            <h1>Submissions</h1>
-            <p>Manage and track all document submissions.</p>
-          </div>
-          <a href="/cms/submissions/new/step-1" className="cms-btn-primary cms-new-doc-btn" style={{textDecoration: 'none'}}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{marginRight: '8px'}}>
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            New Document
-          </a>
-        </header>
 
         <div className="cms-table-container">
           {/* Filter Bar */}
@@ -159,7 +205,7 @@ export default function CMSSubmissions() {
               </tr>
             </thead>
             <tbody>
-              {submissionsData.map((row, index) => (
+              {submissions.map((row, index) => (
                 <tr key={row.id} className={row.status === 'Draft' ? 'cms-row-draft' : ''}>
                   <td style={{textAlign: 'center', color: '#64748b', fontWeight: '500'}}>{index + 1}</td>
                   <td className="cms-col-title">
@@ -188,7 +234,12 @@ export default function CMSSubmissions() {
                           );
                         } else if (act === 'delete') {
                           return (
-                            <button key={actIndex} className="cms-action-btn-icon cms-delete" aria-label="Delete">
+                            <button 
+                              key={actIndex} 
+                              className="cms-action-btn-icon cms-delete" 
+                              aria-label="Delete"
+                              onClick={() => handleActionClick('delete', row)}
+                            >
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <polyline points="3 6 5 6 21 6"></polyline>
                                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -204,6 +255,7 @@ export default function CMSSubmissions() {
                     {row.status === 'Published' ? (
                       <button 
                         className="cms-btn-small"
+                        onClick={() => handleActionClick('unpublish', row)}
                         style={{
                           background: '#fef3c7',
                           color: '#d97706',
@@ -220,6 +272,7 @@ export default function CMSSubmissions() {
                     ) : row.status === 'Approved - Unpublished' ? (
                       <button 
                         className="cms-btn-small"
+                        onClick={() => handleActionClick('publish', row)}
                         style={{
                           background: '#dcfce7',
                           color: '#16a34a',
@@ -239,12 +292,19 @@ export default function CMSSubmissions() {
                   </td>
                 </tr>
               ))}
+              {submissions.length === 0 && (
+                <tr>
+                  <td colSpan="7" style={{ textAlign: 'center', padding: '32px', color: '#64748b' }}>
+                    No submissions found.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
 
           {/* Table Footer */}
           <div className="cms-table-footer">
-            <span className="cms-entries-info">Showing 1 to {submissionsData.length} of {submissionsData.length} entries</span>
+            <span className="cms-entries-info">Showing 1 to {submissions.length} of {submissions.length} entries</span>
             <div className="cms-table-pagination">
               <button className="cms-pag-nav" aria-label="Previous" disabled>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -261,6 +321,43 @@ export default function CMSSubmissions() {
           </div>
         </div>
       </main>
+
+      {/* Action Confirmation Modal */}
+      {isActionModalOpen && selectedDoc && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: '#fff', padding: '32px', borderRadius: '12px', width: '100%', maxWidth: '400px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
+            <h2 style={{ margin: '0 0 16px 0', fontSize: '20px', color: '#0f172a' }}>
+              {actionType === 'delete' ? 'Delete Document' : actionType === 'publish' ? 'Publish Document' : 'Unpublish Document'}
+            </h2>
+            <p style={{ margin: '0 0 24px 0', fontSize: '14px', color: '#475569', lineHeight: '1.5' }}>
+              Are you sure you want to {actionType} <strong>"{selectedDoc.title}"</strong>?
+              {actionType === 'delete' && ' This action cannot be undone.'}
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+              <button 
+                onClick={() => { setIsActionModalOpen(false); setSelectedDoc(null); }}
+                style={{ padding: '10px 20px', background: '#f1f5f9', color: '#475569', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer' }}
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={confirmAction}
+                style={{ 
+                  padding: '10px 20px', 
+                  background: actionType === 'delete' ? '#ef4444' : actionType === 'publish' ? '#16a34a' : '#d97706', 
+                  color: '#fff', 
+                  border: 'none', 
+                  borderRadius: '6px', 
+                  fontWeight: '600', 
+                  cursor: 'pointer' 
+                }}
+              >
+                {actionType === 'delete' ? 'Delete' : actionType === 'publish' ? 'Publish' : 'Unpublish'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </CMSLayout>
   );
 }

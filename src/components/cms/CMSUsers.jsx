@@ -161,6 +161,23 @@ export default function CMSUsers() {
   return (
     <CMSLayout>
       <main className="cms-main">
+        <header className="cms-submissions-header">
+          <div className="cms-header-left">
+            <h1>User Management</h1>
+            <p>Manage access, roles, and status of platform users.</p>
+          </div>
+          <button 
+            className="cms-btn-primary cms-new-doc-btn" 
+            onClick={() => handleOpenModal('create')}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{marginRight: '8px'}}>
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add New User
+          </button>
+        </header>
+
         {notification && (
           <div className="cms-notification-success" style={{ marginBottom: '20px' }}>
             <div className="cms-notification-icon">
@@ -180,23 +197,6 @@ export default function CMSUsers() {
             </button>
           </div>
         )}
-
-        <header className="cms-submissions-header">
-          <div className="cms-header-left">
-            <h1>User Management</h1>
-            <p>Manage access, roles, and status of platform users.</p>
-          </div>
-          <button 
-            className="cms-btn-primary cms-new-doc-btn" 
-            onClick={() => handleOpenModal('create')}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{marginRight: '8px'}}>
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Add New User
-          </button>
-        </header>
 
         <div className="cms-table-container">
           <div className="cms-table-filter-bar">
