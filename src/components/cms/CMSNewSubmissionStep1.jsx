@@ -237,50 +237,54 @@ export default function CMSNewSubmissionStep1() {
                     </div>
 
                     {/* OR divider */}
-                    <div className="wiz-or-divider">
-                      <span>OR</span>
-                    </div>
+                    {!primaryFile && (
+                      <div className="wiz-or-divider">
+                        <span>OR</span>
+                      </div>
+                    )}
                   </>
                 )}
 
                 {/* External URL */}
-                <div className="wiz-field-group">
-                  <label className="wiz-field-label">
-                    External Document URL <span className="wiz-required">*</span>
-                    {primaryUrlChecked && <span style={{ color: '#10b981', marginLeft: '8px', fontWeight: 'bold', fontSize: '24px', verticalAlign: 'middle', lineHeight: '1' }}>✓</span>}
-                  </label>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-start' }}>
-                    <div className="wiz-input-with-icon" style={{ width: '75%' }}>
-                      <svg className="wiz-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                      </svg>
-                      <input
-                        type="url"
-                        placeholder="https://example.com/document.pdf"
-                        value={externalUrl}
-                        onChange={(e) => {
-                          setExternalUrl(e.target.value);
-                          setPrimaryUrlChecked(false);
-                        }}
-                        style={primaryUrlChecked ? { border: '2px solid #10b981', outline: 'none' } : {}}
-                      />
+                {!primaryFile && (
+                  <div className="wiz-field-group">
+                    <label className="wiz-field-label">
+                      External Document URL <span className="wiz-required">*</span>
+                      {primaryUrlChecked && <span style={{ color: '#10b981', marginLeft: '8px', fontWeight: 'bold', fontSize: '24px', verticalAlign: 'middle', lineHeight: '1' }}>✓</span>}
+                    </label>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-start' }}>
+                      <div className="wiz-input-with-icon" style={{ width: '75%' }}>
+                        <svg className="wiz-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                        </svg>
+                        <input
+                          type="url"
+                          placeholder="https://example.com/document.pdf"
+                          value={externalUrl}
+                          onChange={(e) => {
+                            setExternalUrl(e.target.value);
+                            setPrimaryUrlChecked(false);
+                          }}
+                          style={primaryUrlChecked ? { border: '2px solid #10b981', outline: 'none' } : {}}
+                        />
+                      </div>
+                      <button 
+                        type="button" 
+                        onClick={() => { if(externalUrl) setPrimaryUrlChecked(true); }}
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: '#0288d1', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', color: '#ffffff', boxShadow: '0 2px 4px rgba(2, 136, 209, 0.2)', transition: 'background 0.2s' }}
+                        onMouseOver={(e) => e.target.style.background = '#0277bd'}
+                        onMouseOut={(e) => e.target.style.background = '#0288d1'}
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="11" cy="11" r="8" />
+                          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                        Cek URL
+                      </button>
                     </div>
-                    <button 
-                      type="button" 
-                      onClick={() => { if(externalUrl) setPrimaryUrlChecked(true); }}
-                      style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: '#0288d1', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', color: '#ffffff', boxShadow: '0 2px 4px rgba(2, 136, 209, 0.2)', transition: 'background 0.2s' }}
-                      onMouseOver={(e) => e.target.style.background = '#0277bd'}
-                      onMouseOut={(e) => e.target.style.background = '#0288d1'}
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="11" cy="11" r="8" />
-                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                      </svg>
-                      Cek URL
-                    </button>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Cover Document/Image */}
@@ -348,50 +352,54 @@ export default function CMSNewSubmissionStep1() {
                     </div>
 
                     {/* OR divider */}
-                    <div className="wiz-or-divider">
-                      <span>OR</span>
-                    </div>
+                    {!coverFile && (
+                      <div className="wiz-or-divider">
+                        <span>OR</span>
+                      </div>
+                    )}
                   </>
                 )}
 
                 {/* External URL */}
-                <div className="wiz-field-group">
-                  <label className="wiz-field-label">
-                    Cover Image URL
-                    {coverUrlChecked && <span style={{ color: '#10b981', marginLeft: '8px', fontWeight: 'bold', fontSize: '24px', verticalAlign: 'middle', lineHeight: '1' }}>✓</span>}
-                  </label>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-start' }}>
-                    <div className="wiz-input-with-icon" style={{ width: '75%' }}>
-                      <svg className="wiz-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                      </svg>
-                      <input
-                        type="url"
-                        placeholder="https://example.com/cover.jpg"
-                        value={coverUrl}
-                        onChange={(e) => {
-                          setCoverUrl(e.target.value);
-                          setCoverUrlChecked(false);
-                        }}
-                        style={coverUrlChecked ? { border: '2px solid #10b981', outline: 'none' } : {}}
-                      />
+                {!coverFile && (
+                  <div className="wiz-field-group">
+                    <label className="wiz-field-label">
+                      Cover Image URL
+                      {coverUrlChecked && <span style={{ color: '#10b981', marginLeft: '8px', fontWeight: 'bold', fontSize: '24px', verticalAlign: 'middle', lineHeight: '1' }}>✓</span>}
+                    </label>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-start' }}>
+                      <div className="wiz-input-with-icon" style={{ width: '75%' }}>
+                        <svg className="wiz-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                        </svg>
+                        <input
+                          type="url"
+                          placeholder="https://example.com/cover.jpg"
+                          value={coverUrl}
+                          onChange={(e) => {
+                            setCoverUrl(e.target.value);
+                            setCoverUrlChecked(false);
+                          }}
+                          style={coverUrlChecked ? { border: '2px solid #10b981', outline: 'none' } : {}}
+                        />
+                      </div>
+                      <button 
+                        type="button" 
+                        onClick={() => { if(coverUrl) setCoverUrlChecked(true); }}
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: '#0288d1', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', color: '#ffffff', boxShadow: '0 2px 4px rgba(2, 136, 209, 0.2)', transition: 'background 0.2s' }}
+                        onMouseOver={(e) => e.target.style.background = '#0277bd'}
+                        onMouseOut={(e) => e.target.style.background = '#0288d1'}
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="11" cy="11" r="8" />
+                          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                        Cek URL
+                      </button>
                     </div>
-                    <button 
-                      type="button" 
-                      onClick={() => { if(coverUrl) setCoverUrlChecked(true); }}
-                      style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: '#0288d1', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', color: '#ffffff', boxShadow: '0 2px 4px rgba(2, 136, 209, 0.2)', transition: 'background 0.2s' }}
-                      onMouseOver={(e) => e.target.style.background = '#0277bd'}
-                      onMouseOut={(e) => e.target.style.background = '#0288d1'}
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="11" cy="11" r="8" />
-                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                      </svg>
-                      Cek URL
-                    </button>
                   </div>
-                </div>
+                )}
 
                 {/* Cover Preview */}
                 {(coverFile || coverUrlChecked) && (
@@ -427,14 +435,11 @@ export default function CMSNewSubmissionStep1() {
                       className="wiz-add-file-btn"
                       style={{ background: '#f8fafc', color: '#0f172a', border: '1px solid #cbd5e1' }}
                       onClick={() => {
-                        const url = prompt('Enter URL for supporting material:');
-                        if (url) {
-                          setSupportingFiles((prev) => [...prev, {
-                            file: { name: url, size: 0, isUrl: true },
-                            type: 'Additional document',
-                            description: ''
-                          }]);
-                        }
+                        setSupportingFiles((prev) => [...prev, {
+                          file: { name: '', size: 0, isUrl: true },
+                          type: 'Additional document',
+                          description: ''
+                        }]);
                       }}
                     >
                       + Add URL
@@ -458,15 +463,38 @@ export default function CMSNewSubmissionStep1() {
                   <div className="wiz-supporting-list" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     {supportingFiles.map((item, i) => (
                       <div key={i} className="wiz-supporting-item-extended" style={{ background: '#f8fafc', padding: '16px', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: '#64748b' }}>
-                              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                              <polyline points="14 2 14 8 20 8" />
-                            </svg>
-                            <span className="wiz-supporting-name" style={{ fontWeight: '500', color: '#334155' }}>{item.file.name}</span>
-                            {!item.file.isUrl && (
-                              <span className="wiz-supporting-size" style={{ color: '#94a3b8', fontSize: '13px' }}>({(item.file.size / 1024 / 1024).toFixed(2)} MB)</span>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
+                            {item.file.isUrl ? (
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: '#64748b' }}>
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                              </svg>
+                            ) : (
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: '#64748b' }}>
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                              </svg>
+                            )}
+                            
+                            {item.file.isUrl ? (
+                              <input 
+                                type="url" 
+                                className="wiz-input" 
+                                placeholder="https://example.com/..." 
+                                value={item.file.name}
+                                onChange={(e) => {
+                                  const updated = [...supportingFiles];
+                                  updated[i].file.name = e.target.value;
+                                  setSupportingFiles(updated);
+                                }}
+                                style={{ flex: 1, padding: '6px 12px', fontSize: '14px', height: '32px' }}
+                              />
+                            ) : (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#e0f2fe', border: '1px solid #bae6fd', padding: '4px 12px', borderRadius: '6px' }}>
+                                <span className="wiz-supporting-name" style={{ fontWeight: '600', color: '#0369a1', fontSize: '14px' }}>{item.file.name}</span>
+                                <span className="wiz-supporting-size" style={{ color: '#0284c7', fontSize: '12px', fontWeight: '600', background: '#ffffff', padding: '2px 8px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>{(item.file.size / 1024 / 1024).toFixed(2)} MB</span>
+                              </div>
                             )}
                           </div>
                           <button className="wiz-file-remove" onClick={() => removeSupportingFile(i)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '16px', padding: '4px' }}>✕</button>
@@ -494,7 +522,7 @@ export default function CMSNewSubmissionStep1() {
                             <input 
                               type="text" 
                               className="wiz-input" 
-                              style={{ width: '100%', padding: '8px', fontSize: '14px' }}
+                              style={{ width: '80%', padding: '8px', fontSize: '14px' }}
                               placeholder="Add a brief description..." 
                               value={item.description}
                               onChange={(e) => updateSupportingFile(i, 'description', e.target.value)}
