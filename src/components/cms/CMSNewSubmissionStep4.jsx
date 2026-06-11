@@ -89,12 +89,12 @@ export default function CMSNewSubmissionStep4() {
                   <span className="wiz-s4-label">UPLOADED FILES</span>
                   <div className="wiz-s4-file-list">
                     <div className="wiz-s4-file-item" style={{ alignItems: 'flex-start' }}>
-                      <div className="wiz-s4-cover-preview" style={{ width: '80px', height: '113px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #e2e8f0', flexShrink: 0 }}>
+                      <div className="wiz-s4-cover-preview" style={{ width: '160px', height: '226px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #e2e8f0', flexShrink: 0 }}>
                         <img src="/images/report_cover.png" alt="Cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>
                       <div className="wiz-s4-file-details">
                         <span className="wiz-s4-file-name" style={{ fontWeight: '600' }}>digital_economy_rural_id.pdf</span>
-                        <span className="wiz-s4-file-size" style={{ color: '#64748b', fontSize: '13px' }}>4.2 MB • 120 Pages</span>
+                        <span className="wiz-s4-file-size" style={{ color: '#64748b', fontSize: '13px' }}>4.2 MB</span>
                         <span style={{ fontSize: '12px', color: '#0ea5e9', marginTop: '4px', display: 'inline-block', padding: '2px 6px', background: '#e0f2fe', borderRadius: '4px' }}>AI Processed</span>
                       </div>
                     </div>
@@ -109,6 +109,10 @@ export default function CMSNewSubmissionStep4() {
                   <div>
                     <span className="wiz-s4-label">FOCAL POINT EMAIL</span>
                     <p className="wiz-s4-val">b.santoso@undp.org</p>
+                  </div>
+                  <div>
+                    <span className="wiz-s4-label">PHONE NUMBER</span>
+                    <p className="wiz-s4-val">+62 812 3456 7890</p>
                   </div>
                   <div className="wiz-s4-focal-full">
                     <span className="wiz-s4-label">DEPARTMENT / OFFICE</span>
@@ -145,14 +149,18 @@ export default function CMSNewSubmissionStep4() {
                       <p className="wiz-s4-val">May 15, 2024</p>
                     </div>
                     <div>
+                      <span className="wiz-s4-label">TOTAL PAGES</span>
+                      <p className="wiz-s4-val">120 Pages</p>
+                    </div>
+                  </div>
+
+                  <div className="wiz-s4-row-2col">
+                    <div>
                       <span className="wiz-s4-label">STATUS</span>
                       <div className="wiz-s4-status-wrapper">
                         <span className="wiz-s4-status-badge">Published</span>
                       </div>
                     </div>
-                  </div>
-
-                  <div className="wiz-s4-row-2col">
                     <div>
                       <span className="wiz-s4-label">LANGUAGES SELECTED</span>
                       <div className="wiz-s4-langs-row">
@@ -160,13 +168,16 @@ export default function CMSNewSubmissionStep4() {
                         <span className="wiz-s4-lang-chip">Bahasa Indonesia</span>
                       </div>
                     </div>
-                    <div>
-                      <span className="wiz-s4-label">TAGS / KEYWORDS</span>
-                      <div className="wiz-s4-tags-row">
-                        <span className="wiz-s4-tag-item">#digital economy</span>
-                        <span className="wiz-s4-tag-item">#financial inclusion</span>
-                        <span className="wiz-s4-tag-item">#fintech</span>
-                      </div>
+                  </div>
+
+                  <div className="wiz-s4-detail-group">
+                    <span className="wiz-s4-label">TAGS / KEYWORDS</span>
+                    <div className="wiz-s4-tags-row">
+                      <span className="wiz-s4-tag-item">#digital economy</span>
+                      <span className="wiz-s4-tag-item">#financial inclusion</span>
+                      <span className="wiz-s4-tag-item">#rural development</span>
+                      <span className="wiz-s4-tag-item">#fintech</span>
+                      <span className="wiz-s4-tag-item">#women empowerment</span>
                     </div>
                   </div>
 
@@ -175,6 +186,11 @@ export default function CMSNewSubmissionStep4() {
                     <p className="wiz-s4-val wiz-s4-summary-p">
                       This comprehensive report analyzes the rapid expansion of digital financial services across rural Indonesia. It highlights the profound impact of mobile banking and fintech solutions on local micro-economies, emphasizing significant improvements in women's financial independence and empowerment.
                     </p>
+                  </div>
+
+                  <div className="wiz-s4-detail-group">
+                    <span className="wiz-s4-label">DETAILED SUMMARY</span>
+                    <div className="wiz-s4-val wiz-s4-summary-p" style={{ fontSize: '14px', lineHeight: '1.6', color: '#334155' }} dangerouslySetInnerHTML={{__html: "<b>Executive Overview</b><br><br>This extensive report provides an in-depth analysis of the digital economy's penetration into rural areas of Indonesia, focusing on the critical role of financial inclusion in driving sustainable economic development. As digital infrastructure expands across the archipelago, unprecedented opportunities are emerging for smallholder farmers, micro, small, and medium enterprises (MSMEs), and previously unbanked populations.<br><br><b>Key Findings:</b><ul><li><b>Technological Adoption:</b> Mobile internet penetration in rural regions has surged by 45% over the past three years, laying the groundwork for digital financial services (DFS) adoption.</li><li><b>Economic Impact:</b> Access to digital credit and savings platforms has enabled rural MSMEs to increase their average revenue by approximately 22%, fostering local economic resilience.</li><li><b>Gender Equality:</b> Digital financial inclusion has disproportionately benefited rural women. Female-led enterprises represent 60% of new digital banking accounts, providing them with unprecedented control over household finances and business capital.</li><li><b>Agricultural Supply Chains:</b> Agritech platforms integrated with digital payment systems have reduced middleman dependencies, increasing farmers' profit margins by up to 15%.</li></ul><br><b>Challenges Identified</b><br><br>Despite significant progress, substantial barriers remain. The report identifies three primary challenges hindering universal financial inclusion in rural Indonesia: persistent gaps in digital literacy, inadequate telecommunications infrastructure in the most remote areas (the 3T regions: frontier, outermost, and underdeveloped), and limited trust in formal financial institutions among older demographics. Cybersecurity concerns and the risk of predatory digital lending practices also require urgent regulatory attention.<br><br><b>Strategic Recommendations</b><br><br>To accelerate progress towards the Sustainable Development Goals (SDGs), particularly Goal 1 (No Poverty) and Goal 5 (Gender Equality), the report outlines a multi-stakeholder action plan. We recommend enhanced public-private partnerships to subsidize rural broadband infrastructure. Furthermore, targeted digital literacy campaigns, tailored to local languages and cultural contexts, are essential. Regulatory frameworks must be strengthened to protect vulnerable new consumers while simultaneously fostering fintech innovation. By addressing these critical areas, Indonesia can ensure that the digital revolution serves as an inclusive engine for equitable prosperity across its vast rural landscape, leaving no one behind in the transition to a modern digital economy."}} />
                   </div>
                 </div>
               </div>
@@ -255,7 +271,7 @@ export default function CMSNewSubmissionStep4() {
           </div>
 
           {/* Consent */}
-          <div className="wiz-section-card" style={{ marginTop: '24px' }}>
+          <div className="wiz-section-card" style={{ marginTop: '24px', marginBottom: '50px' }}>
             <div className="wiz-section-header">
               <span className="wiz-section-icon consent-icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -297,17 +313,27 @@ export default function CMSNewSubmissionStep4() {
               </svg>
               Back
             </a>
-            <button 
-              className="wiz-btn-submit" 
-              onClick={handleFinishSubmit}
-              disabled={!consentChecked}
-              style={{ opacity: consentChecked ? 1 : 0.6, cursor: consentChecked ? 'pointer' : 'not-allowed' }}
-            >
-              Submit
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </button>
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button 
+                className="wiz-btn-secondary" 
+                onClick={() => window.location.href = '/cms/submissions'}
+                style={{ background: 'white', border: '1px solid #cbd5e1', color: '#475569', padding: '10px 20px', borderRadius: '6px', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                Save as Draft
+              </button>
+              <button 
+                className="wiz-btn-submit" 
+                onClick={handleFinishSubmit}
+                disabled={!consentChecked}
+                style={{ opacity: consentChecked ? 1 : 0.6, cursor: consentChecked ? 'pointer' : 'not-allowed' }}
+              >
+                Submit
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
