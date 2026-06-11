@@ -1848,20 +1848,22 @@ input:checked + .cms-toggle-slider:before {
 /* Add file button */
 .wiz-add-file-btn {
   margin-left: auto;
-  background: none;
+  background: #0288d1;
   border: none;
-  color: #0288d1;
+  color: #ffffff;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 8px 16px;
+  border-radius: 6px;
   transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(2, 136, 209, 0.2);
 }
 
 .wiz-add-file-btn:hover {
-  background: #f0f9ff;
-  color: #0277bd;
+  background: #0277bd;
+  box-shadow: 0 4px 8px rgba(2, 136, 209, 0.3);
+  transform: translateY(-1px);
 }
 
 .wiz-supporting-desc {
