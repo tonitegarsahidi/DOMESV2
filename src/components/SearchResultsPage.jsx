@@ -57,59 +57,84 @@ export default function SearchResultsPage() {
   return (
     <MUIProvider>
       <Navbar />
-      <div className="search-results-container" style={{ paddingTop: '80px', background: '#f8fafc', minHeight: '100vh' }}>
+      <div className="search-results-container" style={{ background: '#f8fafc', minHeight: '100vh' }}>
+        
+        {/* Premium Stylish Search Header */}
+        <div style={{ 
+          background: 'linear-gradient(135deg, var(--un-secondary) 0%, var(--un-primary-dark) 100%)', 
+          padding: '80px 20px 75px', 
+          color: '#ffffff',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          {/* Subtle watermark logo */}
+          <div style={{ position: 'absolute', right: '-2%', top: '-10%', opacity: '0.05', width: '400px', pointerEvents: 'none' }}>
+            <img src="/images/UN Logo_Horizontal_White_English.png" alt="" style={{ width: '100%' }} />
+          </div>
+          
+          <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', position: 'relative', zIndex: 1 }}>
+            <div>
+              <div style={{ fontSize: '12px', color: '#b3e5fc', marginBottom: '12px', fontWeight: '700', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                <a href="/" style={{ color: '#b3e5fc', textDecoration: 'none' }}>Home</a> <span style={{ margin: '0 8px', opacity: 0.5 }}>/</span> Search Results
+              </div>
+              <h1 style={{ fontSize: '36px', fontWeight: '800', marginBottom: '12px', letterSpacing: '-0.5px' }}>
+                {searchQuery ? `Results for "${searchQuery}"` : 'Document Repository'}
+              </h1>
+              
+              {/* Active Filter Pills moved to Header */}
+              {activeFilters.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', marginTop: '16px' }}>
+                  <span style={{ fontSize: '13px', color: '#b3e5fc', fontWeight: '600', marginRight: '4px' }}>Active Filters:</span>
+                  {activeFilters.map((filter, idx) => (
+                    <div key={idx} style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      background: 'rgba(255, 255, 255, 0.15)',
+                      border: '1px solid rgba(255, 255, 255, 0.3)',
+                      padding: '6px 12px',
+                      borderRadius: '16px',
+                      fontSize: '13px',
+                      color: '#ffffff',
+                      fontWeight: '500',
+                      backdropFilter: 'blur(4px)'
+                    }}>
+                      <span style={{ color: '#e0f5ff', textTransform: 'capitalize' }}>{filter.type}:</span> 
+                      {filter.value.toUpperCase()}
+                      <button 
+                        onClick={() => removeFilter(filter.type, filter.value)}
+                        style={{ background: 'rgba(255, 255, 255, 0.2)', border: 'none', cursor: 'pointer', color: '#ffffff', padding: '2px', display: 'flex', borderRadius: '50%', marginLeft: '4px', transition: 'background 0.2s' }}
+                        onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.4)'}
+                        onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="18" y1="6" x2="6" y2="18"></line>
+                          <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                      </button>
+                    </div>
+                  ))}
+                  <a href="/search-results" style={{ fontSize: '13px', color: '#e0f5ff', marginLeft: '8px', textDecoration: 'underline' }}>Clear all</a>
+                </div>
+              )}
+            </div>
+            
+          </div>
+        </div>
+
         <div className="page-container" style={{ 
           display: 'flex', 
           maxWidth: '1400px', 
-          margin: '0 auto', 
-          padding: '30px 20px', 
-          gap: '40px' 
+          margin: '-50px auto 0', 
+          padding: '0 20px 60px', 
+          gap: '40px',
+          position: 'relative',
+          zIndex: 10
         }}>
           <FilterSidebar />
           
           <div className="results-content" style={{ flex: 1 }}>
             <div className="results-header" style={{ marginBottom: '24px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                <div>
-                  <h1 style={{ 
-                    fontSize: '28px', 
-                    fontWeight: '700', 
-                    color: '#1e293b', 
-                    marginBottom: '8px' 
-                  }}>
-                    Search Results
-                  </h1>
-                  <p style={{ color: '#64748b', fontSize: '15px' }}>
-                    {searchQuery ? `Showing results for: "${searchQuery}"` : 'Showing all documents'}
-                  </p>
-                </div>
-                
-                {/* Create Alert Button */}
-                <button style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  background: 'white',
-                  border: '1px solid #cbd5e1',
-                  padding: '10px 16px',
-                  borderRadius: '8px',
-                  color: '#3366cc',
-                  fontWeight: '600',
-                  fontSize: '14px',
-                  cursor: 'pointer',
-                  boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-                  transition: 'all 0.2s'
-                }}
-                onMouseOver={(e) => { e.currentTarget.style.borderColor = '#3366cc'; e.currentTarget.style.background = '#f8fafc'; }}
-                onMouseOut={(e) => { e.currentTarget.style.borderColor = '#cbd5e1'; e.currentTarget.style.background = 'white'; }}
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                  </svg>
-                  Create Alert
-                </button>
-              </div>
 
               {/* Related Searches */}
               {searchQuery && (
@@ -131,39 +156,7 @@ export default function SearchResultsPage() {
                 </div>
               )}
 
-              {/* Active Filter Pills */}
-              {activeFilters.length > 0 && (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', paddingTop: '16px', borderTop: '1px solid #e2e8f0' }}>
-                  <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500', marginRight: '4px' }}>Active Filters:</span>
-                  {activeFilters.map((filter, idx) => (
-                    <div key={idx} style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      background: 'white',
-                      border: '1px solid #e2e8f0',
-                      padding: '4px 10px',
-                      borderRadius: '16px',
-                      fontSize: '13px',
-                      color: '#334155',
-                      fontWeight: '500'
-                    }}>
-                      <span style={{ color: '#94a3b8', textTransform: 'capitalize' }}>{filter.type}:</span> 
-                      {filter.value.toUpperCase()}
-                      <button 
-                        onClick={() => removeFilter(filter.type, filter.value)}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: 0, display: 'flex' }}
-                      >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <line x1="18" y1="6" x2="6" y2="18"></line>
-                          <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                      </button>
-                    </div>
-                  ))}
-                  <a href="/search-results" style={{ fontSize: '13px', color: '#3366cc', marginLeft: '8px', textDecoration: 'none' }}>Clear all</a>
-                </div>
-              )}
+
             </div>
             
             <DocumentList searchQuery={searchQuery} />
