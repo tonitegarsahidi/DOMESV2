@@ -328,7 +328,7 @@ a {
 
 /* ===== MAIN CONTENT LAYOUT ===== */
 .main-content {
-  max-width: 1280px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 40px 32px;
   display: flex;
