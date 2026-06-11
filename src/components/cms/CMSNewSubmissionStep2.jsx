@@ -1,5 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import CMSLayout from './CMSLayout.jsx';
+
+const SimpleWYSIWYG = ({ value, onChange, maxLength, readOnly }) => {
+  const editorRef = useRef(null);
+
+  useEffect(() => {
+    if (editorRef.current && editorRef.current.innerHTML !== value && document.activeElement !== editorRef.current) {
+      editorRef.current.innerHTML = value;
+    }
+  }, [value]);
+
+  const handleInput = (e) => {
+    const html = e.currentTarget.innerHTML;
+    onChange(html);
+  };
+
+  const execCmd = (cmd, val = null) => {
+    document.execCommand(cmd, false, val);
+    if (editorRef.current) {
+      editorRef.current.focus();
+      handleInput({ currentTarget: editorRef.current });
+    }
+  };
+
+  if (readOnly) {
+    return (
+      <div 
+        style={{ padding: '16px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', color: '#334155', lineHeight: '1.6', width: '75%', boxSizing: 'border-box' }}
+        dangerouslySetInnerHTML={{ __html: value }}
+      />
+    );
+  }
+
+  return (
+    <div style={{ width: '75%', border: '1px solid #cbd5e1', borderRadius: '8px', overflow: 'hidden', background: '#fff', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ padding: '8px', borderBottom: '1px solid #cbd5e1', background: '#f1f5f9', display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+        <button onClick={() => execCmd('bold')} type="button" style={{ background: 'white', border: '1px solid #e2e8f0', cursor: 'pointer', width: '32px', height: '32px', borderRadius: '4px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>B</button>
+        <button onClick={() => execCmd('italic')} type="button" style={{ background: 'white', border: '1px solid #e2e8f0', cursor: 'pointer', width: '32px', height: '32px', borderRadius: '4px', fontStyle: 'italic', fontFamily: 'serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>I</button>
+        <button onClick={() => execCmd('underline')} type="button" style={{ background: 'white', border: '1px solid #e2e8f0', cursor: 'pointer', width: '32px', height: '32px', borderRadius: '4px', textDecoration: 'underline', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>U</button>
+        <div style={{ width: '1px', background: '#cbd5e1', margin: '0 4px' }} />
+        <button onClick={() => execCmd('insertUnorderedList')} type="button" style={{ background: 'white', border: '1px solid #e2e8f0', cursor: 'pointer', padding: '0 10px', height: '32px', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px' }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg> Bullet
+        </button>
+        <button onClick={() => execCmd('insertOrderedList')} type="button" style={{ background: 'white', border: '1px solid #e2e8f0', cursor: 'pointer', padding: '0 10px', height: '32px', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px' }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="10" y1="6" x2="21" y2="6"></line><line x1="10" y1="12" x2="21" y2="12"></line><line x1="10" y1="18" x2="21" y2="18"></line><path d="M4 6h1v4"></path><path d="M4 10h2"></path><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"></path></svg> Number
+        </button>
+      </div>
+      <div 
+        ref={editorRef}
+        contentEditable
+        onInput={handleInput}
+        style={{ padding: '16px', minHeight: '220px', outline: 'none', fontSize: '14px', lineHeight: '1.6', color: '#334155', flex: 1, overflowY: 'auto' }}
+      />
+    </div>
+  );
+};
 
 export default function CMSNewSubmissionStep2() {
   const currentStep = 2;
@@ -11,7 +66,6 @@ export default function CMSNewSubmissionStep2() {
   const [summary, setSummary] = useState(
     'This report outlines the progress made across the Asia-Pacific region towards achieving the Sustainable Development Goals (SDGs) established by the United Nations. It highlights key areas of success, identifies ongoing challenges, and proposes strategic recommendations for accelerating implementation over the next decade.'
   );
-  const [summaryEditing, setSummaryEditing] = useState(false);
   const [shortSummary, setShortSummary] = useState('');
   const [tags, setTags] = useState(['environment', 'sustainability', 'report']);
   const [tagInput, setTagInput] = useState('');
@@ -242,30 +296,22 @@ export default function CMSNewSubmissionStep2() {
 
                 <div className="wiz-field-group">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '8px', width: '75%' }}>
-                    <label className="wiz-field-label" style={{ marginBottom: 0 }}>
-                      DETAILED SUMMARY <AiSparkle />
+                    <label className="wiz-field-label" style={{ marginBottom: 0, display: 'flex', alignItems: 'center', gap: '12px', width: '100%' }}>
+                      <span>DETAILED SUMMARY <AiSparkle /></span>
+                      <span style={{ fontSize: '12px', color: summary.replace(/<[^>]*>?/gm, '').length >= 5000 ? '#ef4444' : '#94a3b8', fontWeight: '500', textTransform: 'none', marginLeft: 'auto' }}>
+                        {5000 - summary.replace(/<[^>]*>?/gm, '').length} characters left
+                      </span>
                     </label>
-                    <button
-                      className="wiz-s2-edit-link"
-                      onClick={() => setSummaryEditing(!summaryEditing)}
-                      style={{ background: 'none', border: 'none', color: '#0ea5e9', cursor: 'pointer', fontSize: '13px', fontWeight: '500', padding: 0 }}
-                    >
-                      {summaryEditing ? 'Done Editing' : 'Edit Summary'}
-                    </button>
                   </div>
-                  {summaryEditing ? (
-                    <textarea
-                      className="wiz-input"
-                      value={summary}
-                      onChange={(e) => setSummary(e.target.value)}
-                      rows={10}
-                      style={{ resize: 'vertical', width: '75%' }}
-                    />
-                  ) : (
-                    <div style={{ padding: '16px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', color: '#334155', lineHeight: '1.6', width: '75%', boxSizing: 'border-box' }}>
-                      {summary}
-                    </div>
-                  )}
+                  <SimpleWYSIWYG 
+                    value={summary} 
+                    onChange={(val) => {
+                      if (val.replace(/<[^>]*>?/gm, '').length <= 5000) {
+                        setSummary(val);
+                      }
+                    }} 
+                    maxLength={5000} 
+                  />
                 </div>
 
                 <div className="wiz-field-group">
