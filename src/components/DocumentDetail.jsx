@@ -108,7 +108,7 @@ export default function DocumentDetail({ id }) {
       <Navbar />
 
       {/* Premium Stylish Document Header */}
-      <div style={{ 
+      <div className="detail-hero-header" style={{ 
         background: 'linear-gradient(135deg, var(--un-secondary) 0%, var(--un-primary-dark) 100%)', 
         padding: '40px 20px 140px', 
         color: '#ffffff',
@@ -122,7 +122,7 @@ export default function DocumentDetail({ id }) {
 
         <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 1 }}>
           
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
             <div style={{ fontSize: '13px', color: '#b3e5fc', fontWeight: '600', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
               <a href="/" style={{ color: '#b3e5fc', textDecoration: 'none' }}>Home</a> 
               <span style={{ margin: '0 8px', opacity: 0.5 }}>/</span> 

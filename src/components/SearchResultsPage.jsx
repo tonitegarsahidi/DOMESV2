@@ -60,9 +60,9 @@ export default function SearchResultsPage() {
       <div className="search-results-container" style={{ background: '#f8fafc', minHeight: '100vh' }}>
         
         {/* Premium Stylish Search Header */}
-        <div style={{ 
+        <div className="search-header-banner" style={{ 
           background: 'linear-gradient(135deg, var(--un-secondary) 0%, var(--un-primary-dark) 100%)', 
-          padding: '80px 20px 75px', 
+          padding: '60px 20px 75px', 
           color: '#ffffff',
           position: 'relative',
           overflow: 'hidden'

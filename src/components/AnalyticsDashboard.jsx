@@ -157,7 +157,7 @@ export default function AnalyticsDashboard() {
       </style>
 
       {/* Key Metrics */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginBottom: '40px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '24px', marginBottom: '40px' }}>
         <div style={{ background: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
           <p style={{ color: '#64748b', fontSize: '14px', fontWeight: '600', marginBottom: '8px', textTransform: 'uppercase' }}>Total Documents</p>
           <h2 style={{ fontSize: '36px', fontWeight: '700', color: '#1e293b', marginBottom: '8px' }}>12,457</h2>
@@ -178,7 +178,7 @@ export default function AnalyticsDashboard() {
       </div>
 
       {/* Main Charts: Uploads & SDGs */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))', gap: '30px', marginBottom: '30px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 500px), 1fr))', gap: '30px', marginBottom: '30px' }}>
         {/* Uploads Over Time */}
         <div style={{ background: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
           <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#1e293b', marginBottom: '20px' }}>Document Uploads Over Time</h3>
@@ -227,7 +227,7 @@ export default function AnalyticsDashboard() {
       </div>
 
       {/* Secondary Charts: Agencies, Sectors, Languages */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '30px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 350px), 1fr))', gap: '30px' }}>
         {/* Agencies Contribution */}
         <div style={{ background: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
           <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#1e293b', marginBottom: '20px' }}>Contributions by Agency</h3>
