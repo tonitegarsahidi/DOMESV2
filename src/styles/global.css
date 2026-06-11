@@ -1858,16 +1858,34 @@ a {
 }
 
 .adv-modal-content {
-  background: #ffffff;
+  background: linear-gradient(135deg, var(--un-secondary) 0%, var(--un-primary-dark) 100%);
   border-radius: 16px;
   width: 100%;
   max-width: 900px;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  color: #ffffff;
+}
+
+.adv-modal-watermark {
+  position: absolute;
+  bottom: -40px;
+  right: -40px;
+  width: 450px;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.adv-modal-watermark img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 @keyframes slideUp {
@@ -1877,27 +1895,28 @@ a {
 
 .adv-modal-header {
   padding: 24px 32px;
-  border-bottom: 1px solid var(--neutral-200);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f8fafc;
+  position: relative;
+  z-index: 1;
 }
 
 .adv-modal-header h2 {
   font-size: 22px;
   font-weight: 700;
-  color: var(--neutral-800);
+  color: #ffffff;
   margin: 0;
 }
 
 .adv-modal-close {
-  background: none;
-  border: none;
-  color: var(--neutral-400);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
   cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
+  padding: 6px;
+  border-radius: 6px;
   transition: all 0.2s;
   display: flex;
   align-items: center;
@@ -1905,8 +1924,8 @@ a {
 }
 
 .adv-modal-close:hover {
-  color: var(--neutral-800);
-  background: var(--neutral-200);
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
 }
 
 .adv-modal-body {
@@ -1916,6 +1935,8 @@ a {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  position: relative;
+  z-index: 1;
 }
 
 .adv-grid-2col {
@@ -1937,7 +1958,7 @@ a {
 .adv-filter-group label {
   font-size: 13px;
   font-weight: 700;
-  color: var(--neutral-600);
+  color: rgba(255, 255, 255, 0.85);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -1945,27 +1966,34 @@ a {
 .adv-input-large {
   width: 100%;
   padding: 16px 20px;
-  border: 2px solid var(--neutral-200);
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   font-size: 16px;
+  color: #ffffff;
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
+}
+
+.adv-input-large::placeholder {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .adv-input-large:focus {
-  border-color: var(--un-primary);
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .adv-scroll-list {
   max-height: 160px;
   overflow-y: auto;
-  border: 1px solid var(--neutral-200);
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  background: #fdfdfd;
 }
 
 .adv-compact-checkbox {
@@ -1975,10 +2003,22 @@ a {
 .adv-compact-checkbox .checkbox-box {
   width: 16px;
   height: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+}
+
+.adv-compact-checkbox input[type="checkbox"]:checked ~ .checkbox-box {
+  background: #0ea5e9;
+  border-color: #0ea5e9;
 }
 
 .adv-compact-checkbox .checkbox-label {
   font-size: 12px;
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.checkbox-item:hover .checkbox-label {
+  color: #ffffff !important;
 }
 
 .adv-flex-row {
@@ -1994,19 +2034,26 @@ a {
 .adv-input-small {
   flex: 1;
   padding: 10px 12px;
-  border: 1px solid var(--neutral-200);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 6px;
   font-size: 14px;
+  color: #ffffff;
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
+}
+
+.adv-input-small::placeholder {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .adv-input-small:focus {
-  border-color: var(--un-primary);
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .adv-dash {
-  color: var(--neutral-400);
+  color: rgba(255, 255, 255, 0.6);
   font-weight: 500;
 }
 
@@ -2018,18 +2065,19 @@ a {
 
 .adv-modal-footer {
   padding: 24px 32px;
-  border-top: 1px solid var(--neutral-200);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
   display: flex;
   justify-content: flex-end;
   gap: 16px;
-  background: #f8fafc;
+  position: relative;
+  z-index: 1;
 }
 
 .adv-btn-clear {
   padding: 12px 24px;
-  background: none;
-  border: none;
-  color: var(--neutral-600);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
   font-weight: 600;
   cursor: pointer;
   border-radius: 8px;
@@ -2037,28 +2085,27 @@ a {
 }
 
 .adv-btn-clear:hover {
-  background: var(--neutral-200);
-  color: var(--neutral-800);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .adv-btn-search {
   padding: 12px 28px;
-  background: linear-gradient(90deg, var(--un-primary) 0%, var(--un-primary-dark) 100%);
-  color: white;
+  background: #ffffff;
+  color: var(--un-primary-dark);
   border: none;
   border-radius: 8px;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 15px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
   transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(0, 158, 219, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .adv-btn-search:hover {
-  background: linear-gradient(90deg, var(--un-primary-dark) 0%, var(--un-primary-darker) 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(0, 158, 219, 0.4);
+  background: #f0f9ff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }

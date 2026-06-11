@@ -94,6 +94,10 @@ export default function AdvancedSearchModal({ isOpen, onClose, initialQuery = ''
   return (
     <div className="adv-modal-overlay" onClick={onClose}>
       <div className="adv-modal-content" onClick={e => e.stopPropagation()}>
+        <div className="adv-modal-watermark">
+          <img src="/images/UN Logo_Horizontal_White_English.png" alt="UN Logo Background" />
+        </div>
+        
         <div className="adv-modal-header">
           <h2>Advanced Search</h2>
           <button className="adv-modal-close" onClick={onClose}>
