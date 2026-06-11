@@ -105,27 +105,43 @@ export default function DocumentDetail({ id }) {
     <div className="detail-page-wrapper">
       <Navbar />
 
-      <main className="detail-main-content">
-        {/* Navigation Bar / Breadcrumbs */}
-        <div className="detail-navigation-bar">
-          <div className="breadcrumbs">
-            <a href="/">Home</a>
-            <span className="separator">&gt;</span>
-            <span className="active-breadcrumb">Document Detail</span>
-            <span className="separator">&gt;</span>
-            <span className="active-breadcrumb code-breadcrumb">{doc.code}</span>
-          </div>
-          <a href="/" className="btn-back-search">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px'}}>
-              <line x1="19" y1="12" x2="5" y2="12"></line>
-              <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            Back to Search Results
-          </a>
+      {/* Premium Stylish Document Header */}
+      <div style={{ 
+        background: 'linear-gradient(135deg, var(--un-secondary) 0%, var(--un-primary-dark) 100%)', 
+        padding: '40px 20px 140px', 
+        color: '#ffffff',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        {/* Subtle watermark logo */}
+        <div style={{ position: 'absolute', right: '-2%', top: '-20%', opacity: '0.05', width: '500px', pointerEvents: 'none' }}>
+          <img src="/images/UN Logo_Horizontal_White_English.png" alt="" style={{ width: '100%' }} />
         </div>
 
+        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 1 }}>
+          
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ fontSize: '13px', color: '#b3e5fc', fontWeight: '600', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
+              <a href="/" style={{ color: '#b3e5fc', textDecoration: 'none' }}>Home</a> 
+              <span style={{ margin: '0 8px', opacity: 0.5 }}>/</span> 
+              <a href="#" style={{ color: '#b3e5fc', textDecoration: 'none', cursor: 'default' }}>Document Details</a>
+              <span style={{ margin: '0 8px', opacity: 0.5 }}>/</span> 
+              <span style={{ color: '#ffffff' }}>{doc.code}</span>
+            </div>
+            <a href="/search-results" style={{ display: 'flex', alignItems: 'center', color: '#ffffff', textDecoration: 'none', fontSize: '14px', fontWeight: '500', background: 'rgba(255,255,255,0.1)', padding: '8px 16px', borderRadius: '20px', backdropFilter: 'blur(4px)', transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background='rgba(255,255,255,0.2)'} onMouseOut={(e) => e.currentTarget.style.background='rgba(255,255,255,0.1)'}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px'}}>
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              Back
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <main className="detail-main-content" style={{ paddingTop: 0 }}>
         {/* Content Layout */}
-        <div className="detail-columns">
+        <div className="detail-columns" style={{ marginTop: '-80px', position: 'relative', zIndex: 10, maxWidth: '1200px', margin: '-80px auto 60px auto' }}>
           {/* Left Column: Cover & Action buttons */}
           <div className="detail-left-col">
             <div className="detail-cover-card">
@@ -144,7 +160,7 @@ export default function DocumentDetail({ id }) {
                   </div>
                 </div>
               ) : (
-                <img src={doc.image} alt={doc.title} className="detail-cover-img" />
+                <img src={doc.image} alt={doc.title} className="detail-cover-img" style={{ boxShadow: '0 20px 40px rgba(0,0,0,0.25)', border: '6px solid white', borderRadius: '12px' }} />
               )}
             </div>
 
@@ -168,13 +184,21 @@ export default function DocumentDetail({ id }) {
           </div>
 
           {/* Right Column: Metadata & Description */}
-          <div className="detail-right-col">
-            <div className="detail-tags-top">
-              <span className="tag-top">{doc.agency}</span>
-              <span className="tag-top">{doc.year}</span>
+          <div className="detail-right-col" style={{ background: '#ffffff', borderRadius: '16px', padding: '32px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+            <div className="detail-tags-top" style={{ marginBottom: '16px' }}>
+              <span className="tag-top" style={{ background: '#e0f2fe', color: '#0369a1', padding: '6px 12px', borderRadius: '4px', fontWeight: '600', fontSize: '13px', marginRight: '12px' }}>{doc.agency}</span>
+              <span className="tag-top" style={{ background: '#f1f5f9', color: '#475569', padding: '6px 12px', borderRadius: '4px', fontWeight: '600', fontSize: '13px' }}>{doc.year}</span>
             </div>
 
-            <h1 className="detail-title">{doc.title}</h1>
+            <h1 className="detail-title" style={{ fontSize: '32px', marginBottom: '24px', color: '#0f172a', lineHeight: '1.2' }}>{doc.title}</h1>
+
+            {/* Abstract */}
+            <div className="detail-section" style={{ marginBottom: '32px' }}>
+              <h2 className="detail-section-title" style={{ fontSize: '18px', marginBottom: '12px', color: '#334155', fontWeight: '700' }}>Abstract (Short Summary)</h2>
+              {doc.abstract.map((p, index) => (
+                <p key={index} className="detail-paragraph" style={{ fontSize: '16px', color: '#475569', lineHeight: '1.6', margin: 0 }}>{p}</p>
+              ))}
+            </div>
 
             {/* Metadata Grid */}
             <div className="detail-meta-grid">
@@ -211,14 +235,6 @@ export default function DocumentDetail({ id }) {
                   <span key={i} className="detail-pill-badge" style={{ background: '#f1f5f9', color: '#475569', border: '1px solid #e2e8f0', textTransform: 'none' }}>#{tag}</span>
                 ))}
               </div>
-            </div>
-
-            {/* Abstract */}
-            <div className="detail-section">
-              <h2 className="detail-section-title">Abstract (Short Summary)</h2>
-              {doc.abstract.map((p, index) => (
-                <p key={index} className="detail-paragraph">{p}</p>
-              ))}
             </div>
 
             {/* Summary Document Box */}
