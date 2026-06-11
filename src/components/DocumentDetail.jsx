@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from './Navbar.jsx';
 import Footer from './Footer.jsx';
 
@@ -10,7 +10,7 @@ const digitalEconomyDoc = {
   title: 'Digital Economy and Financial Inclusion in Rural Indonesia',
   language: 'English, Bahasa Indonesia',
   fileSize: '4.2 MB',
-  added: '15/05/2024',
+  added: '3 January 2026',
   type: 'Report',
   image: '/images/report_cover.png',
   totalPages: 120,
@@ -100,6 +100,8 @@ const getSdgClass = (goal) => {
 
 export default function DocumentDetail({ id }) {
   const doc = digitalEconomyDoc; // Ignore ID, always show dummy data
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   return (
     <div className="detail-page-wrapper">
@@ -170,10 +172,10 @@ export default function DocumentDetail({ id }) {
                 <polyline points="7 10 12 15 17 10"></polyline>
                 <line x1="12" y1="15" x2="12" y2="3"></line>
               </svg>
-              DOWNLOAD PDF
+              DOWNLOAD
             </button>
 
-            <button className="btn-detail-report">
+            <button className="btn-detail-report" onClick={() => setIsReportModalOpen(true)}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '10px', verticalAlign: 'middle'}}>
                 <circle cx="12" cy="12" r="10"></circle>
                 <line x1="12" y1="8" x2="12" y2="12"></line>
@@ -215,16 +217,8 @@ export default function DocumentDetail({ id }) {
                 <span className="meta-box-value">{doc.totalPages} Pages</span>
               </div>
               <div className="meta-grid-box">
-                <span className="meta-box-label">ADDED</span>
+                <span className="meta-box-label">PUBLISHED</span>
                 <span className="meta-box-value">{doc.added}</span>
-              </div>
-              <div className="meta-grid-box">
-                <span className="meta-box-label">TYPE</span>
-                <span className="meta-box-value">{doc.type}</span>
-              </div>
-              <div className="meta-grid-box">
-                <span className="meta-box-label">STATUS</span>
-                <span className="meta-box-value" style={{ color: '#16a34a', fontWeight: '600' }}>{doc.pubStatus}</span>
               </div>
             </div>
 
@@ -376,6 +370,84 @@ export default function DocumentDetail({ id }) {
       </main>
 
       <Footer />
+
+      {/* Report Broken Link Modal */}
+      {isReportModalOpen && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: '#fff', padding: '32px', borderRadius: '12px', width: '100%', maxWidth: '500px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
+            <h2 style={{ margin: '0 0 16px 0', fontSize: '20px', color: '#0f172a' }}>Report Broken Link</h2>
+            <p style={{ margin: '0 0 24px 0', fontSize: '14px', color: '#475569' }}>Please provide your details and let us know what went wrong.</p>
+            
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#334155', marginBottom: '8px' }}>Name</label>
+              <input type="text" style={{ width: '100%', padding: '10px 14px', border: '1px solid #cbd5e1', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' }} placeholder="Enter your name" />
+            </div>
+            
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#334155', marginBottom: '8px' }}>Email</label>
+              <input type="email" style={{ width: '100%', padding: '10px 14px', border: '1px solid #cbd5e1', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' }} placeholder="Enter your email" />
+            </div>
+            
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#334155', marginBottom: '8px' }}>Report Details</label>
+              <textarea style={{ width: '100%', padding: '10px 14px', border: '1px solid #cbd5e1', borderRadius: '6px', fontSize: '14px', minHeight: '100px', resize: 'vertical', boxSizing: 'border-box' }} placeholder="Describe the issue..."></textarea>
+            </div>
+            
+            {/* Mock reCAPTCHA */}
+            <div style={{ marginBottom: '24px', padding: '12px', background: '#f9fafb', border: '1px solid #d1d5db', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <input type="checkbox" style={{ width: '24px', height: '24px', cursor: 'pointer' }} />
+                <span style={{ fontSize: '14px', color: '#374151' }}>I'm not a robot</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <img src="/images/un-logo.png" alt="reCAPTCHA" style={{ width: '24px', opacity: 0.5 }} />
+                <span style={{ fontSize: '10px', color: '#9ca3af', marginTop: '4px' }}>reCAPTCHA</span>
+              </div>
+            </div>
+            
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+              <button 
+                onClick={() => setIsReportModalOpen(false)}
+                style={{ padding: '10px 20px', background: '#f1f5f9', color: '#475569', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer' }}
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => {
+                  setIsReportModalOpen(false);
+                  setIsSuccessModalOpen(true);
+                }}
+                style={{ padding: '10px 20px', background: 'var(--un-primary, #006699)', color: '#fff', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer' }}
+              >
+                Submit Report
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success Modal */}
+      {isSuccessModalOpen && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: '#fff', padding: '40px', borderRadius: '12px', width: '100%', maxWidth: '400px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)', textAlign: 'center' }}>
+            <div style={{ width: '64px', height: '64px', background: '#dcfce7', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px auto' }}>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="3">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
+            <h2 style={{ margin: '0 0 12px 0', fontSize: '24px', color: '#0f172a' }}>Thank You!</h2>
+            <p style={{ margin: '0 0 32px 0', fontSize: '15px', color: '#475569', lineHeight: '1.5' }}>
+              Your report has been successfully submitted. Our team will review the issue shortly.
+            </p>
+            <button 
+              onClick={() => setIsSuccessModalOpen(false)}
+              style={{ width: '100%', padding: '12px 24px', background: 'var(--un-primary, #006699)', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: '600', cursor: 'pointer' }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

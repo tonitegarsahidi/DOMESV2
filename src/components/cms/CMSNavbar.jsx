@@ -23,6 +23,7 @@ export default function CMSNavbar() {
   const isDashboard = pathname.includes('/cms/dashboard');
   const isSubmissions = pathname.includes('/cms/submissions');
   const isAnalytics = pathname.includes('/cms/analytics');
+  const isReports = pathname.includes('/cms/reports');
   const isSettings = pathname.includes('/cms/settings');
 
   return (
@@ -61,6 +62,13 @@ export default function CMSNavbar() {
             <line x1="6" y1="20" x2="6" y2="14"></line>
           </svg>
           Analytics
+        </a>
+        <a href="/cms/reports" className={`cms-nav-link ${isReports ? 'active' : ''}`}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+            <line x1="4" y1="22" x2="4" y2="15"></line>
+          </svg>
+          Reports
         </a>
         <a href="/cms/settings" className={`cms-nav-link ${isSettings ? 'active' : ''}`}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
