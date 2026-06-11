@@ -61,7 +61,13 @@ export default function HeroSection() {
         <div className="hero-tags">
           <span className="hero-tags-label">Quick Tags:</span>
           {quickTags.map((tag) => (
-            <span key={tag} className="hero-tag">{tag}</span>
+            <span 
+              key={tag} 
+              className="hero-tag"
+              onClick={() => window.location.href = `/search-results?q=Climate%20Change`}
+            >
+              {tag}
+            </span>
           ))}
           <span className="hero-tag advanced" onClick={() => setIsAdvancedSearchOpen(true)}>Advanced Filters</span>
         </div>
