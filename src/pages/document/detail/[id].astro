@@ -3,18 +3,13 @@ import DocumentDetail from '../../../components/DocumentDetail.jsx';
 import '../../../styles/global.css';
 
 export function getStaticPaths() {
-  return [
-    { params: { id: '1' } },
-    { params: { id: '2' } },
-    { params: { id: '3' } },
-    { params: { id: '4' } },
-    { params: { id: '5' } },
-    { params: { id: '6' } },
-    { params: { id: '7' } },
-    { params: { id: '8' } },
-    { params: { id: '9' } },
+  const paths = [
     { params: { id: 'UNIDO-2015-001' } }
   ];
+  for (let i = 1; i <= 150; i++) {
+    paths.push({ params: { id: String(i) } });
+  }
+  return paths;
 }
 
 const { id } = Astro.params;
