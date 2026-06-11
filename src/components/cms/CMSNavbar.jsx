@@ -28,7 +28,7 @@ export default function CMSNavbar() {
   return (
     <nav className="cms-navbar">
       <div className="cms-navbar-brand">
-        <div className="cms-logo-circle">UN</div>
+        <img src="/images/UN Logo_Horizontal_White_English.png" alt="UN Logo" style={{ height: '60px', marginRight: '12px', objectFit: 'contain' }} />
         <div className="cms-brand-text">
           <span className="cms-brand-title">DOMES CMS PORTAL</span>
         </div>
@@ -86,27 +86,27 @@ export default function CMSNavbar() {
           </svg>
         </button>
         <div className="cms-user-menu-wrapper" ref={userMenuRef}>
-          <button 
-            className="cms-user-menu" 
+          <button
+            className="cms-user-menu"
             onClick={() => setUserMenuOpen(!userMenuOpen)}
           >
             <div className="cms-avatar">
               <img src="https://i.pravatar.cc/150?img=11" alt="User" />
             </div>
             <span className="cms-user-name">Admin User</span>
-            <svg 
-              width="16" 
-              height="16" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
               strokeWidth="2"
               className={`cms-dropdown-icon ${userMenuOpen ? 'open' : ''}`}
             >
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </button>
-          
+
           {userMenuOpen && (
             <div className="cms-user-dropdown">
               <a href="/cms/settings" className="cms-dropdown-item" onClick={() => setUserMenuOpen(false)}>

@@ -17,6 +17,7 @@ export default function CMSNewSubmissionStep2() {
   
   const [focalName, setFocalName] = useState('');
   const [focalEmail, setFocalEmail] = useState('');
+  const [focalPhone, setFocalPhone] = useState('');
   const [focalDept, setFocalDept] = useState('');
 
   const progressSteps = [
@@ -115,6 +116,7 @@ export default function CMSNewSubmissionStep2() {
                     className="wiz-input"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
+                    style={{ width: '75%' }}
                   />
                 </div>
 
@@ -127,6 +129,7 @@ export default function CMSNewSubmissionStep2() {
                     className="wiz-input"
                     value={pubDate}
                     onChange={(e) => setPubDate(e.target.value)}
+                    style={{ width: '75%' }}
                   />
                 </div>
 
@@ -202,10 +205,10 @@ export default function CMSNewSubmissionStep2() {
                       value={summary}
                       onChange={(e) => setSummary(e.target.value)}
                       rows={5}
-                      style={{ resize: 'vertical' }}
+                      style={{ resize: 'vertical', width: '75%' }}
                     />
                   ) : (
-                    <div style={{ padding: '16px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', color: '#334155', lineHeight: '1.6' }}>
+                    <div style={{ padding: '16px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', color: '#334155', lineHeight: '1.6', width: '75%', boxSizing: 'border-box' }}>
                       {summary}
                     </div>
                   )}
@@ -222,7 +225,7 @@ export default function CMSNewSubmissionStep2() {
                     value={shortSummary}
                     onChange={(e) => setShortSummary(e.target.value)}
                     rows={3}
-                    style={{ resize: 'vertical' }}
+                    style={{ resize: 'vertical', width: '75%' }}
                   />
                 </div>
 
@@ -234,12 +237,13 @@ export default function CMSNewSubmissionStep2() {
                     placeholder="e.g. environment, sustainability, report"
                     value={tags}
                     onChange={(e) => setTags(e.target.value)}
+                    style={{ width: '75%' }}
                   />
                 </div>
               </div>
 
               {/* Focal Point Card */}
-              <div className="wiz-section-card">
+              <div className="wiz-section-card" style={{ marginBottom: '50px' }}>
                 <div className="wiz-section-header">
                   <span className="wiz-section-icon">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -252,7 +256,7 @@ export default function CMSNewSubmissionStep2() {
 
                 <div className="wiz-field-group">
                   <label className="wiz-field-label">
-                    FULL NAME <span className="wiz-required">*</span>
+                    FULL NAME
                   </label>
                   <input
                     type="text"
@@ -260,12 +264,13 @@ export default function CMSNewSubmissionStep2() {
                     placeholder="e.g. Jane Doe"
                     value={focalName}
                     onChange={(e) => setFocalName(e.target.value)}
+                    style={{ width: '75%' }}
                   />
                 </div>
 
                 <div className="wiz-field-group">
                   <label className="wiz-field-label">
-                    EMAIL ADDRESS <span className="wiz-required">*</span>
+                    EMAIL ADDRESS
                   </label>
                   <input
                     type="email"
@@ -273,6 +278,19 @@ export default function CMSNewSubmissionStep2() {
                     placeholder="jane.doe@organization.org"
                     value={focalEmail}
                     onChange={(e) => setFocalEmail(e.target.value)}
+                    style={{ width: '75%' }}
+                  />
+                </div>
+
+                <div className="wiz-field-group">
+                  <label className="wiz-field-label">PHONE NUMBER</label>
+                  <input
+                    type="tel"
+                    className="wiz-input"
+                    placeholder="+62 812 3456 7890"
+                    value={focalPhone}
+                    onChange={(e) => setFocalPhone(e.target.value)}
+                    style={{ width: '75%' }}
                   />
                 </div>
 
@@ -284,6 +302,7 @@ export default function CMSNewSubmissionStep2() {
                     placeholder="Enter department..."
                     value={focalDept}
                     onChange={(e) => setFocalDept(e.target.value)}
+                    style={{ width: '75%' }}
                   />
                 </div>
               </div>

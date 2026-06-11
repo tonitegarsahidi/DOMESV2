@@ -10,6 +10,9 @@ export default function CMSNewSubmissionStep1() {
   const [coverFile, setCoverFile] = useState(null);
   const [coverUrl, setCoverUrl] = useState('');
 
+  const [primaryUrlChecked, setPrimaryUrlChecked] = useState(false);
+  const [coverUrlChecked, setCoverUrlChecked] = useState(false);
+
   const [supportingFiles, setSupportingFiles] = useState([]);
   const fileInputRef = useRef(null);
   const coverInputRef = useRef(null);
@@ -183,75 +186,99 @@ export default function CMSNewSubmissionStep1() {
                 </div>
 
                 {/* Upload zone */}
-                <div
-                  className={`wiz-upload-zone ${dragActive ? 'drag-active' : ''} ${primaryFile ? 'has-file' : ''}`}
-                  onDragEnter={handleDrag}
-                  onDragLeave={handleDrag}
-                  onDragOver={handleDrag}
-                  onDrop={handleDrop}
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".pdf,.docx,.pptx"
-                    style={{ display: 'none' }}
-                    onChange={handleFileChange}
-                  />
-                  {primaryFile ? (
-                    <div className="wiz-file-attached">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                        <polyline points="14 2 14 8 20 8" />
-                      </svg>
-                      <span className="wiz-file-name">{primaryFile.name}</span>
-                      <span className="wiz-file-size">({(primaryFile.size / 1024 / 1024).toFixed(2)} MB)</span>
-                      <button
-                        className="wiz-file-remove"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setPrimaryFile(null);
-                        }}
-                      >
-                        ✕
-                      </button>
+                {!primaryUrlChecked && (
+                  <>
+                    <div
+                      className={`wiz-upload-zone ${dragActive ? 'drag-active' : ''} ${primaryFile ? 'has-file' : ''}`}
+                      onDragEnter={handleDrag}
+                      onDragLeave={handleDrag}
+                      onDragOver={handleDrag}
+                      onDrop={handleDrop}
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept=".pdf,.docx,.pptx"
+                        style={{ display: 'none' }}
+                        onChange={handleFileChange}
+                      />
+                      {primaryFile ? (
+                        <div className="wiz-file-attached">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                          </svg>
+                          <span className="wiz-file-name">{primaryFile.name}</span>
+                          <span className="wiz-file-size">({(primaryFile.size / 1024 / 1024).toFixed(2)} MB)</span>
+                          <button
+                            className="wiz-file-remove"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setPrimaryFile(null);
+                            }}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="wiz-upload-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                              <polyline points="17 8 12 3 7 8" />
+                              <line x1="12" y1="3" x2="12" y2="15" />
+                            </svg>
+                          </div>
+                          <p className="wiz-upload-text">Click to upload or drag and drop</p>
+                          <p className="wiz-upload-hint">Supported formats: PDF, DOCX, PPTX (Max 50MB)</p>
+                        </>
+                      )}
                     </div>
-                  ) : (
-                    <>
-                      <div className="wiz-upload-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                          <polyline points="17 8 12 3 7 8" />
-                          <line x1="12" y1="3" x2="12" y2="15" />
-                        </svg>
-                      </div>
-                      <p className="wiz-upload-text">Click to upload or drag and drop</p>
-                      <p className="wiz-upload-hint">Supported formats: PDF, DOCX, PPTX (Max 50MB)</p>
-                    </>
-                  )}
-                </div>
 
-                {/* OR divider */}
-                <div className="wiz-or-divider">
-                  <span>OR</span>
-                </div>
+                    {/* OR divider */}
+                    <div className="wiz-or-divider">
+                      <span>OR</span>
+                    </div>
+                  </>
+                )}
 
                 {/* External URL */}
                 <div className="wiz-field-group">
                   <label className="wiz-field-label">
                     External Document URL <span className="wiz-required">*</span>
+                    {primaryUrlChecked && <span style={{ color: '#10b981', marginLeft: '8px', fontWeight: 'bold', fontSize: '24px', verticalAlign: 'middle', lineHeight: '1' }}>✓</span>}
                   </label>
-                  <div className="wiz-input-with-icon">
-                    <svg className="wiz-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                    </svg>
-                    <input
-                      type="url"
-                      placeholder="https://example.com/document.pdf"
-                      value={externalUrl}
-                      onChange={(e) => setExternalUrl(e.target.value)}
-                    />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-start' }}>
+                    <div className="wiz-input-with-icon" style={{ width: '75%' }}>
+                      <svg className="wiz-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                      </svg>
+                      <input
+                        type="url"
+                        placeholder="https://example.com/document.pdf"
+                        value={externalUrl}
+                        onChange={(e) => {
+                          setExternalUrl(e.target.value);
+                          setPrimaryUrlChecked(false);
+                        }}
+                        style={primaryUrlChecked ? { border: '2px solid #10b981', outline: 'none' } : {}}
+                      />
+                    </div>
+                    <button 
+                      type="button" 
+                      onClick={() => { if(externalUrl) setPrimaryUrlChecked(true); }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: '#0288d1', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', color: '#ffffff', boxShadow: '0 2px 4px rgba(2, 136, 209, 0.2)', transition: 'background 0.2s' }}
+                      onMouseOver={(e) => e.target.style.background = '#0277bd'}
+                      onMouseOut={(e) => e.target.style.background = '#0288d1'}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                      </svg>
+                      Cek URL
+                    </button>
                   </div>
                 </div>
               </div>
@@ -270,75 +297,99 @@ export default function CMSNewSubmissionStep1() {
                 </div>
 
                 {/* Upload zone */}
-                <div
-                  className={`wiz-upload-zone ${coverDragActive ? 'drag-active' : ''} ${coverFile ? 'has-file' : ''}`}
-                  onDragEnter={handleCoverDrag}
-                  onDragLeave={handleCoverDrag}
-                  onDragOver={handleCoverDrag}
-                  onDrop={handleCoverDrop}
-                  onClick={() => coverInputRef.current?.click()}
-                >
-                  <input
-                    ref={coverInputRef}
-                    type="file"
-                    accept="image/*,.pdf"
-                    style={{ display: 'none' }}
-                    onChange={handleCoverFileChange}
-                  />
-                  {coverFile ? (
-                    <div className="wiz-file-attached">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                        <polyline points="14 2 14 8 20 8" />
-                      </svg>
-                      <span className="wiz-file-name">{coverFile.name}</span>
-                      <span className="wiz-file-size">({(coverFile.size / 1024 / 1024).toFixed(2)} MB)</span>
-                      <button
-                        className="wiz-file-remove"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setCoverFile(null);
-                        }}
-                      >
-                        ✕
-                      </button>
+                {!coverUrlChecked && (
+                  <>
+                    <div
+                      className={`wiz-upload-zone ${coverDragActive ? 'drag-active' : ''} ${coverFile ? 'has-file' : ''}`}
+                      onDragEnter={handleCoverDrag}
+                      onDragLeave={handleCoverDrag}
+                      onDragOver={handleCoverDrag}
+                      onDrop={handleCoverDrop}
+                      onClick={() => coverInputRef.current?.click()}
+                    >
+                      <input
+                        ref={coverInputRef}
+                        type="file"
+                        accept="image/*,.pdf"
+                        style={{ display: 'none' }}
+                        onChange={handleCoverFileChange}
+                      />
+                      {coverFile ? (
+                        <div className="wiz-file-attached">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                          </svg>
+                          <span className="wiz-file-name">{coverFile.name}</span>
+                          <span className="wiz-file-size">({(coverFile.size / 1024 / 1024).toFixed(2)} MB)</span>
+                          <button
+                            className="wiz-file-remove"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCoverFile(null);
+                            }}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="wiz-upload-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                              <circle cx="8.5" cy="8.5" r="1.5"/>
+                              <polyline points="21 15 16 10 5 21"/>
+                            </svg>
+                          </div>
+                          <p className="wiz-upload-text">Click to upload or drag and drop</p>
+                          <p className="wiz-upload-hint">Supported formats: JPG, PNG, PDF (Max 10MB)</p>
+                        </>
+                      )}
                     </div>
-                  ) : (
-                    <>
-                      <div className="wiz-upload-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                          <circle cx="8.5" cy="8.5" r="1.5"/>
-                          <polyline points="21 15 16 10 5 21"/>
-                        </svg>
-                      </div>
-                      <p className="wiz-upload-text">Click to upload or drag and drop</p>
-                      <p className="wiz-upload-hint">Supported formats: JPG, PNG, PDF (Max 10MB)</p>
-                    </>
-                  )}
-                </div>
 
-                {/* OR divider */}
-                <div className="wiz-or-divider">
-                  <span>OR</span>
-                </div>
+                    {/* OR divider */}
+                    <div className="wiz-or-divider">
+                      <span>OR</span>
+                    </div>
+                  </>
+                )}
 
                 {/* External URL */}
                 <div className="wiz-field-group">
                   <label className="wiz-field-label">
                     Cover Image URL
+                    {coverUrlChecked && <span style={{ color: '#10b981', marginLeft: '8px', fontWeight: 'bold', fontSize: '24px', verticalAlign: 'middle', lineHeight: '1' }}>✓</span>}
                   </label>
-                  <div className="wiz-input-with-icon">
-                    <svg className="wiz-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                    </svg>
-                    <input
-                      type="url"
-                      placeholder="https://example.com/cover.jpg"
-                      value={coverUrl}
-                      onChange={(e) => setCoverUrl(e.target.value)}
-                    />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-start' }}>
+                    <div className="wiz-input-with-icon" style={{ width: '75%' }}>
+                      <svg className="wiz-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                      </svg>
+                      <input
+                        type="url"
+                        placeholder="https://example.com/cover.jpg"
+                        value={coverUrl}
+                        onChange={(e) => {
+                          setCoverUrl(e.target.value);
+                          setCoverUrlChecked(false);
+                        }}
+                        style={coverUrlChecked ? { border: '2px solid #10b981', outline: 'none' } : {}}
+                      />
+                    </div>
+                    <button 
+                      type="button" 
+                      onClick={() => { if(coverUrl) setCoverUrlChecked(true); }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: '#0288d1', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', color: '#ffffff', boxShadow: '0 2px 4px rgba(2, 136, 209, 0.2)', transition: 'background 0.2s' }}
+                      onMouseOver={(e) => e.target.style.background = '#0277bd'}
+                      onMouseOut={(e) => e.target.style.background = '#0288d1'}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                      </svg>
+                      Cek URL
+                    </button>
                   </div>
                 </div>
               </div>
