@@ -7,12 +7,32 @@ export default function CMSNewSubmissionStep2() {
   const [title, setTitle] = useState('Annual Progress Report on Sustainable Development Goals in the Asia-Pacific Region');
   const [languages, setLanguages] = useState({ english: true, bahasa: false, others: false });
   const [pubDate, setPubDate] = useState('');
+  const [totalPages, setTotalPages] = useState('');
   const [summary, setSummary] = useState(
     'This report outlines the progress made across the Asia-Pacific region towards achieving the Sustainable Development Goals (SDGs) established by the United Nations. It highlights key areas of success, identifies ongoing challenges, and proposes strategic recommendations for accelerating implementation over the next decade.'
   );
   const [summaryEditing, setSummaryEditing] = useState(false);
   const [shortSummary, setShortSummary] = useState('');
-  const [tags, setTags] = useState('');
+  const [tags, setTags] = useState(['environment', 'sustainability', 'report']);
+  const [tagInput, setTagInput] = useState('');
+
+  const handleTagKeyDown = (e) => {
+    if (e.key === ',' || e.key === 'Enter') {
+      e.preventDefault();
+      const val = tagInput.trim().replace(/,$/, '');
+      if (val && !tags.includes(val)) {
+        setTags([...tags, val]);
+      }
+      setTagInput('');
+    } else if (e.key === 'Backspace' && !tagInput && tags.length > 0) {
+      setTags(tags.slice(0, -1));
+    }
+  };
+
+  const removeTag = (tagToRemove) => {
+    setTags(tags.filter(tag => tag !== tagToRemove));
+  };
+
   const [pubStatus, setPubStatus] = useState('');
   
   const [focalName, setFocalName] = useState('');
@@ -129,7 +149,21 @@ export default function CMSNewSubmissionStep2() {
                     className="wiz-input"
                     value={pubDate}
                     onChange={(e) => setPubDate(e.target.value)}
-                    style={{ width: '75%' }}
+                    style={{ width: '50%' }}
+                  />
+                </div>
+
+                <div className="wiz-field-group">
+                  <label className="wiz-field-label">
+                    TOTAL PAGES (JUMLAH HALAMAN)
+                  </label>
+                  <input
+                    type="number"
+                    className="wiz-input"
+                    placeholder="e.g. 150"
+                    value={totalPages}
+                    onChange={(e) => setTotalPages(e.target.value)}
+                    style={{ width: '50%' }}
                   />
                 </div>
 
@@ -187,14 +221,34 @@ export default function CMSNewSubmissionStep2() {
                 </div>
 
                 <div className="wiz-field-group">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <label className="wiz-field-label" style={{ display: 'flex', justifyContent: 'space-between', width: '75%', marginBottom: '4px' }}>
+                    <span>SHORT SUMMARY <AiSparkle /></span>
+                    <span style={{ fontSize: '12px', color: shortSummary.length >= 300 ? '#ef4444' : '#94a3b8', fontWeight: '500', textTransform: 'none' }}>
+                      {300 - shortSummary.length} characters left
+                    </span>
+                  </label>
+                  <p style={{ fontSize: '13px', color: '#64748b', margin: '0 0 10px 0' }}>Concise version for search results</p>
+                  <textarea
+                    className="wiz-input"
+                    placeholder="Enter a brief overview..."
+                    value={shortSummary}
+                    onChange={(e) => {
+                      if (e.target.value.length <= 300) setShortSummary(e.target.value);
+                    }}
+                    rows={3}
+                    style={{ resize: 'vertical', width: '75%' }}
+                  />
+                </div>
+
+                <div className="wiz-field-group">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '8px', width: '75%' }}>
                     <label className="wiz-field-label" style={{ marginBottom: 0 }}>
-                      SUMMARY <AiSparkle />
+                      DETAILED SUMMARY <AiSparkle />
                     </label>
                     <button
                       className="wiz-s2-edit-link"
                       onClick={() => setSummaryEditing(!summaryEditing)}
-                      style={{ background: 'none', border: 'none', color: '#0ea5e9', cursor: 'pointer', fontSize: '13px', fontWeight: '500' }}
+                      style={{ background: 'none', border: 'none', color: '#0ea5e9', cursor: 'pointer', fontSize: '13px', fontWeight: '500', padding: 0 }}
                     >
                       {summaryEditing ? 'Done Editing' : 'Edit Summary'}
                     </button>
@@ -204,7 +258,7 @@ export default function CMSNewSubmissionStep2() {
                       className="wiz-input"
                       value={summary}
                       onChange={(e) => setSummary(e.target.value)}
-                      rows={5}
+                      rows={10}
                       style={{ resize: 'vertical', width: '75%' }}
                     />
                   ) : (
@@ -215,30 +269,35 @@ export default function CMSNewSubmissionStep2() {
                 </div>
 
                 <div className="wiz-field-group">
-                  <label className="wiz-field-label">
-                    SHORT SUMMARY <AiSparkle />
+                  <label className="wiz-field-label" style={{ display: 'flex', justifyContent: 'space-between', width: '75%', marginBottom: '4px' }}>
+                    <span>TAGS / KEYWORDS</span>
+                    <span style={{ fontSize: '12px', color: (tags.join(',').length + tagInput.length) >= 500 ? '#ef4444' : '#94a3b8', fontWeight: '500', textTransform: 'none' }}>
+                      {500 - (tags.join(',').length + tagInput.length)} characters left
+                    </span>
                   </label>
-                  <p style={{ fontSize: '13px', color: '#64748b', margin: '-4px 0 10px 0' }}>Concise version for search results (max 3 sentences)</p>
-                  <textarea
-                    className="wiz-input"
-                    placeholder="Enter a brief overview..."
-                    value={shortSummary}
-                    onChange={(e) => setShortSummary(e.target.value)}
-                    rows={3}
-                    style={{ resize: 'vertical', width: '75%' }}
-                  />
-                </div>
-
-                <div className="wiz-field-group">
-                  <label className="wiz-field-label">TAGS / KEYWORDS</label>
-                  <input
-                    type="text"
-                    className="wiz-input"
-                    placeholder="e.g. environment, sustainability, report"
-                    value={tags}
-                    onChange={(e) => setTags(e.target.value)}
-                    style={{ width: '75%' }}
-                  />
+                  <p style={{ fontSize: '13px', color: '#64748b', margin: '0 0 10px 0' }}>Use commas to separate tags.</p>
+                  <div className="wiz-input" style={{ width: '75%', display: 'flex', flexWrap: 'wrap', gap: '8px', minHeight: '44px', height: 'auto', padding: '8px 12px' }}>
+                    {tags.map((tag, idx) => (
+                      <span key={idx} style={{ background: '#f1f5f9', border: '1px solid #e2e8f0', color: '#475569', padding: '4px 8px', borderRadius: '4px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        {tag}
+                        <button onClick={() => removeTag(tag)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: 0, display: 'flex' }} title="Remove tag">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
+                      </span>
+                    ))}
+                    <input
+                      type="text"
+                      placeholder={tags.length === 0 ? "Type a keyword and press comma..." : "Add tag..."}
+                      value={tagInput}
+                      onChange={(e) => {
+                        if (tags.join(',').length + e.target.value.length <= 500) {
+                          setTagInput(e.target.value);
+                        }
+                      }}
+                      onKeyDown={handleTagKeyDown}
+                      style={{ border: 'none', outline: 'none', flex: 1, minWidth: '120px', background: 'transparent', fontSize: '14px', color: '#334155' }}
+                    />
+                  </div>
                 </div>
               </div>
 
