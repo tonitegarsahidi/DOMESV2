@@ -139,7 +139,7 @@ export default function SearchResultsPage() {
               {/* Related Searches */}
               {searchQuery && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-                  <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>Related:</span>
+                  <span style={{ fontSize: '13px', color: '#e0f5ff', fontWeight: '600' }}>Related:</span>
                   {['Green Economy', 'Carbon Emission', 'SDGs', 'Paris Agreement'].map((term, i) => (
                     <a key={i} href={`/search-results?q=${encodeURIComponent(term)}`} style={{
                       fontSize: '13px',
