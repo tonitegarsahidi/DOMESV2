@@ -3,7 +3,7 @@ import CMSLayout from './CMSLayout.jsx';
 
 export default function CMSNewSubmissionStep4() {
   const currentStep = 4;
-  const documentTitle = "Annual Progress Report on Sustainable Agriculture 2023";
+  const documentTitle = "Digital Economy and Financial Inclusion in Rural Indonesia";
   const [consentChecked, setConsentChecked] = useState(false);
 
   const progressSteps = [
@@ -88,29 +88,14 @@ export default function CMSNewSubmissionStep4() {
                 <div className="wiz-s4-section">
                   <span className="wiz-s4-label">UPLOADED FILES</span>
                   <div className="wiz-s4-file-list">
-                    <div className="wiz-s4-file-item">
-                      <div className="wiz-s4-file-icon wiz-pdf">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                          <polyline points="14 2 14 8 20 8"/>
-                        </svg>
+                    <div className="wiz-s4-file-item" style={{ alignItems: 'flex-start' }}>
+                      <div className="wiz-s4-cover-preview" style={{ width: '80px', height: '113px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #e2e8f0', flexShrink: 0 }}>
+                        <img src="/images/report_cover.png" alt="Cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>
                       <div className="wiz-s4-file-details">
-                        <span className="wiz-s4-file-name">annual_progress_report_2023_final.pdf</span>
-                        <span className="wiz-s4-file-size">4.2 MB</span>
-                      </div>
-                    </div>
-
-                    <div className="wiz-s4-file-item">
-                      <div className="wiz-s4-file-icon wiz-docx">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                          <polyline points="14 2 14 8 20 8"/>
-                        </svg>
-                      </div>
-                      <div className="wiz-s4-file-details">
-                        <span className="wiz-s4-file-name">annex_1_data_tables.docx</span>
-                        <span className="wiz-s4-file-size">1.1 MB</span>
+                        <span className="wiz-s4-file-name" style={{ fontWeight: '600' }}>digital_economy_rural_id.pdf</span>
+                        <span className="wiz-s4-file-size" style={{ color: '#64748b', fontSize: '13px' }}>4.2 MB • 120 Pages</span>
+                        <span style={{ fontSize: '12px', color: '#0ea5e9', marginTop: '4px', display: 'inline-block', padding: '2px 6px', background: '#e0f2fe', borderRadius: '4px' }}>AI Processed</span>
                       </div>
                     </div>
                   </div>
@@ -119,15 +104,15 @@ export default function CMSNewSubmissionStep4() {
                 <div className="wiz-s4-focal-grid">
                   <div>
                     <span className="wiz-s4-label">FOCAL POINT NAME</span>
-                    <p className="wiz-s4-val">Elena Rodriguez</p>
+                    <p className="wiz-s4-val">Budi Santoso</p>
                   </div>
                   <div>
                     <span className="wiz-s4-label">FOCAL POINT EMAIL</span>
-                    <p className="wiz-s4-val">e.rodriguez@undp.org</p>
+                    <p className="wiz-s4-val">b.santoso@undp.org</p>
                   </div>
                   <div className="wiz-s4-focal-full">
                     <span className="wiz-s4-label">DEPARTMENT / OFFICE</span>
-                    <p className="wiz-s4-val">Sustainable Development Unit, Latin America Hub</p>
+                    <p className="wiz-s4-val">Inclusive Growth Unit</p>
                   </div>
                 </div>
               </div>
@@ -157,7 +142,7 @@ export default function CMSNewSubmissionStep4() {
                   <div className="wiz-s4-row-2col">
                     <div>
                       <span className="wiz-s4-label">PUBLICATION DATE</span>
-                      <p className="wiz-s4-val">October 15, 2023</p>
+                      <p className="wiz-s4-val">May 15, 2024</p>
                     </div>
                     <div>
                       <span className="wiz-s4-label">STATUS</span>
@@ -172,15 +157,15 @@ export default function CMSNewSubmissionStep4() {
                       <span className="wiz-s4-label">LANGUAGES SELECTED</span>
                       <div className="wiz-s4-langs-row">
                         <span className="wiz-s4-lang-chip">English</span>
-                        <span className="wiz-s4-lang-chip">Spanish</span>
+                        <span className="wiz-s4-lang-chip">Bahasa Indonesia</span>
                       </div>
                     </div>
                     <div>
                       <span className="wiz-s4-label">TAGS / KEYWORDS</span>
                       <div className="wiz-s4-tags-row">
-                        <span className="wiz-s4-tag-item">#Agriculture</span>
-                        <span className="wiz-s4-tag-item">#Sustainability</span>
-                        <span className="wiz-s4-tag-item">#LATAM</span>
+                        <span className="wiz-s4-tag-item">#digital economy</span>
+                        <span className="wiz-s4-tag-item">#financial inclusion</span>
+                        <span className="wiz-s4-tag-item">#fintech</span>
                       </div>
                     </div>
                   </div>
@@ -188,9 +173,7 @@ export default function CMSNewSubmissionStep4() {
                   <div className="wiz-s4-detail-group">
                     <span className="wiz-s4-label">SHORT SUMMARY</span>
                     <p className="wiz-s4-val wiz-s4-summary-p">
-                      A comprehensive overview of agricultural sustainability initiatives implemented across
-                      Latin America in 2023, highlighting key achievements in water conservation and crop
-                      yield improvements.
+                      This comprehensive report analyzes the rapid expansion of digital financial services across rural Indonesia. It highlights the profound impact of mobile banking and fintech solutions on local micro-economies, emphasizing significant improvements in women's financial independence and empowerment.
                     </p>
                   </div>
                 </div>
@@ -216,12 +199,20 @@ export default function CMSNewSubmissionStep4() {
                   <span className="wiz-s4-label">SUSTAINABLE DEVELOPMENT GOALS</span>
                   <div className="wiz-s4-sdg-list">
                     <div className="wiz-s4-sdg-item">
-                      <span className="wiz-s4-sdg-num red-bg">2</span>
-                      <span className="wiz-s4-sdg-label">Zero Hunger</span>
+                      <span className="wiz-s4-sdg-num" style={{ background: '#E5243B', color: 'white' }}>1</span>
+                      <span className="wiz-s4-sdg-label">No Poverty</span>
                     </div>
                     <div className="wiz-s4-sdg-item">
-                      <span className="wiz-s4-sdg-num green-bg">13</span>
-                      <span className="wiz-s4-sdg-label">Climate Action</span>
+                      <span className="wiz-s4-sdg-num" style={{ background: '#FF3A21', color: 'white' }}>5</span>
+                      <span className="wiz-s4-sdg-label">Gender Equality</span>
+                    </div>
+                    <div className="wiz-s4-sdg-item">
+                      <span className="wiz-s4-sdg-num" style={{ background: '#A21942', color: 'white' }}>8</span>
+                      <span className="wiz-s4-sdg-label">Decent Work</span>
+                    </div>
+                    <div className="wiz-s4-sdg-item">
+                      <span className="wiz-s4-sdg-num" style={{ background: '#DD1367', color: 'white' }}>10</span>
+                      <span className="wiz-s4-sdg-label">Reduced Inequalities</span>
                     </div>
                   </div>
                 </div>
@@ -242,7 +233,7 @@ export default function CMSNewSubmissionStep4() {
 
                 <div className="wiz-s4-info-group">
                   <span className="wiz-s4-label">OTHER AGENCIES INVOLVED</span>
-                  <p className="wiz-s4-val">FAO, UNEP</p>
+                  <p className="wiz-s4-val">World Bank</p>
                 </div>
 
                 <div className="wiz-s4-info-group">
@@ -252,12 +243,12 @@ export default function CMSNewSubmissionStep4() {
 
                 <div className="wiz-s4-info-group">
                   <span className="wiz-s4-label">GEOGRAPHIC SCOPE</span>
-                  <p className="wiz-s4-val">Regional (Latin America)</p>
+                  <p className="wiz-s4-val">National (Indonesia)</p>
                 </div>
 
                 <div className="wiz-s4-info-group">
                   <span className="wiz-s4-label">LNOB GROUPS</span>
-                  <p className="wiz-s4-val">Rural populations, Indigenous peoples</p>
+                  <p className="wiz-s4-val">Women and Girls, Rural populations</p>
                 </div>
               </div>
             </div>

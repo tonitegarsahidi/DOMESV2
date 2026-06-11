@@ -3,85 +3,43 @@ import Navbar from './Navbar.jsx';
 import Footer from './Footer.jsx';
 
 // Detailed document data map or fallback
-const documentDetails = {
-  1: {
-    code: 'UNDP-2023-001',
-    agency: 'UNDP',
-    year: '2023',
-    title: 'Annual Progress Report: Sustainable Development Goals in Indonesia 2023',
-    language: 'English',
-    fileSize: '~ 4.8 MB',
-    added: '12/10/23',
-    type: 'Report',
-    image: '/images/doc-cover-sdg.png',
-    abstract: [
-      'This progress report outlines the milestones achieved in the past fiscal year, focusing on the impact of global initiatives on sustainable development goals across multiple governance levels in Indonesia.',
-      'The analysis highlights major areas of improvement in poverty alleviation, clean energy integration, and educational access in remote regions, offering strategic recommendations to align regional policies with UN sustainability benchmarks.'
-    ],
-    summary: 'The report emphasizes that partnership between public and private sectors remains the cornerstone of achieving the 2030 Agenda in Indonesia, highlighting success stories in climate finance and inclusive social programs.',
-    sdgs: ['GOAL 1', 'GOAL 7', 'GOAL 8', 'GOAL 10', 'GOAL 13', 'GOAL 17'],
-    themes: ['Socio-Economic Development', 'Climate Action', 'Partnership for Goals'],
-    sectors: ['Governance', 'Energy', 'Finance', 'Education']
-  },
-  2: {
-    code: 'UNDP-2022-004',
-    agency: 'UNDP',
-    year: '2022',
-    title: 'Climate Action Framework: Maritime Biodiversity in the Archipelago',
-    language: 'English',
-    fileSize: '~ 3.2 MB',
-    added: '25/08/22',
-    type: 'Framework',
-    image: '/images/doc-cover-ocean.png',
-    abstract: [
-      'A strategic roadmap for protecting marine and coastal habitats in the Indonesian archipelago through sustainable fishing practices and community-led conservation efforts.',
-      'The document provides comprehensive policy frameworks to mitigate illegal fishing, marine pollution, and coral reef degradation while fostering ecotourism opportunities for coastal communities.'
-    ],
-    summary: 'Protecting the archipelagic biodiversity requires centralized ocean monitoring, local community enforcement, and alternative sustainable livelihoods to ensure the prosperity of fishing villages.',
-    sdgs: ['GOAL 13', 'GOAL 14', 'GOAL 15'],
-    themes: ['Maritime Biodiversity', 'Environment', 'Ecotourism'],
-    sectors: ['Fishery', 'Environment', 'Tourism', 'Governance']
-  },
-  3: {
-    code: 'UNICEF-2023-008',
-    agency: 'UNICEF',
-    year: '2023',
-    title: 'Children in Focus: Socio-Economic Protection Systems',
-    language: 'English',
-    fileSize: '~ 2.8 MB',
-    added: '15/07/23',
-    type: 'Report',
-    image: '/images/doc-cover-children.png',
-    abstract: [
-      'Analyzing the efficacy of social safety nets for vulnerable families across the outer islands of Indonesia, with policy recommendations for enhanced coverage and efficiency.',
-      'This study evaluates childcare accessibility, health services, and education resources in rural and underserved regions, focusing on post-pandemic recovery.'
-    ],
-    summary: 'Improving socio-economic protection systems for children is essential for regional growth. Recommendations focus on school feeding programs, direct cash transfers, and digital registration platforms.',
-    sdgs: ['GOAL 1', 'GOAL 3', 'GOAL 4', 'GOAL 5', 'GOAL 10'],
-    themes: ['Social Protection', 'Child Education', 'Healthcare Access'],
-    sectors: ['Healthcare', 'Education', 'Social Affairs', 'Finance']
-  }
-};
-
-// Default seaweed document (from user mockup)
-const defaultDoc = {
-  code: 'UNIDO-2015-001',
-  agency: 'UNIDO',
-  year: '2015',
-  title: 'A diagnostic analysis of seaweed value chains in Sumenep Regency, Madura Indonesia',
-  language: 'English',
-  fileSize: '~ 2.4 MB',
-  added: '01/10/16',
+const digitalEconomyDoc = {
+  code: 'UNDP-2024-001',
+  agency: 'UNDP',
+  year: '2024',
+  title: 'Digital Economy and Financial Inclusion in Rural Indonesia',
+  language: 'English, Bahasa Indonesia',
+  fileSize: '4.2 MB',
+  added: '15/05/2024',
   type: 'Report',
-  image: '/images/doc-cover-sdg.png', // Fallback cover
+  image: '/images/report_cover.png',
+  totalPages: 120,
+  pubStatus: 'Published',
+  focalPoint: {
+    name: 'Budi Santoso',
+    email: 'b.santoso@undp.org',
+    phone: '+62 812 3456 7890',
+    dept: 'Inclusive Growth Unit'
+  },
+  classification: {
+    leadAgency: 'UNDP',
+    otherAgencies: ['World Bank'],
+    jointProgramme: 'Yes',
+    geographicScope: 'National (Indonesia)',
+    nonUnPartners: [
+      { type: 'Government', name: 'Ministry of Villages' },
+      { type: 'Consulting Firm', name: 'GoTo Group' }
+    ],
+    thematicAreas: ['Inclusive Economic Transformation'],
+    lnobGroups: ['Women and Girls', 'Rural populations'],
+    sectors: ['Economic Development', 'Innovation and Technology', 'Rural and Regional Development']
+  },
   abstract: [
-    'This report provides a comprehensive diagnostic analysis of the seaweed value chains operating within the Sumenep Regency of Madura, Indonesia. It explores the intricate network of actors involved, from primary cultivation by local farmers to processing and market distribution.',
-    'The analysis aims to identify key constraints and opportunities for upgrading the value chain, focusing on enhancing productivity, improving quality standards, and ensuring sustainable livelihoods for the communities dependent on this vital coastal resource. It addresses aspects of inclusive human development and economic transformation within the region.'
+    "This comprehensive report analyzes the rapid expansion of digital financial services across rural Indonesia. It highlights the profound impact of mobile banking and fintech solutions on local micro-economies, emphasizing significant improvements in women's financial independence and empowerment."
   ],
-  summary: 'The Sumenep Regency seaweed value chain faces challenges in quality control and market access despite high production volumes. Key recommendations include establishing farmer cooperatives, improving drying techniques, and developing direct links with national processors to increase margins for primary producers.',
-  sdgs: ['GOAL 2', 'GOAL 7', 'GOAL 8', 'GOAL 12', 'GOAL 13', 'GOAL 14', 'GOAL 15'],
-  themes: ['Inclusive Human Development', 'Economic Transformation', 'Green Development', 'Innovation for SDGs'],
-  sectors: ['Business', 'Economic Development', 'Energy', 'Environment', 'Fishery', 'Governance']
+  summary: "<b>Executive Overview</b><br><br>This extensive report provides an in-depth analysis of the digital economy's penetration into rural areas of Indonesia, focusing on the critical role of financial inclusion in driving sustainable economic development. As digital infrastructure expands across the archipelago, unprecedented opportunities are emerging for smallholder farmers, micro, small, and medium enterprises (MSMEs), and previously unbanked populations.<br><br><b>Key Findings:</b><ul><li><b>Technological Adoption:</b> Mobile internet penetration in rural regions has surged by 45% over the past three years, laying the groundwork for digital financial services (DFS) adoption.</li><li><b>Economic Impact:</b> Access to digital credit and savings platforms has enabled rural MSMEs to increase their average revenue by approximately 22%, fostering local economic resilience.</li><li><b>Gender Equality:</b> Digital financial inclusion has disproportionately benefited rural women. Female-led enterprises represent 60% of new digital banking accounts, providing them with unprecedented control over household finances and business capital.</li><li><b>Agricultural Supply Chains:</b> Agritech platforms integrated with digital payment systems have reduced middleman dependencies, increasing farmers' profit margins by up to 15%.</li></ul><br><b>Challenges Identified</b><br><br>Despite significant progress, substantial barriers remain. The report identifies three primary challenges hindering universal financial inclusion in rural Indonesia: persistent gaps in digital literacy, inadequate telecommunications infrastructure in the most remote areas (the 3T regions: frontier, outermost, and underdeveloped), and limited trust in formal financial institutions among older demographics. Cybersecurity concerns and the risk of predatory digital lending practices also require urgent regulatory attention.<br><br><b>Strategic Recommendations</b><br><br>To accelerate progress towards the Sustainable Development Goals (SDGs), particularly Goal 1 (No Poverty) and Goal 5 (Gender Equality), the report outlines a multi-stakeholder action plan. We recommend enhanced public-private partnerships to subsidize rural broadband infrastructure. Furthermore, targeted digital literacy campaigns, tailored to local languages and cultural contexts, are essential. Regulatory frameworks must be strengthened to protect vulnerable new consumers while simultaneously fostering fintech innovation. By addressing these critical areas, Indonesia can ensure that the digital revolution serves as an inclusive engine for equitable prosperity across its vast rural landscape, leaving no one behind in the transition to a modern digital economy.",
+  sdgs: ['GOAL 1', 'GOAL 5', 'GOAL 8', 'GOAL 10'],
+  tags: ['digital economy', 'financial inclusion', 'fintech', 'women empowerment', 'rural development']
 };
 
 const relatedDocs = [
@@ -141,7 +99,7 @@ const getSdgClass = (goal) => {
 };
 
 export default function DocumentDetail({ id }) {
-  const doc = documentDetails[id] || defaultDoc;
+  const doc = digitalEconomyDoc; // Ignore ID, always show dummy data
 
   return (
     <div className="detail-page-wrapper">
@@ -229,6 +187,10 @@ export default function DocumentDetail({ id }) {
                 <span className="meta-box-value">{doc.fileSize}</span>
               </div>
               <div className="meta-grid-box">
+                <span className="meta-box-label">TOTAL PAGES</span>
+                <span className="meta-box-value">{doc.totalPages} Pages</span>
+              </div>
+              <div className="meta-grid-box">
                 <span className="meta-box-label">ADDED</span>
                 <span className="meta-box-value">{doc.added}</span>
               </div>
@@ -236,36 +198,49 @@ export default function DocumentDetail({ id }) {
                 <span className="meta-box-label">TYPE</span>
                 <span className="meta-box-value">{doc.type}</span>
               </div>
+              <div className="meta-grid-box">
+                <span className="meta-box-label">STATUS</span>
+                <span className="meta-box-value" style={{ color: '#16a34a', fontWeight: '600' }}>{doc.pubStatus}</span>
+              </div>
+            </div>
+
+            {/* Tags Grid (from keywords) */}
+            <div className="detail-section">
+              <div className="detail-pills-row" style={{ marginTop: '16px', marginBottom: '24px' }}>
+                {doc.tags.map((tag, i) => (
+                  <span key={i} className="detail-pill-badge" style={{ background: '#f1f5f9', color: '#475569', border: '1px solid #e2e8f0', textTransform: 'none' }}>#{tag}</span>
+                ))}
+              </div>
             </div>
 
             {/* Abstract */}
             <div className="detail-section">
-              <h2 className="detail-section-title">Abstract</h2>
+              <h2 className="detail-section-title">Abstract (Short Summary)</h2>
               {doc.abstract.map((p, index) => (
                 <p key={index} className="detail-paragraph">{p}</p>
               ))}
             </div>
 
             {/* Summary Document Box */}
-            <div className="detail-summary-box">
-              <div className="summary-box-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="16" y1="13" x2="8" y2="13"></line>
-                  <line x1="16" y1="17" x2="8" y2="17"></line>
-                  <polyline points="10 9 9 9 8 9"></polyline>
-                </svg>
-              </div>
-              <div className="summary-box-content">
-                <h3>Summary Document</h3>
-                <p>{doc.summary}</p>
-                <a href="#" className="summary-read-more">
-                  Read More
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginLeft: '4px'}}>
-                    <polyline points="6 9 12 15 18 9"></polyline>
+            <div className="detail-summary-box" style={{ flexDirection: 'column' }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
+                <div className="summary-box-icon" style={{ marginRight: '16px', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
                   </svg>
-                </a>
+                </div>
+                <h3 style={{ margin: 0, fontSize: '18px', color: '#0f172a' }}>Detailed Summary</h3>
+              </div>
+              <div className="summary-box-content" style={{ paddingLeft: '0' }}>
+                <div 
+                  className="wysiwyg-content" 
+                  style={{ lineHeight: '1.7', color: '#334155', fontSize: '15px' }}
+                  dangerouslySetInnerHTML={{ __html: doc.summary }}
+                />
               </div>
             </div>
 
@@ -289,23 +264,73 @@ export default function DocumentDetail({ id }) {
               </div>
             </div>
 
-            {/* Thematic Areas */}
-            <div className="detail-section">
-              <h3 className="detail-sub-title">THEMATIC AREAS</h3>
-              <div className="detail-pills-row">
-                {doc.themes.map((theme, i) => (
-                  <span key={i} className="detail-pill-badge">{theme}</span>
-                ))}
-              </div>
-            </div>
+            {/* Classification & Metadata Row */}
+            <div className="detail-section" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
+              <div>
+                <h3 className="detail-sub-title">THEMATIC AREAS</h3>
+                <div className="detail-pills-row">
+                  {doc.classification.thematicAreas.map((theme, i) => (
+                    <span key={i} className="detail-pill-badge">{theme}</span>
+                  ))}
+                </div>
 
-            {/* Sectors */}
-            <div className="detail-section">
-              <h3 className="detail-sub-title">SECTORS</h3>
-              <div className="detail-pills-row">
-                {doc.sectors.map((sector, i) => (
-                  <span key={i} className="detail-pill-badge sector-badge">{sector}</span>
-                ))}
+                <h3 className="detail-sub-title" style={{ marginTop: '24px' }}>SECTORS</h3>
+                <div className="detail-pills-row">
+                  {doc.classification.sectors.map((sector, i) => (
+                    <span key={i} className="detail-pill-badge sector-badge">{sector}</span>
+                  ))}
+                </div>
+
+                <h3 className="detail-sub-title" style={{ marginTop: '24px' }}>LEAVE NO ONE BEHIND (LNOB)</h3>
+                <div className="detail-pills-row">
+                  {doc.classification.lnobGroups.map((group, i) => (
+                    <span key={i} className="detail-pill-badge" style={{ background: '#fce7f3', color: '#be185d', borderColor: '#fbcfe8' }}>{group}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="detail-sub-title">CLASSIFICATION DETAILS</h3>
+                <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                  <div style={{ marginBottom: '12px' }}>
+                    <span style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#64748b', marginBottom: '4px' }}>LEAD AGENCY</span>
+                    <span style={{ fontSize: '14px', color: '#0f172a', fontWeight: '500' }}>{doc.classification.leadAgency}</span>
+                  </div>
+                  <div style={{ marginBottom: '12px' }}>
+                    <span style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#64748b', marginBottom: '4px' }}>OTHER AGENCIES</span>
+                    <span style={{ fontSize: '14px', color: '#0f172a' }}>{doc.classification.otherAgencies.join(', ')}</span>
+                  </div>
+                  <div style={{ marginBottom: '12px' }}>
+                    <span style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#64748b', marginBottom: '4px' }}>JOINT PROGRAMME</span>
+                    <span style={{ fontSize: '14px', color: '#0f172a' }}>{doc.classification.jointProgramme}</span>
+                  </div>
+                  <div style={{ marginBottom: '12px' }}>
+                    <span style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#64748b', marginBottom: '4px' }}>GEOGRAPHIC SCOPE</span>
+                    <span style={{ fontSize: '14px', color: '#0f172a' }}>{doc.classification.geographicScope}</span>
+                  </div>
+                  <div>
+                    <span style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#64748b', marginBottom: '4px' }}>NON-UN PARTNERS</span>
+                    {doc.classification.nonUnPartners.map((p, idx) => (
+                      <div key={idx} style={{ fontSize: '13px', color: '#334155', marginBottom: '2px' }}>
+                        • <strong>{p.name}</strong> ({p.type})
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <h3 className="detail-sub-title" style={{ marginTop: '24px' }}>FOCAL POINT</h3>
+                <div style={{ background: '#f0fdfa', padding: '16px', borderRadius: '8px', border: '1px solid #ccfbf1' }}>
+                  <p style={{ margin: '0 0 4px 0', fontWeight: '600', color: '#0f766e' }}>{doc.focalPoint.name}</p>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '13px', color: '#0f766e' }}>{doc.focalPoint.dept}</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px', fontSize: '13px', color: '#0f766e' }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    {doc.focalPoint.email}
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px', fontSize: '13px', color: '#0f766e' }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    {doc.focalPoint.phone}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

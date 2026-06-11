@@ -157,11 +157,14 @@ export default function CMSNewSubmissionStep3() {
   const currentStep = 3;
 
   /* state */
-  const [selectedSectors, setSelectedSectors] = useState(['Economic Growth & Trade', 'Governance & Human Rights']);
-  const [selectedSDGs, setSelectedSDGs] = useState([2, 5]);
-  const [selectedAgencies, setSelectedAgencies] = useState([]);
-  const [worksWithNonUNPartners, setWorksWithNonUNPartners] = useState('');
-  const [nonUNPartners, setNonUNPartners] = useState([{ type: '', name: '' }]);
+  const [selectedSectors, setSelectedSectors] = useState(['Economic Development', 'Innovation and Technology', 'Rural and Regional Development']);
+  const [selectedSDGs, setSelectedSDGs] = useState([1, 5, 8, 10]);
+  const [selectedAgencies, setSelectedAgencies] = useState(['UNDP', 'World Bank']);
+  const [worksWithNonUNPartners, setWorksWithNonUNPartners] = useState('yes');
+  const [nonUNPartners, setNonUNPartners] = useState([
+    { type: 'Government', name: 'Ministry of Villages' },
+    { type: 'Consulting Firm', name: 'GoTo Group' }
+  ]);
 
   const nonUNPartnerTypes = [
     'Government',
@@ -190,8 +193,8 @@ export default function CMSNewSubmissionStep3() {
     setNonUNPartners(updated);
   };
   const [selectedThematic, setSelectedThematic] = useState(['Inclusive Economic Transformation']);
-  const [selectedLNOB, setSelectedLNOB] = useState(['Youth and Children']);
-  const [otherLNOB, setOtherLNOB] = useState('');
+  const [selectedLNOB, setSelectedLNOB] = useState(['Women and Girls']);
+  const [otherLNOB, setOtherLNOB] = useState('Rural populations');
 
   /* helpers */
   const toggleItem = (arr, setter, item) => {

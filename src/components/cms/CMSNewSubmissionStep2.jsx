@@ -59,15 +59,15 @@ const SimpleWYSIWYG = ({ value, onChange, maxLength, readOnly }) => {
 export default function CMSNewSubmissionStep2() {
   const currentStep = 2;
 
-  const [title, setTitle] = useState('Annual Progress Report on Sustainable Development Goals in the Asia-Pacific Region');
-  const [languages, setLanguages] = useState({ english: true, bahasa: false, others: false });
-  const [pubDate, setPubDate] = useState('');
-  const [totalPages, setTotalPages] = useState('');
+  const [title, setTitle] = useState('Digital Economy and Financial Inclusion in Rural Indonesia');
+  const [languages, setLanguages] = useState({ english: true, bahasa: true, others: false });
+  const [pubDate, setPubDate] = useState('2024-05-15');
+  const [totalPages, setTotalPages] = useState('120');
   const [summary, setSummary] = useState(
-    'This report outlines the progress made across the Asia-Pacific region towards achieving the Sustainable Development Goals (SDGs) established by the United Nations. It highlights key areas of success, identifies ongoing challenges, and proposes strategic recommendations for accelerating implementation over the next decade.'
+    '<b>Executive Overview</b><br><br>This extensive report provides an in-depth analysis of the digital economy\'s penetration into rural areas of Indonesia, focusing on the critical role of financial inclusion in driving sustainable economic development. As digital infrastructure expands across the archipelago, unprecedented opportunities are emerging for smallholder farmers, micro, small, and medium enterprises (MSMEs), and previously unbanked populations.<br><br><b>Key Findings:</b><ul><li><b>Technological Adoption:</b> Mobile internet penetration in rural regions has surged by 45% over the past three years, laying the groundwork for digital financial services (DFS) adoption.</li><li><b>Economic Impact:</b> Access to digital credit and savings platforms has enabled rural MSMEs to increase their average revenue by approximately 22%, fostering local economic resilience.</li><li><b>Gender Equality:</b> Digital financial inclusion has disproportionately benefited rural women. Female-led enterprises represent 60% of new digital banking accounts, providing them with unprecedented control over household finances and business capital.</li><li><b>Agricultural Supply Chains:</b> Agritech platforms integrated with digital payment systems have reduced middleman dependencies, increasing farmers\' profit margins by up to 15%.</li></ul><br><b>Challenges Identified</b><br><br>Despite significant progress, substantial barriers remain. The report identifies three primary challenges hindering universal financial inclusion in rural Indonesia: persistent gaps in digital literacy, inadequate telecommunications infrastructure in the most remote areas (the 3T regions: frontier, outermost, and underdeveloped), and limited trust in formal financial institutions among older demographics. Cybersecurity concerns and the risk of predatory digital lending practices also require urgent regulatory attention.<br><br><b>Strategic Recommendations</b><br><br>To accelerate progress towards the Sustainable Development Goals (SDGs), particularly Goal 1 (No Poverty) and Goal 5 (Gender Equality), the report outlines a multi-stakeholder action plan. We recommend enhanced public-private partnerships to subsidize rural broadband infrastructure. Furthermore, targeted digital literacy campaigns, tailored to local languages and cultural contexts, are essential. Regulatory frameworks must be strengthened to protect vulnerable new consumers while simultaneously fostering fintech innovation. By addressing these critical areas, Indonesia can ensure that the digital revolution serves as an inclusive engine for equitable prosperity across its vast rural landscape, leaving no one behind in the transition to a modern digital economy.'
   );
-  const [shortSummary, setShortSummary] = useState('');
-  const [tags, setTags] = useState(['environment', 'sustainability', 'report']);
+  const [shortSummary, setShortSummary] = useState('This comprehensive report analyzes the rapid expansion of digital financial services across rural Indonesia. It highlights the profound impact of mobile banking and fintech solutions on local micro-economies, emphasizing significant improvements in women\'s financial independence and empowerment.');
+  const [tags, setTags] = useState(['digital economy', 'financial inclusion', 'rural development', 'fintech', 'women empowerment']);
   const [tagInput, setTagInput] = useState('');
 
   const handleTagKeyDown = (e) => {
@@ -87,12 +87,12 @@ export default function CMSNewSubmissionStep2() {
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
-  const [pubStatus, setPubStatus] = useState('');
+  const [pubStatus, setPubStatus] = useState('published');
   
-  const [focalName, setFocalName] = useState('');
-  const [focalEmail, setFocalEmail] = useState('');
-  const [focalPhone, setFocalPhone] = useState('');
-  const [focalDept, setFocalDept] = useState('');
+  const [focalName, setFocalName] = useState('Budi Santoso');
+  const [focalEmail, setFocalEmail] = useState('b.santoso@undp.org');
+  const [focalPhone, setFocalPhone] = useState('+62 812 3456 7890');
+  const [focalDept, setFocalDept] = useState('Inclusive Growth Unit');
 
   const progressSteps = [
     { num: 1, label: 'Files' },
