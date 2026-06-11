@@ -272,9 +272,9 @@ export default function CMSNewSubmissionStep1() {
                       <button 
                         type="button" 
                         onClick={() => { if(externalUrl) setPrimaryUrlChecked(true); }}
-                        style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: '#0288d1', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', color: '#ffffff', boxShadow: '0 2px 4px rgba(2, 136, 209, 0.2)', transition: 'background 0.2s' }}
-                        onMouseOver={(e) => e.target.style.background = '#0277bd'}
-                        onMouseOut={(e) => e.target.style.background = '#0288d1'}
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: 'var(--un-primary)', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', color: '#ffffff', boxShadow: '0 2px 4px rgba(0, 158, 219, 0.2)', transition: 'background 0.2s' }}
+                        onMouseOver={(e) => e.target.style.background = 'var(--un-primary-dark)'}
+                        onMouseOut={(e) => e.target.style.background = 'var(--un-primary)'}
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <circle cx="11" cy="11" r="8" />
@@ -387,9 +387,9 @@ export default function CMSNewSubmissionStep1() {
                       <button 
                         type="button" 
                         onClick={() => { if(coverUrl) setCoverUrlChecked(true); }}
-                        style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: '#0288d1', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', color: '#ffffff', boxShadow: '0 2px 4px rgba(2, 136, 209, 0.2)', transition: 'background 0.2s' }}
-                        onMouseOver={(e) => e.target.style.background = '#0277bd'}
-                        onMouseOut={(e) => e.target.style.background = '#0288d1'}
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: 'var(--un-primary)', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', color: '#ffffff', boxShadow: '0 2px 4px rgba(0, 158, 219, 0.2)', transition: 'background 0.2s' }}
+                        onMouseOver={(e) => e.target.style.background = 'var(--un-primary-dark)'}
+                        onMouseOut={(e) => e.target.style.background = 'var(--un-primary)'}
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <circle cx="11" cy="11" r="8" />
@@ -409,7 +409,7 @@ export default function CMSNewSubmissionStep1() {
                     </div>
                     <div>
                       <h4 style={{ margin: '0 0 4px 0', color: '#0f172a', fontSize: '15px' }}>Cover Preview Generated</h4>
-                      <p style={{ margin: '0', color: '#64748b', fontSize: '13px', lineHeight: '1.5' }}>The system has successfully loaded and optimized your cover image for display across the platform.</p>
+                      <p style={{ margin: '0', color: '#64748b', fontSize: '14px', lineHeight: '1.5' }}>The system has successfully loaded and optimized your cover image for display across the platform.</p>
                     </div>
                   </div>
                 )}
@@ -488,12 +488,12 @@ export default function CMSNewSubmissionStep1() {
                                   updated[i].file.name = e.target.value;
                                   setSupportingFiles(updated);
                                 }}
-                                style={{ flex: 1, padding: '6px 12px', fontSize: '14px', height: '32px' }}
+                                style={{ flex: 1, padding: '8px 12px', fontSize: '15px', height: '36px' }}
                               />
                             ) : (
                               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#e0f2fe', border: '1px solid #bae6fd', padding: '4px 12px', borderRadius: '6px' }}>
-                                <span className="wiz-supporting-name" style={{ fontWeight: '600', color: '#0369a1', fontSize: '14px' }}>{item.file.name}</span>
-                                <span className="wiz-supporting-size" style={{ color: '#0284c7', fontSize: '12px', fontWeight: '600', background: '#ffffff', padding: '2px 8px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>{(item.file.size / 1024 / 1024).toFixed(2)} MB</span>
+                                <span className="wiz-supporting-name" style={{ fontWeight: '600', color: '#0369a1', fontSize: '15px' }}>{item.file.name}</span>
+                                <span className="wiz-supporting-size" style={{ color: '#0284c7', fontSize: '13px', fontWeight: '600', background: '#ffffff', padding: '2px 8px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>{(item.file.size / 1024 / 1024).toFixed(2)} MB</span>
                               </div>
                             )}
                           </div>
@@ -502,10 +502,10 @@ export default function CMSNewSubmissionStep1() {
                         
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '12px' }}>
                           <div>
-                            <label className="wiz-field-label" style={{ fontSize: '12px', marginBottom: '4px', display: 'block' }}>TYPE</label>
+                            <label className="wiz-field-label" style={{ fontSize: '13px', marginBottom: '4px', display: 'block' }}>TYPE</label>
                             <select 
                               className="wiz-input" 
-                              style={{ width: '100%', padding: '8px', fontSize: '14px' }}
+                              style={{ width: '100%', padding: '10px', fontSize: '15px' }}
                               value={item.type}
                               onChange={(e) => updateSupportingFile(i, 'type', e.target.value)}
                             >
@@ -518,11 +518,11 @@ export default function CMSNewSubmissionStep1() {
                             </select>
                           </div>
                           <div>
-                            <label className="wiz-field-label" style={{ fontSize: '12px', marginBottom: '4px', display: 'block' }}>DESCRIPTION</label>
+                            <label className="wiz-field-label" style={{ fontSize: '13px', marginBottom: '4px', display: 'block' }}>DESCRIPTION</label>
                             <input 
                               type="text" 
                               className="wiz-input" 
-                              style={{ width: '80%', padding: '8px', fontSize: '14px' }}
+                              style={{ width: '80%', padding: '10px', fontSize: '15px' }}
                               placeholder="Add a brief description..." 
                               value={item.description}
                               onChange={(e) => updateSupportingFile(i, 'description', e.target.value)}

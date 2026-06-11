@@ -26,7 +26,7 @@ const SimpleWYSIWYG = ({ value, onChange, maxLength, readOnly }) => {
   if (readOnly) {
     return (
       <div 
-        style={{ padding: '16px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', color: '#334155', lineHeight: '1.6', width: '75%', boxSizing: 'border-box' }}
+        style={{ padding: '16px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '15px', color: '#334155', lineHeight: '1.6', width: '75%', boxSizing: 'border-box' }}
         dangerouslySetInnerHTML={{ __html: value }}
       />
     );
@@ -39,10 +39,10 @@ const SimpleWYSIWYG = ({ value, onChange, maxLength, readOnly }) => {
         <button onClick={() => execCmd('italic')} type="button" style={{ background: 'white', border: '1px solid #e2e8f0', cursor: 'pointer', width: '32px', height: '32px', borderRadius: '4px', fontStyle: 'italic', fontFamily: 'serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>I</button>
         <button onClick={() => execCmd('underline')} type="button" style={{ background: 'white', border: '1px solid #e2e8f0', cursor: 'pointer', width: '32px', height: '32px', borderRadius: '4px', textDecoration: 'underline', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>U</button>
         <div style={{ width: '1px', background: '#cbd5e1', margin: '0 4px' }} />
-        <button onClick={() => execCmd('insertUnorderedList')} type="button" style={{ background: 'white', border: '1px solid #e2e8f0', cursor: 'pointer', padding: '0 10px', height: '32px', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px' }}>
+        <button onClick={() => execCmd('insertUnorderedList')} type="button" style={{ background: 'white', border: '1px solid #e2e8f0', cursor: 'pointer', padding: '0 10px', height: '32px', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '14px' }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg> Bullet
         </button>
-        <button onClick={() => execCmd('insertOrderedList')} type="button" style={{ background: 'white', border: '1px solid #e2e8f0', cursor: 'pointer', padding: '0 10px', height: '32px', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px' }}>
+        <button onClick={() => execCmd('insertOrderedList')} type="button" style={{ background: 'white', border: '1px solid #e2e8f0', cursor: 'pointer', padding: '0 10px', height: '32px', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '14px' }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="10" y1="6" x2="21" y2="6"></line><line x1="10" y1="12" x2="21" y2="12"></line><line x1="10" y1="18" x2="21" y2="18"></line><path d="M4 6h1v4"></path><path d="M4 10h2"></path><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"></path></svg> Number
         </button>
       </div>
@@ -50,7 +50,7 @@ const SimpleWYSIWYG = ({ value, onChange, maxLength, readOnly }) => {
         ref={editorRef}
         contentEditable
         onInput={handleInput}
-        style={{ padding: '16px', minHeight: '220px', outline: 'none', fontSize: '14px', lineHeight: '1.6', color: '#334155', flex: 1, overflowY: 'auto' }}
+        style={{ padding: '16px', minHeight: '220px', outline: 'none', fontSize: '15px', lineHeight: '1.6', color: '#334155', flex: 1, overflowY: 'auto' }}
       />
     </div>
   );
@@ -277,11 +277,11 @@ export default function CMSNewSubmissionStep2() {
                 <div className="wiz-field-group">
                   <label className="wiz-field-label" style={{ display: 'flex', justifyContent: 'space-between', width: '75%', marginBottom: '4px' }}>
                     <span>SHORT SUMMARY <AiSparkle /></span>
-                    <span style={{ fontSize: '12px', color: shortSummary.length >= 300 ? '#ef4444' : '#94a3b8', fontWeight: '500', textTransform: 'none' }}>
+                    <span style={{ fontSize: '13px', color: shortSummary.length >= 300 ? '#ef4444' : '#94a3b8', fontWeight: '500', textTransform: 'none' }}>
                       {300 - shortSummary.length} characters left
                     </span>
                   </label>
-                  <p style={{ fontSize: '13px', color: '#64748b', margin: '0 0 10px 0' }}>Concise version for search results</p>
+                  <p style={{ fontSize: '14px', color: '#64748b', margin: '0 0 10px 0' }}>Concise version for search results</p>
                   <textarea
                     className="wiz-input"
                     placeholder="Enter a brief overview..."
@@ -298,7 +298,7 @@ export default function CMSNewSubmissionStep2() {
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '8px', width: '75%' }}>
                     <label className="wiz-field-label" style={{ marginBottom: 0, display: 'flex', alignItems: 'center', gap: '12px', width: '100%' }}>
                       <span>DETAILED SUMMARY <AiSparkle /></span>
-                      <span style={{ fontSize: '12px', color: summary.replace(/<[^>]*>?/gm, '').length >= 5000 ? '#ef4444' : '#94a3b8', fontWeight: '500', textTransform: 'none', marginLeft: 'auto' }}>
+                      <span style={{ fontSize: '13px', color: summary.replace(/<[^>]*>?/gm, '').length >= 5000 ? '#ef4444' : '#94a3b8', fontWeight: '500', textTransform: 'none', marginLeft: 'auto' }}>
                         {5000 - summary.replace(/<[^>]*>?/gm, '').length} characters left
                       </span>
                     </label>
@@ -317,14 +317,14 @@ export default function CMSNewSubmissionStep2() {
                 <div className="wiz-field-group">
                   <label className="wiz-field-label" style={{ display: 'flex', justifyContent: 'space-between', width: '75%', marginBottom: '4px' }}>
                     <span>TAGS / KEYWORDS</span>
-                    <span style={{ fontSize: '12px', color: (tags.join(',').length + tagInput.length) >= 500 ? '#ef4444' : '#94a3b8', fontWeight: '500', textTransform: 'none' }}>
+                    <span style={{ fontSize: '13px', color: (tags.join(',').length + tagInput.length) >= 500 ? '#ef4444' : '#94a3b8', fontWeight: '500', textTransform: 'none' }}>
                       {500 - (tags.join(',').length + tagInput.length)} characters left
                     </span>
                   </label>
-                  <p style={{ fontSize: '13px', color: '#64748b', margin: '0 0 10px 0' }}>Use commas to separate tags.</p>
+                  <p style={{ fontSize: '14px', color: '#64748b', margin: '0 0 10px 0' }}>Use commas to separate tags.</p>
                   <div className="wiz-input" style={{ width: '75%', display: 'flex', flexWrap: 'wrap', gap: '8px', minHeight: '44px', height: 'auto', padding: '8px 12px' }}>
                     {tags.map((tag, idx) => (
-                      <span key={idx} style={{ background: '#f1f5f9', border: '1px solid #e2e8f0', color: '#475569', padding: '4px 8px', borderRadius: '4px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span key={idx} style={{ background: '#f1f5f9', border: '1px solid #e2e8f0', color: '#475569', padding: '4px 8px', borderRadius: '4px', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         {tag}
                         <button onClick={() => removeTag(tag)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: 0, display: 'flex' }} title="Remove tag">
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -341,7 +341,7 @@ export default function CMSNewSubmissionStep2() {
                         }
                       }}
                       onKeyDown={handleTagKeyDown}
-                      style={{ border: 'none', outline: 'none', flex: 1, minWidth: '120px', background: 'transparent', fontSize: '14px', color: '#334155' }}
+                      style={{ border: 'none', outline: 'none', flex: 1, minWidth: '120px', background: 'transparent', fontSize: '15px', color: '#334155' }}
                     />
                   </div>
                 </div>
