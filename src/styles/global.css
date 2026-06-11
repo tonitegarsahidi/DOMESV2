@@ -899,7 +899,7 @@ a {
 /* ===== DOCUMENT GRID LAYOUT ===== */
 .document-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
 }
 
@@ -922,7 +922,7 @@ a {
 
 .document-card-grid-image {
   width: 100%;
-  aspect-ratio: 2/3;
+  aspect-ratio: 4/5;
   height: auto;
   overflow: hidden;
   position: relative;
@@ -1757,7 +1757,8 @@ a {
 
 .related-doc-card-image {
   width: 100%;
-  height: 180px;
+  aspect-ratio: 4/5;
+  height: auto;
   overflow: hidden;
 }
 
