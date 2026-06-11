@@ -1,8 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import AdvancedSearchModal from './AdvancedSearchModal.jsx';
 
 export default function HeroSection() {
   const quickTags = ['COVID 19', 'Climate Change', 'Gender Equality', 'Economic Recovery'];
   const searchInputRef = useRef(null);
+  const [isAdvancedSearchOpen, setIsAdvancedSearchOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -61,12 +63,18 @@ export default function HeroSection() {
           {quickTags.map((tag) => (
             <span key={tag} className="hero-tag">{tag}</span>
           ))}
-          <span className="hero-tag advanced">Advanced Filters</span>
+          <span className="hero-tag advanced" onClick={() => setIsAdvancedSearchOpen(true)}>Advanced Filters</span>
         </div>
       </div>
       <div className="un-logo-background">
          <img src="/images/UN Logo_Horizontal_White_English.png" alt="UN Logo Background" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
        </div>
+
+       <AdvancedSearchModal 
+         isOpen={isAdvancedSearchOpen} 
+         onClose={() => setIsAdvancedSearchOpen(false)} 
+         initialQuery={searchInputRef.current?.value || ''}
+       />
     </section>
   );
 }
