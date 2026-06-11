@@ -118,7 +118,7 @@ export default function DocumentDetail({ id }) {
           <img src="/images/UN Logo_Horizontal_White_English.png" alt="" style={{ width: '100%' }} />
         </div>
 
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 1 }}>
           
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ fontSize: '13px', color: '#b3e5fc', fontWeight: '600', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
@@ -141,7 +141,7 @@ export default function DocumentDetail({ id }) {
 
       <main className="detail-main-content" style={{ paddingTop: 0 }}>
         {/* Content Layout */}
-        <div className="detail-columns" style={{ marginTop: '-80px', position: 'relative', zIndex: 10, maxWidth: '1200px', margin: '-80px auto 60px auto' }}>
+        <div className="detail-columns" style={{ marginTop: '-80px', position: 'relative', zIndex: 10, maxWidth: '1400px', margin: '-80px auto 60px auto' }}>
           {/* Left Column: Cover & Action buttons */}
           <div className="detail-left-col">
             <div className="detail-cover-card">
