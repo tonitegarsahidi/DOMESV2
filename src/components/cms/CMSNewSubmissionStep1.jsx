@@ -392,10 +392,23 @@ export default function CMSNewSubmissionStep1() {
                     </button>
                   </div>
                 </div>
+
+                {/* Cover Preview */}
+                {(coverFile || coverUrlChecked) && (
+                  <div style={{ marginTop: '20px', padding: '16px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    <div style={{ width: '120px', height: '169px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #cbd5e1', flexShrink: 0, background: '#fff' }}>
+                      <img src="/images/report_cover.png" alt="Cover Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                    <div>
+                      <h4 style={{ margin: '0 0 4px 0', color: '#0f172a', fontSize: '15px' }}>Cover Preview Generated</h4>
+                      <p style={{ margin: '0', color: '#64748b', fontSize: '13px', lineHeight: '1.5' }}>The system has successfully loaded and optimized your cover image for display across the platform.</p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Supporting Materials */}
-              <div className="wiz-section-card">
+              <div className="wiz-section-card" style={{ marginBottom: '50px' }}>
                 <div className="wiz-section-header">
                   <span className="wiz-section-icon">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -403,12 +416,30 @@ export default function CMSNewSubmissionStep1() {
                     </svg>
                   </span>
                   <h3>Supporting Materials</h3>
-                  <button
-                    className="wiz-add-file-btn"
-                    onClick={() => supportingInputRef.current?.click()}
-                  >
-                    + Add File
-                  </button>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      className="wiz-add-file-btn"
+                      onClick={() => supportingInputRef.current?.click()}
+                    >
+                      + Add File
+                    </button>
+                    <button
+                      className="wiz-add-file-btn"
+                      style={{ background: '#f8fafc', color: '#0f172a', border: '1px solid #cbd5e1' }}
+                      onClick={() => {
+                        const url = prompt('Enter URL for supporting material:');
+                        if (url) {
+                          setSupportingFiles((prev) => [...prev, {
+                            file: { name: url, size: 0, isUrl: true },
+                            type: 'Additional document',
+                            description: ''
+                          }]);
+                        }
+                      }}
+                    >
+                      + Add URL
+                    </button>
+                  </div>
                   <input
                     ref={supportingInputRef}
                     type="file"
@@ -434,7 +465,9 @@ export default function CMSNewSubmissionStep1() {
                               <polyline points="14 2 14 8 20 8" />
                             </svg>
                             <span className="wiz-supporting-name" style={{ fontWeight: '500', color: '#334155' }}>{item.file.name}</span>
-                            <span className="wiz-supporting-size" style={{ color: '#94a3b8', fontSize: '13px' }}>({(item.file.size / 1024 / 1024).toFixed(2)} MB)</span>
+                            {!item.file.isUrl && (
+                              <span className="wiz-supporting-size" style={{ color: '#94a3b8', fontSize: '13px' }}>({(item.file.size / 1024 / 1024).toFixed(2)} MB)</span>
+                            )}
                           </div>
                           <button className="wiz-file-remove" onClick={() => removeSupportingFile(i)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '16px', padding: '4px' }}>✕</button>
                         </div>
