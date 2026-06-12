@@ -406,7 +406,7 @@ export default function CMSNewSubmissionStep3() {
             </div>
 
             {/* ── THEMATIC + LNOB row ── */}
-            <div className="wiz-s3-row-2col">
+            <div className="wiz-s3-row-2col" style={{ marginBottom: '50px' }}>
               {/* Thematic Area */}
               <div className="wiz-s3-card">
                 <h3 className="wiz-s3-card-title">Thematic Area (UNSDCF) <span className="wiz-required">*</span></h3>
