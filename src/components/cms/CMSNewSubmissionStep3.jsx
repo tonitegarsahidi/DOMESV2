@@ -275,7 +275,7 @@ export default function CMSNewSubmissionStep3() {
                       onClick={() => toggleItem(selectedSectors, setSelectedSectors, sector.name)}
                     >
                       <span className="wiz-s3-chip-icon" style={{ marginRight: '8px', display: 'flex', alignItems: 'center' }}>
-                        {React.cloneElement(sector.icon, { style: { fontSize: '20px' } })}
+                        {React.cloneElement(sector.icon, { style: { fontSize: '40px', color: 'var(--un-primary)' } })}
                       </span>
                       <span className="wiz-s3-chip-check">
                         {active ? (
