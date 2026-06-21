@@ -271,7 +271,7 @@ export default function CMSNewSubmissionStep4() {
           </div>
 
           {/* Consent */}
-          <div className="wiz-section-card" style={{ marginTop: '24px', marginBottom: '50px' }}>
+          <div className={`wiz-section-card ${consentChecked ? 'wiz-consent-checked' : 'wiz-consent-unchecked'}`} style={{ marginTop: '24px', marginBottom: '50px' }}>
             <div className="wiz-section-header">
               <span className="wiz-section-icon consent-icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

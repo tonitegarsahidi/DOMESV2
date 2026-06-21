@@ -2095,6 +2095,43 @@ input:checked+.cms-toggle-slider:before {
   line-height: 1.5;
 }
 
+.wiz-consent-unchecked {
+  border: 2px solid #ef4444;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.1);
+  transition: all 0.3s ease;
+}
+.wiz-consent-unchecked .wiz-consent-label {
+  color: #ef4444;
+  font-weight: 600;
+}
+.wiz-consent-unchecked .wiz-section-header h3 {
+  font-size: 22px;
+  color: #ef4444;
+  font-weight: 700;
+}
+.wiz-consent-unchecked .wiz-section-icon {
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.wiz-consent-checked {
+  border: 2px solid #334155;
+  transition: all 0.3s ease;
+}
+.wiz-consent-checked .wiz-consent-label {
+  color: #334155;
+  font-weight: 600;
+}
+.wiz-consent-checked .wiz-section-header h3 {
+  font-size: 22px;
+  color: #334155;
+  font-weight: 700;
+}
+.wiz-consent-checked .wiz-section-icon {
+  color: #334155;
+  border-color: rgba(51, 65, 85, 0.3);
+}
+
 /* Footer */
 .wiz-footer {
   display: flex;
@@ -2103,15 +2140,15 @@ input:checked+.cms-toggle-slider:before {
   gap: 16px;
   padding: 20px 48px;
   margin-top: auto;
-  border-top: 1px solid rgba(226, 232, 240, 0.8);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
   position: sticky;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(12px);
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(20px);
   margin-left: -48px;
   margin-right: -48px;
   z-index: 100;
-  box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.03);
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15);
 }
 
 .wiz-btn-cancel {
