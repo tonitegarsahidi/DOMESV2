@@ -153,6 +153,37 @@ const LNOB_OPTIONS = [
   'Persons with Disabilities',
 ];
 
+const JOINT_PROGRAMMES = [
+  "Advancing Indonesia’s Lighting Market to High Efficient Technologies (ADLIGHT)",
+  "Better Reproductive Health and Rights for All in Indonesia (BERANI)",
+  "Better Sexual and Reproductive Rights for All in Indonesia (BERANI II)",
+  "Building a safer South-East Asia by preventing and responding to the use of chemical weapons by terrorists and other non-state actors in Indonesia (Chemical Weapons Terrorism Project)",
+  "Climate Village Project (PROKLIM)",
+  "Driving Public and Private Capital Towards Green and Social Investments in Indonesia / Accelerating SDGs Investments in Indonesia (ASSIST)",
+  "EmPower: Women for Climate-Resilient Societies",
+  "Employment and Livelihood: An Inclusive Approach to Economic Empowerment of Women and Vulnerable Populations in Indonesia (ELJP, COVID-19)",
+  "Food Systems, Land Use and Restoration (FOLUR) Impact Program",
+  "Global IOM-UNDP Seed Funding Round I",
+  "Global IOM-UNDP Seed Funding Round II",
+  "Global Peatlands Initiative (GPI)",
+  "HIV/AIDS Joint Programme",
+  "Leaving No One Behind: Adaptive Social Protection (ASP) for All in Indonesia",
+  "Migration Governance for Sustainable Development in Indonesia",
+  "Net Zero Nature Positive Accelerator",
+  "Partnership for Action on Green Economy (PAGE)",
+  "Preventing Violent Extremism through Promoting Tolerance and Respect for Diversity (PROTECT) Project",
+  "Project Unwaste: tackling waste trafficking to support a circular economy",
+  "RESPECT - Preventing Violence against Women",
+  "Safe and Fair Migration: Realizing women migrant workers’ rights and opportunities in the ASEAN region (SPOTLIGHT)",
+  "Ship to Shore Rights Project",
+  "Strengthening Resilience Against Violent Extremism in Asia (STRIVE Asia)",
+  "Supporting the Government of Indonesia and Key Stakeholders to Scale-Up Inclusive Social Protection Programmes in Response to COVID-19",
+  "Sustainable, Healthy and Inclusive Food Systems Transformation (SHIFT) Indonesia",
+  "Tackling the threat of violent extremism and its impact on human securities in East Java (The Guyub Project)",
+  "UN Joint Violent Extremist Prisoners (VEPs) Parole and Probation Project",
+  "UN-REDD ASEAN Social Forestry initiative (UN-REDD)"
+];
+
 export default function CMSNewSubmissionStep3() {
   const currentStep = 3;
 
@@ -195,6 +226,10 @@ export default function CMSNewSubmissionStep3() {
   const [selectedThematic, setSelectedThematic] = useState(['Inclusive Economic Transformation']);
   const [selectedLNOB, setSelectedLNOB] = useState(['Women and Girls']);
   const [otherLNOB, setOtherLNOB] = useState('Rural populations');
+  
+  const [selectedJointProgrammes, setSelectedJointProgrammes] = useState(['Climate Village Project (PROKLIM)']);
+  const [customJointProgramme, setCustomJointProgramme] = useState('');
+  const [jointProgrammeSearch, setJointProgrammeSearch] = useState('');
 
   /* helpers */
   const toggleItem = (arr, setter, item) => {
@@ -403,6 +438,105 @@ export default function CMSNewSubmissionStep3() {
                   </button>
                 </div>
               )}
+            </div>
+
+            {/* ── JOINT PROGRAMME ── */}
+            <div className="wiz-s3-card" style={{ marginBottom: '24px' }}>
+              <h3 className="wiz-s3-card-title">Joint Programme</h3>
+              <p className="wiz-s3-card-desc">Select the Joint Programme associated with this document, or type your own if not listed.</p>
+              
+              <div className="wiz-s3-field">
+                <label className="wiz-s3-label">Search & Select Joint Programme</label>
+                <div style={{ position: 'relative', marginBottom: '12px', width: '100%', boxSizing: 'border-box' }}>
+                  <input
+                    type="text"
+                    className="wiz-s3-text-input"
+                    style={{ paddingLeft: '36px', paddingRight: '32px', height: '32px', fontSize: '14px', boxSizing: 'border-box', width: '100%' }}
+                    placeholder="Type to filter Joint Programmes..."
+                    value={jointProgrammeSearch}
+                    onChange={(e) => setJointProgrammeSearch(e.target.value)}
+                  />
+                  <svg 
+                    width="14" 
+                    height="14" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="#94a3b8" 
+                    strokeWidth="2"
+                    style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }}
+                  >
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                  </svg>
+                  {jointProgrammeSearch && (
+                    <button
+                      type="button"
+                      onClick={() => setJointProgrammeSearch('')}
+                      style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                    >
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                  )}
+                </div>
+
+                <div style={{
+                  maxHeight: '220px',
+                  overflowY: 'auto',
+                  border: '1px solid #cbd5e1',
+                  borderRadius: '6px',
+                  padding: '12px',
+                  background: '#ffffff',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px'
+                }}>
+                  {JOINT_PROGRAMMES.filter(prog => 
+                    prog.toLowerCase().includes(jointProgrammeSearch.toLowerCase())
+                  ).map((prog) => {
+                    const active = selectedJointProgrammes.includes(prog);
+                    return (
+                      <label key={prog} className="wiz-s2-checkbox-item" style={{ margin: 0, display: 'flex', alignItems: 'flex-start', cursor: 'pointer' }}>
+                        <input
+                          type="checkbox"
+                          checked={active}
+                          onChange={() => toggleItem(selectedJointProgrammes, setSelectedJointProgrammes, prog)}
+                        />
+                        <span className="wiz-s2-checkmark" style={{ marginTop: '3px', flexShrink: 0 }} />
+                        <span style={{ fontSize: '14px', color: '#334155', lineHeight: '1.4' }}>{prog}</span>
+                      </label>
+                    );
+                  })}
+                  {JOINT_PROGRAMMES.filter(prog => 
+                    prog.toLowerCase().includes(jointProgrammeSearch.toLowerCase())
+                  ).length === 0 && (
+                    <span style={{ fontSize: '14px', color: '#64748b', fontStyle: 'italic', padding: '8px 0' }}>No Joint Programmes found matching your search.</span>
+                  )}
+                </div>
+              </div>
+
+              <div className="wiz-s3-field" style={{ marginTop: '20px' }}>
+                <label 
+                  className="wiz-s3-label" 
+                  style={{ color: selectedJointProgrammes.length > 0 ? '#94a3b8' : 'inherit', transition: 'color 0.2s' }}
+                >
+                  Or specify your own Joint Programme (Free text)
+                </label>
+                <input
+                  type="text"
+                  className="wiz-s3-text-input"
+                  placeholder={selectedJointProgrammes.length > 0 ? "Deselect all selected options above to enter a custom Joint Programme name" : "Type custom Joint Programme name here..."}
+                  value={customJointProgramme}
+                  onChange={(e) => setCustomJointProgramme(e.target.value)}
+                  disabled={selectedJointProgrammes.length > 0}
+                  style={{
+                    backgroundColor: selectedJointProgrammes.length > 0 ? '#f1f5f9' : '#ffffff',
+                    cursor: selectedJointProgrammes.length > 0 ? 'not-allowed' : 'text',
+                    transition: 'all 0.2s',
+                    boxSizing: 'border-box',
+                    width: '100%'
+                  }}
+                />
+              </div>
             </div>
 
             {/* ── THEMATIC + LNOB row ── */}

@@ -254,7 +254,7 @@ export default function CMSNewSubmissionStep4() {
 
                 <div className="wiz-s4-info-group">
                   <span className="wiz-s4-label">JOINT PROGRAMME</span>
-                  <p className="wiz-s4-val">Yes</p>
+                  <p className="wiz-s4-val">Yes (Climate Village Project (PROKLIM))</p>
                 </div>
 
                 <div className="wiz-s4-info-group">
