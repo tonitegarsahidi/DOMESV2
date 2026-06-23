@@ -8,6 +8,7 @@ export default function AdvancedSearchModal({ isOpen, onClose, initialQuery = ''
   const [selectedLangs, setSelectedLangs] = useState({});
   const [yearFrom, setYearFrom] = useState('');
   const [yearTo, setYearTo] = useState('');
+  const [selectedJointProgrammes, setSelectedJointProgrammes] = useState({});
 
   if (!isOpen) return null;
 
@@ -29,6 +30,37 @@ export default function AdvancedSearchModal({ isOpen, onClose, initialQuery = ''
     'Urban Development', 'Water and Sanitation'
   ];
 
+  const jointProgrammesList = [
+    "Advancing Indonesia’s Lighting Market to High Efficient Technologies (ADLIGHT)",
+    "Better Reproductive Health and Rights for All in Indonesia (BERANI)",
+    "Better Sexual and Reproductive Rights for All in Indonesia (BERANI II)",
+    "Building a safer South-East Asia by preventing and responding to the use of chemical weapons by terrorists and other non-state actors in Indonesia (Chemical Weapons Terrorism Project)",
+    "Climate Village Project (PROKLIM)",
+    "Driving Public and Private Capital Towards Green and Social Investments in Indonesia / Accelerating SDGs Investments in Indonesia (ASSIST)",
+    "EmPower: Women for Climate-Resilient Societies",
+    "Employment and Livelihood: An Inclusive Approach to Economic Empowerment of Women and Vulnerable Populations in Indonesia (ELJP, COVID-19)",
+    "Food Systems, Land Use and Restoration (FOLUR) Impact Program",
+    "Global IOM-UNDP Seed Funding Round I",
+    "Global IOM-UNDP Seed Funding Round II",
+    "Global Peatlands Initiative (GPI)",
+    "HIV/AIDS Joint Programme",
+    "Leaving No One Behind: Adaptive Social Protection (ASP) for All in Indonesia",
+    "Migration Governance for Sustainable Development in Indonesia",
+    "Net Zero Nature Positive Accelerator",
+    "Partnership for Action on Green Economy (PAGE)",
+    "Preventing Violent Extremism through Promoting Tolerance and Respect for Diversity (PROTECT) Project",
+    "Project Unwaste: tackling waste trafficking to support a circular economy",
+    "RESPECT - Preventing Violence against Women",
+    "Safe and Fair Migration: Realizing women migrant workers’ rights and opportunities in the ASEAN region (SPOTLIGHT)",
+    "Ship to Shore Rights Project",
+    "Strengthening Resilience Against Violent Extremism in Asia (STRIVE Asia)",
+    "Supporting the Government of Indonesia and Key Stakeholders to Scale-Up Inclusive Social Protection Programmes in Response to COVID-19",
+    "Sustainable, Healthy and Inclusive Food Systems Transformation (SHIFT) Indonesia",
+    "Tackling the threat of violent extremism and its impact on human securities in East Java (The Guyub Project)",
+    "UN Joint Violent Extremist Prisoners (VEPs) Parole and Probation Project",
+    "UN-REDD ASEAN Social Forestry initiative (UN-REDD)"
+  ];
+
   const sdgList = [
     { key: 'g1', number: 1, name: 'No Poverty' },
     { key: 'g2', number: 2, name: 'Zero Hunger' },
@@ -48,7 +80,6 @@ export default function AdvancedSearchModal({ isOpen, onClose, initialQuery = ''
     { key: 'g16', number: 16, name: 'Peace & Justice' },
     { key: 'g17', number: 17, name: 'Partnerships' },
   ];
-
   const createSlug = (str) => {
     return str.toLowerCase().replace(/[^a-z0-9]+/g, '').replace(/(^-|-$)/g, '');
   };
@@ -57,6 +88,7 @@ export default function AdvancedSearchModal({ isOpen, onClose, initialQuery = ''
   const toggleSector = (slug) => setSelectedSectors(prev => ({ ...prev, [slug]: !prev[slug] }));
   const toggleSdg = (key) => setSelectedSdgs(prev => ({ ...prev, [key]: !prev[key] }));
   const toggleLang = (lang) => setSelectedLangs(prev => ({ ...prev, [lang]: !prev[lang] }));
+  const toggleJointProgramme = (slug) => setSelectedJointProgrammes(prev => ({ ...prev, [slug]: !prev[slug] }));
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -75,6 +107,9 @@ export default function AdvancedSearchModal({ isOpen, onClose, initialQuery = ''
     const langs = Object.keys(selectedLangs).filter(k => selectedLangs[k]);
     if (langs.length > 0) params.set('langs', langs.join(','));
 
+    const jointProgs = Object.keys(selectedJointProgrammes).filter(k => selectedJointProgrammes[k]);
+    if (jointProgs.length > 0) params.set('jointProgrammes', jointProgs.join(','));
+
     if (yearFrom) params.set('yearFrom', yearFrom);
     if (yearTo) params.set('yearTo', yearTo);
 
@@ -87,10 +122,10 @@ export default function AdvancedSearchModal({ isOpen, onClose, initialQuery = ''
     setSelectedSdgs({});
     setSelectedSectors({});
     setSelectedLangs({});
+    setSelectedJointProgrammes({});
     setYearFrom('');
     setYearTo('');
   };
-
   return (
     <div className="adv-modal-overlay" onClick={onClose}>
       <div className="adv-modal-content" onClick={e => e.stopPropagation()}>
@@ -205,6 +240,23 @@ export default function AdvancedSearchModal({ isOpen, onClose, initialQuery = ''
                   <span className="checkbox-label">SDG {sdg.number}: {sdg.name}</span>
                 </label>
               ))}
+            </div>
+          </div>
+
+          {/* Joint Programme */}
+          <div className="adv-filter-group full-width" style={{ marginTop: '20px' }}>
+            <label>Joint Programme</label>
+            <div className="adv-scroll-list" style={{ maxHeight: '180px' }}>
+              {jointProgrammesList.map(prog => {
+                const slug = createSlug(prog);
+                return (
+                  <label className="checkbox-item adv-compact-checkbox" key={slug} style={{ display: 'flex', alignItems: 'flex-start' }}>
+                    <input type="checkbox" checked={selectedJointProgrammes[slug] || false} onChange={() => toggleJointProgramme(slug)} />
+                    <span className="checkbox-box" style={{ marginTop: '2px', flexShrink: 0 }}></span>
+                    <span className="checkbox-label" style={{ fontSize: '13px', lineHeight: '1.4' }}>{prog}</span>
+                  </label>
+                );
+              })}
             </div>
           </div>
         </div>

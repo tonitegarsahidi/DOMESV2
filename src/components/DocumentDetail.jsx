@@ -24,7 +24,7 @@ const digitalEconomyDoc = {
   classification: {
     leadAgency: 'UNDP',
     otherAgencies: ['World Bank'],
-    jointProgramme: 'Yes',
+    jointProgramme: 'Climate Village Project (PROKLIM)',
     geographicScope: 'National (Indonesia)',
     nonUnPartners: [
       { type: 'Government', name: 'Ministry of Villages' },
