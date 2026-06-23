@@ -66,9 +66,59 @@ export default function FilterSidebar() {
     'Water and Sanitation'
   ];
 
+  const jointProgrammesList = [
+    "Advancing Indonesia’s Lighting Market to High Efficient Technologies (ADLIGHT)",
+    "Better Reproductive Health and Rights for All in Indonesia (BERANI)",
+    "Better Sexual and Reproductive Rights for All in Indonesia (BERANI II)",
+    "Building a safer South-East Asia by preventing and responding to the use of chemical weapons by terrorists and other non-state actors in Indonesia (Chemical Weapons Terrorism Project)",
+    "Climate Village Project (PROKLIM)",
+    "Driving Public and Private Capital Towards Green and Social Investments in Indonesia / Accelerating SDGs Investments in Indonesia (ASSIST)",
+    "EmPower: Women for Climate-Resilient Societies",
+    "Employment and Livelihood: An Inclusive Approach to Economic Empowerment of Women and Vulnerable Populations in Indonesia (ELJP, COVID-19)",
+    "Food Systems, Land Use and Restoration (FOLUR) Impact Program",
+    "Global IOM-UNDP Seed Funding Round I",
+    "Global IOM-UNDP Seed Funding Round II",
+    "Global Peatlands Initiative (GPI)",
+    "HIV/AIDS Joint Programme",
+    "Leaving No One Behind: Adaptive Social Protection (ASP) for All in Indonesia",
+    "Migration Governance for Sustainable Development in Indonesia",
+    "Net Zero Nature Positive Accelerator",
+    "Partnership for Action on Green Economy (PAGE)",
+    "Preventing Violent Extremism through Promoting Tolerance and Respect for Diversity (PROTECT) Project",
+    "Project Unwaste: tackling waste trafficking to support a circular economy",
+    "RESPECT - Preventing Violence against Women",
+    "Safe and Fair Migration: Realizing women migrant workers’ rights and opportunities in the ASEAN region (SPOTLIGHT)",
+    "Ship to Shore Rights Project",
+    "Strengthening Resilience Against Violent Extremism in Asia (STRIVE Asia)",
+    "Supporting the Government of Indonesia and Key Stakeholders to Scale-Up Inclusive Social Protection Programmes in Response to COVID-19",
+    "Sustainable, Healthy and Inclusive Food Systems Transformation (SHIFT) Indonesia",
+    "Tackling the threat of violent extremism and its impact on human securities in East Java (The Guyub Project)",
+    "UN Joint Violent Extremist Prisoners (VEPs) Parole and Probation Project",
+    "UN-REDD ASEAN Social Forestry initiative (UN-REDD)"
+  ];
+
+  const lnobList = [
+    'Women and Girls',
+    'Youth and Children',
+    'Persons with Disabilities',
+    'Others'
+  ];
+
+  const nonUnPartnersList = [
+    'Government',
+    'Universities',
+    'Billateral Agency',
+    'Consulting Firm',
+    'Think Tank / Research Institute',
+    'International NGO',
+    'Local NGO',
+    'Others'
+  ];
+
   const [isRefining, setIsRefining] = useState(false);
   const isInitialMount = useRef(true);
   const [isReady, setIsReady] = useState(false);
+  const isSyncingToUrl = useRef(false);
 
   // States for checkbox values
   const [selectedAgencies, setSelectedAgencies] = useState({});
@@ -77,9 +127,16 @@ export default function FilterSidebar() {
   const [selectedLangs, setSelectedLangs] = useState({});
   const [yearFrom, setYearFrom] = useState(2014);
   const [yearTo, setYearTo] = useState(2024);
+  const [selectedJointProgrammes, setSelectedJointProgrammes] = useState({});
+  const [selectedLnob, setSelectedLnob] = useState({});
+  const [selectedNonUnPartners, setSelectedNonUnPartners] = useState({});
 
-  useEffect(() => {
-    // Parse URL on mount
+  const [jointProgrammesExpanded, setJointProgrammesExpanded] = useState(true);
+  const [jointProgrammesShowAll, setJointProgrammesShowAll] = useState(false);
+  const [lnobExpanded, setLnobExpanded] = useState(true);
+  const [nonUnPartnersExpanded, setNonUnPartnersExpanded] = useState(true);
+
+  const loadFromUrl = () => {
     const params = new URLSearchParams(window.location.search);
 
     // Agencies
@@ -98,6 +155,8 @@ export default function FilterSidebar() {
       const sdgsMap = {};
       sdgParam.split(',').forEach(s => sdgsMap[s] = true);
       setSelectedSdgs(sdgsMap);
+    } else {
+      setSelectedSdgs({});
     }
 
     // Sectors
@@ -106,6 +165,8 @@ export default function FilterSidebar() {
       const sectorsMap = {};
       sectorParam.split(',').forEach(s => sectorsMap[s] = true);
       setSelectedSectors(sectorsMap);
+    } else {
+      setSelectedSectors({});
     }
 
     // Langs
@@ -127,7 +188,52 @@ export default function FilterSidebar() {
     if (yTo) setYearTo(parseInt(yTo));
     else setYearTo(2024);
 
+    // Joint Programmes
+    const jpParam = params.get('jointProgrammes');
+    if (jpParam) {
+      const jpMap = {};
+      jpParam.split(',').forEach(j => jpMap[j] = true);
+      setSelectedJointProgrammes(jpMap);
+    } else {
+      setSelectedJointProgrammes({});
+    }
+
+    // LNOBs
+    const lnobParam = params.get('lnobs');
+    if (lnobParam) {
+      const lnobMap = {};
+      lnobParam.split(',').forEach(l => lnobMap[l] = true);
+      setSelectedLnob(lnobMap);
+    } else {
+      setSelectedLnob({});
+    }
+
+    // Non-UN Partners
+    const nonUnPartnersParam = params.get('nonUnPartners');
+    if (nonUnPartnersParam) {
+      const nonUnPartnersMap = {};
+      nonUnPartnersParam.split(',').forEach(n => nonUnPartnersMap[n] = true);
+      setSelectedNonUnPartners(nonUnPartnersMap);
+    } else {
+      setSelectedNonUnPartners({});
+    }
+  };
+
+  useEffect(() => {
+    loadFromUrl();
     setIsReady(true);
+
+    const handleUrlChange = () => {
+      if (isSyncingToUrl.current) return;
+      loadFromUrl();
+    };
+
+    window.addEventListener('urlchange', handleUrlChange);
+    window.addEventListener('popstate', handleUrlChange);
+    return () => {
+      window.removeEventListener('urlchange', handleUrlChange);
+      window.removeEventListener('popstate', handleUrlChange);
+    }
   }, []);
 
   // Sync to URL
@@ -168,13 +274,30 @@ export default function FilterSidebar() {
       if (yearTo !== 2024) params.set('yearTo', yearTo);
       else params.delete('yearTo');
 
+      // Joint Programmes
+      const jointProgs = Object.keys(selectedJointProgrammes).filter(k => selectedJointProgrammes[k]);
+      if (jointProgs.length > 0) params.set('jointProgrammes', jointProgs.join(','));
+      else params.delete('jointProgrammes');
+
+      // LNOBs
+      const lnobs = Object.keys(selectedLnob).filter(k => selectedLnob[k]);
+      if (lnobs.length > 0) params.set('lnobs', lnobs.join(','));
+      else params.delete('lnobs');
+
+      // Non-UN Partners
+      const nonUnPartners = Object.keys(selectedNonUnPartners).filter(k => selectedNonUnPartners[k]);
+      if (nonUnPartners.length > 0) params.set('nonUnPartners', nonUnPartners.join(','));
+      else params.delete('nonUnPartners');
+
+      isSyncingToUrl.current = true;
       const newUrl = `${window.location.pathname}?${params.toString()}`;
       window.history.pushState({}, '', newUrl);
       window.dispatchEvent(new Event('urlchange'));
+      isSyncingToUrl.current = false;
     }, 1000);
 
     return () => clearTimeout(handler);
-  }, [selectedAgencies, selectedSdgs, selectedSectors, selectedLangs, yearFrom, yearTo, isReady]);
+  }, [selectedAgencies, selectedSdgs, selectedSectors, selectedLangs, yearFrom, yearTo, selectedJointProgrammes, selectedLnob, selectedNonUnPartners, isReady]);
 
   // SDG Full list with icons
   const sdgList = [
@@ -214,6 +337,18 @@ export default function FilterSidebar() {
 
   const toggleSector = (key) => {
     setSelectedSectors(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const toggleJointProgramme = (key) => {
+    setSelectedJointProgrammes(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const toggleLnob = (key) => {
+    setSelectedLnob(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const toggleNonUnPartner = (key) => {
+    setSelectedNonUnPartners(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
   // Helper to create slug from agency/sector name
@@ -491,6 +626,117 @@ export default function FilterSidebar() {
                   Show all {sectorsList.length} sectors
                 </a>
               )}
+            </div>
+          )}
+        </div>
+
+        {/* 6. Joint Programme Card */}
+        <div className={`filter-card ${jointProgrammesExpanded ? 'expanded' : 'collapsed'}`}>
+          <div className="filter-card-header" onClick={() => setJointProgrammesExpanded(!jointProgrammesExpanded)}>
+            <h3>Joint Programme</h3>
+            <span className="chevron-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                {jointProgrammesExpanded ? <polyline points="18 15 12 9 6 15"></polyline> : <polyline points="6 9 12 15 18 9"></polyline>}
+              </svg>
+            </span>
+          </div>
+
+          {jointProgrammesExpanded && (
+            <div className="filter-card-body">
+              <div className="custom-checkbox-list">
+                {(jointProgrammesShowAll ? jointProgrammesList : jointProgrammesList.slice(0, 5)).map((prog) => {
+                  const slug = createSlug(prog);
+                  return (
+                    <label className="checkbox-item" key={slug}>
+                      <input
+                        type="checkbox"
+                        checked={selectedJointProgrammes[slug] || false}
+                        onChange={() => toggleJointProgramme(slug)}
+                      />
+                      <span className="checkbox-box"></span>
+                      <span className="checkbox-label" style={{ fontSize: '13px', lineHeight: '1.4' }}>{prog}</span>
+                    </label>
+                  );
+                })}
+              </div>
+              {!jointProgrammesShowAll && (
+                <a
+                  href="#"
+                  className="filter-link"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setJointProgrammesShowAll(true);
+                  }}
+                >
+                  Show all {jointProgrammesList.length} programmes
+                </a>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* 7. Leave No One Behind (LNOB) Card */}
+        <div className={`filter-card ${lnobExpanded ? 'expanded' : 'collapsed'}`}>
+          <div className="filter-card-header" onClick={() => setLnobExpanded(!lnobExpanded)}>
+            <h3>Leave No One Behind (LNOB)</h3>
+            <span className="chevron-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                {lnobExpanded ? <polyline points="18 15 12 9 6 15"></polyline> : <polyline points="6 9 12 15 18 9"></polyline>}
+              </svg>
+            </span>
+          </div>
+
+          {lnobExpanded && (
+            <div className="filter-card-body">
+              <div className="custom-checkbox-list">
+                {lnobList.map((group) => {
+                  const slug = createSlug(group);
+                  return (
+                    <label className="checkbox-item" key={slug}>
+                      <input
+                        type="checkbox"
+                        checked={selectedLnob[slug] || false}
+                        onChange={() => toggleLnob(slug)}
+                      />
+                      <span className="checkbox-box"></span>
+                      <span className="checkbox-label">{group}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 8. Non-UN Partners Card */}
+        <div className={`filter-card ${nonUnPartnersExpanded ? 'expanded' : 'collapsed'}`}>
+          <div className="filter-card-header" onClick={() => setNonUnPartnersExpanded(!nonUnPartnersExpanded)}>
+            <h3>Non-UN Partners</h3>
+            <span className="chevron-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                {nonUnPartnersExpanded ? <polyline points="18 15 12 9 6 15"></polyline> : <polyline points="6 9 12 15 18 9"></polyline>}
+              </svg>
+            </span>
+          </div>
+
+          {nonUnPartnersExpanded && (
+            <div className="filter-card-body">
+              <div className="custom-checkbox-list">
+                {nonUnPartnersList.map((partner) => {
+                  const slug = createSlug(partner);
+                  return (
+                    <label className="checkbox-item" key={slug}>
+                      <input
+                        type="checkbox"
+                        checked={selectedNonUnPartners[slug] || false}
+                        onChange={() => toggleNonUnPartner(slug)}
+                      />
+                      <span className="checkbox-box"></span>
+                      <span className="checkbox-label">{partner}</span>
+                    </label>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>

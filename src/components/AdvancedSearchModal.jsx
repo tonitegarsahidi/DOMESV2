@@ -9,6 +9,8 @@ export default function AdvancedSearchModal({ isOpen, onClose, initialQuery = ''
   const [yearFrom, setYearFrom] = useState('');
   const [yearTo, setYearTo] = useState('');
   const [selectedJointProgrammes, setSelectedJointProgrammes] = useState({});
+  const [selectedLnob, setSelectedLnob] = useState({});
+  const [selectedNonUnPartners, setSelectedNonUnPartners] = useState({});
 
   if (!isOpen) return null;
 
@@ -80,6 +82,25 @@ export default function AdvancedSearchModal({ isOpen, onClose, initialQuery = ''
     { key: 'g16', number: 16, name: 'Peace & Justice' },
     { key: 'g17', number: 17, name: 'Partnerships' },
   ];
+
+  const lnobList = [
+    'Women and Girls',
+    'Youth and Children',
+    'Persons with Disabilities',
+    'Others'
+  ];
+
+  const nonUnPartnersList = [
+    'Government',
+    'Universities',
+    'Billateral Agency',
+    'Consulting Firm',
+    'Think Tank / Research Institute',
+    'International NGO',
+    'Local NGO',
+    'Others'
+  ];
+
   const createSlug = (str) => {
     return str.toLowerCase().replace(/[^a-z0-9]+/g, '').replace(/(^-|-$)/g, '');
   };
@@ -89,6 +110,8 @@ export default function AdvancedSearchModal({ isOpen, onClose, initialQuery = ''
   const toggleSdg = (key) => setSelectedSdgs(prev => ({ ...prev, [key]: !prev[key] }));
   const toggleLang = (lang) => setSelectedLangs(prev => ({ ...prev, [lang]: !prev[lang] }));
   const toggleJointProgramme = (slug) => setSelectedJointProgrammes(prev => ({ ...prev, [slug]: !prev[slug] }));
+  const toggleLnob = (slug) => setSelectedLnob(prev => ({ ...prev, [slug]: !prev[slug] }));
+  const toggleNonUnPartner = (slug) => setSelectedNonUnPartners(prev => ({ ...prev, [slug]: !prev[slug] }));
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -110,6 +133,12 @@ export default function AdvancedSearchModal({ isOpen, onClose, initialQuery = ''
     const jointProgs = Object.keys(selectedJointProgrammes).filter(k => selectedJointProgrammes[k]);
     if (jointProgs.length > 0) params.set('jointProgrammes', jointProgs.join(','));
 
+    const lnobs = Object.keys(selectedLnob).filter(k => selectedLnob[k]);
+    if (lnobs.length > 0) params.set('lnobs', lnobs.join(','));
+
+    const nonUnPartners = Object.keys(selectedNonUnPartners).filter(k => selectedNonUnPartners[k]);
+    if (nonUnPartners.length > 0) params.set('nonUnPartners', nonUnPartners.join(','));
+
     if (yearFrom) params.set('yearFrom', yearFrom);
     if (yearTo) params.set('yearTo', yearTo);
 
@@ -123,6 +152,8 @@ export default function AdvancedSearchModal({ isOpen, onClose, initialQuery = ''
     setSelectedSectors({});
     setSelectedLangs({});
     setSelectedJointProgrammes({});
+    setSelectedLnob({});
+    setSelectedNonUnPartners({});
     setYearFrom('');
     setYearTo('');
   };
@@ -240,6 +271,43 @@ export default function AdvancedSearchModal({ isOpen, onClose, initialQuery = ''
                   <span className="checkbox-label">SDG {sdg.number}: {sdg.name}</span>
                 </label>
               ))}
+            </div>
+          </div>
+
+          {/* LNOB & Non-UN Partners */}
+          <div className="adv-grid-2col" style={{ marginTop: '20px' }}>
+            {/* LNOB */}
+            <div className="adv-filter-group">
+              <label>Leave No One Behind (LNOB)</label>
+              <div className="adv-scroll-list" style={{ maxHeight: '180px' }}>
+                {lnobList.map(group => {
+                  const slug = createSlug(group);
+                  return (
+                    <label className="checkbox-item adv-compact-checkbox" key={slug}>
+                      <input type="checkbox" checked={selectedLnob[slug] || false} onChange={() => toggleLnob(slug)} />
+                      <span className="checkbox-box"></span>
+                      <span className="checkbox-label">{group}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Non-UN Partners */}
+            <div className="adv-filter-group">
+              <label>Non-UN Partners</label>
+              <div className="adv-scroll-list" style={{ maxHeight: '180px' }}>
+                {nonUnPartnersList.map(partner => {
+                  const slug = createSlug(partner);
+                  return (
+                    <label className="checkbox-item adv-compact-checkbox" key={slug}>
+                      <input type="checkbox" checked={selectedNonUnPartners[slug] || false} onChange={() => toggleNonUnPartner(slug)} />
+                      <span className="checkbox-box"></span>
+                      <span className="checkbox-label">{partner}</span>
+                    </label>
+                  );
+                })}
+              </div>
             </div>
           </div>
 

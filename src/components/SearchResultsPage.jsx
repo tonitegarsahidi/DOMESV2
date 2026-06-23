@@ -15,7 +15,7 @@ export default function SearchResultsPage() {
     setSearchQuery(query ? decodeURIComponent(query) : '');
 
     const filters = [];
-    ['agencies', 'sdgs', 'sectors', 'langs'].forEach(param => {
+    ['agencies', 'sdgs', 'sectors', 'langs', 'jointProgrammes', 'lnobs', 'nonUnPartners'].forEach(param => {
       const val = urlParams.get(param);
       if (val) {
         val.split(',').forEach(v => {
@@ -99,7 +99,12 @@ export default function SearchResultsPage() {
                       fontWeight: '500',
                       backdropFilter: 'blur(4px)'
                     }}>
-                      <span style={{ color: '#e0f5ff', textTransform: 'capitalize' }}>{filter.type}:</span> 
+                      <span style={{ color: '#e0f5ff' }}>
+                        {filter.type === 'jointProgrammes' ? 'Joint Programme' : 
+                         filter.type === 'lnobs' ? 'LNOB' : 
+                         filter.type === 'nonUnPartners' ? 'Non-UN Partner' : 
+                         filter.type.charAt(0).toUpperCase() + filter.type.slice(1)}:
+                      </span> 
                       {filter.value.toUpperCase()}
                       <button 
                         onClick={() => removeFilter(filter.type, filter.value)}
