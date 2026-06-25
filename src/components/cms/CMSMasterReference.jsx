@@ -23,30 +23,30 @@ const defaultRefData = {
     { id: 17, number: 17, name: 'Partnerships', color: '#19486A', icon: '/images/SDG-logos/SDG-17_partnership-for-the-goals.png', status: 'Published' }
   ],
   agencies: [
-    { id: 1, name: 'FAO', status: 'Published' },
-    { id: 2, name: 'Global Pulse/ PLJ', status: 'Published' },
-    { id: 3, name: 'IFAD', status: 'Published' },
-    { id: 4, name: 'ILO', status: 'Published' },
-    { id: 5, name: 'IMF', status: 'Published' },
-    { id: 6, name: 'IOM', status: 'Published' },
-    { id: 7, name: 'ITU', status: 'Published' },
-    { id: 8, name: 'RCO', status: 'Published' },
-    { id: 9, name: 'UNAIDS', status: 'Published' },
-    { id: 10, name: 'UN Women', status: 'Published' },
-    { id: 11, name: 'UNDP', status: 'Published' },
-    { id: 12, name: 'UNEP', status: 'Published' },
-    { id: 13, name: 'UNESCO', status: 'Published' },
-    { id: 14, name: 'UNFPA', status: 'Published' },
-    { id: 15, name: 'UN-HABITAT', status: 'Published' },
-    { id: 16, name: 'UNHCR', status: 'Published' },
-    { id: 17, name: 'UNICEF', status: 'Published' },
-    { id: 18, name: 'UNIDO', status: 'Published' },
-    { id: 19, name: 'UNOCHA', status: 'Published' },
-    { id: 20, name: 'UNODC', status: 'Published' },
-    { id: 21, name: 'UNOPS', status: 'Published' },
-    { id: 22, name: 'WFP', status: 'Published' },
-    { id: 23, name: 'WHO', status: 'Published' },
-    { id: 24, name: 'World Bank', status: 'Published' }
+    { id: 1, code: 'FAO', name: 'Food and Agriculture Organization', logo: null, status: 'Published' },
+    { id: 2, code: 'Global Pulse/ PLJ', name: 'Global Pulse / Program Layanan Jakarta', logo: null, status: 'Published' },
+    { id: 3, code: 'IFAD', name: 'International Fund for Agricultural Development', logo: null, status: 'Published' },
+    { id: 4, code: 'ILO', name: 'International Labour Organization', logo: null, status: 'Published' },
+    { id: 5, code: 'IMF', name: 'International Monetary Fund', logo: null, status: 'Published' },
+    { id: 6, code: 'IOM', name: 'International Organization for Migration', logo: null, status: 'Published' },
+    { id: 7, code: 'ITU', name: 'International Telecommunication Union', logo: null, status: 'Published' },
+    { id: 8, code: 'RCO', name: 'Resident Coordinator\'s Office', logo: null, status: 'Published' },
+    { id: 9, code: 'UNAIDS', name: 'Joint United Nations Programme on HIV/AIDS', logo: null, status: 'Published' },
+    { id: 10, code: 'UN Women', name: 'United Nations Entity for Gender Equality and the Empowerment of Women', logo: null, status: 'Published' },
+    { id: 11, code: 'UNDP', name: 'United Nations Development Programme', logo: null, status: 'Published' },
+    { id: 12, code: 'UNEP', name: 'United Nations Environment Programme', logo: null, status: 'Published' },
+    { id: 13, code: 'UNESCO', name: 'United Nations Educational, Scientific and Cultural Organization', logo: null, status: 'Published' },
+    { id: 14, code: 'UNFPA', name: 'United Nations Population Fund', logo: null, status: 'Published' },
+    { id: 15, code: 'UN-HABITAT', name: 'United Nations Human Settlements Programme', logo: null, status: 'Published' },
+    { id: 16, code: 'UNHCR', name: 'United Nations Refugee Agency', logo: null, status: 'Published' },
+    { id: 17, code: 'UNICEF', name: 'United Nations Children\'s Fund', logo: null, status: 'Published' },
+    { id: 18, code: 'UNIDO', name: 'United Nations Industrial Development Organization', logo: null, status: 'Published' },
+    { id: 19, code: 'UNOCHA', name: 'United Nations Office for the Coordination of Humanitarian Affairs', logo: null, status: 'Published' },
+    { id: 20, code: 'UNODC', name: 'United Nations Office on Drugs and Crime', logo: null, status: 'Published' },
+    { id: 21, code: 'UNOPS', name: 'United Nations Office for Project Services', logo: null, status: 'Published' },
+    { id: 22, code: 'WFP', name: 'World Food Programme', logo: null, status: 'Published' },
+    { id: 23, code: 'WHO', name: 'World Health Organization', logo: null, status: 'Published' },
+    { id: 24, code: 'World Bank', name: 'World Bank Group', logo: null, status: 'Published' }
   ],
   lnobs: [
     { id: 1, name: 'Women and Girls', status: 'Published' },
@@ -166,6 +166,7 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
   const [formNumber, setFormNumber] = useState('');
   const [formColor, setFormColor] = useState('');
   const [formIcon, setFormIcon] = useState('');
+  const [formLogo, setFormLogo] = useState(null);
   const [formStatus, setFormStatus] = useState('Published');
 
   // Load from localStorage or initialize
@@ -176,7 +177,39 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
     const savedData = localStorage.getItem('cms_master_references');
     if (savedData) {
       try {
-        setData(JSON.parse(savedData));
+        const parsed = JSON.parse(savedData);
+        // Automatic migration of old agencies list to support Code vs Full Name mapping
+        if (parsed.agencies && parsed.agencies.length > 0) {
+          const needsMigration = parsed.agencies.some(item => !item.code);
+          if (needsMigration) {
+            parsed.agencies = parsed.agencies.map(item => {
+              if (!item.code) {
+                // Find matching default agency
+                const matchingDefault = defaultRefData.agencies.find(
+                  d => d.code === item.name || d.name === item.name
+                );
+                if (matchingDefault) {
+                  return {
+                    ...item,
+                    code: matchingDefault.code,
+                    name: matchingDefault.name,
+                    logo: item.logo || matchingDefault.logo
+                  };
+                } else {
+                  return {
+                    ...item,
+                    code: item.name, // The abbreviation was stored under the name field
+                    name: item.name,
+                    logo: item.logo || null
+                  };
+                }
+              }
+              return item;
+            });
+            localStorage.setItem('cms_master_references', JSON.stringify(parsed));
+          }
+        }
+        setData(parsed);
       } catch (e) {
         setData(defaultRefData);
       }
@@ -213,6 +246,7 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
     setFormNumber('');
     setFormColor('#009EDB');
     setFormIcon('');
+    setFormLogo(null);
     setFormStatus('Published');
     setIsFormModalOpen(true);
   };
@@ -226,6 +260,7 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
     setFormNumber(item.number || '');
     setFormColor(item.color || '#009EDB');
     setFormIcon(item.icon || '');
+    setFormLogo(item.logo || null);
     setFormStatus(item.status || 'Published');
     setIsFormModalOpen(true);
   };
@@ -243,7 +278,8 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
         id: newId,
         name: formName,
         status: formStatus,
-        ...(activeRef === 'sdgs' && { number: parseInt(formNumber) || 1, color: formColor, icon: formIcon || `/images/SDG-logos/SDG-${formNumber || 1}_custom.png` }),
+        ...(activeRef === 'sdgs' && { number: parseInt(formNumber) || 1, color: formColor, icon: formIcon || `/images/SDG-logos/SDG-${formNumber || 1}_no-poverty.png` }),
+        ...(activeRef === 'agencies' && { code: formCode, logo: formLogo }),
         ...(activeRef === 'languages' && { code: formCode }),
         ...(activeRef === 'organizations' && { code: formCode })
       };
@@ -257,6 +293,7 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
             name: formName,
             status: formStatus,
             ...(activeRef === 'sdgs' && { number: parseInt(formNumber) || item.number, color: formColor, icon: formIcon }),
+            ...(activeRef === 'agencies' && { code: formCode, logo: formLogo }),
             ...(activeRef === 'languages' && { code: formCode }),
             ...(activeRef === 'organizations' && { code: formCode })
           };
@@ -504,8 +541,16 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
                             {activeRef === 'sdgs' && (
                               <>
                                 <th style={{ width: '12%', textAlign: 'center' }}>GOAL NO.</th>
+                                <th style={{ width: '10%', textAlign: 'center' }}>ICON</th>
                                 <th style={{ width: '15%', textAlign: 'center' }}>COLOR</th>
                                 <th style={{ width: '35%' }}>GOAL NAME</th>
+                              </>
+                            )}
+                            {activeRef === 'agencies' && (
+                              <>
+                                <th style={{ width: '18%' }}>CODE (ABBREVIATION)</th>
+                                <th style={{ width: '44%' }}>AGENCY NAME</th>
+                                <th style={{ width: '12%', textAlign: 'center' }}>LOGO</th>
                               </>
                             )}
                             {activeRef === 'languages' && (
@@ -520,7 +565,7 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
                                 <th style={{ width: '42%' }}>ORGANIZATION NAME</th>
                               </>
                             )}
-                            {activeRef !== 'sdgs' && activeRef !== 'languages' && activeRef !== 'organizations' && (
+                            {activeRef !== 'sdgs' && activeRef !== 'agencies' && activeRef !== 'languages' && activeRef !== 'organizations' && (
                               <th style={{ width: '62%' }}>NAME</th>
                             )}
                             <th style={{ width: '15%', textAlign: 'center' }}>STATUS</th>
@@ -535,7 +580,14 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
                               </td>
                               {activeRef === 'sdgs' && (
                                 <>
-                                  <td style={{ textAlign: 'center', fontWeight: '700' }}>{item.number}</td>
+                                  <td style={{ textAlign: 'center', fontWeight: '700' }}>SDG {item.number}</td>
+                                  <td style={{ textAlign: 'center' }}>
+                                    {item.icon ? (
+                                      <img src={item.icon} alt={`SDG ${item.number}`} style={{ width: '36px', height: '36px', objectFit: 'contain', borderRadius: '4px' }} />
+                                    ) : (
+                                      <span style={{ color: '#94a3b8' }}>-</span>
+                                    )}
+                                  </td>
                                   <td style={{ textAlign: 'center' }}>
                                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
                                       <span style={{ display: 'inline-block', width: '16px', height: '16px', borderRadius: '4px', background: item.color, border: '1px solid #cbd5e1' }} />
@@ -544,6 +596,19 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
                                   </td>
                                   <td>
                                     <span style={{ fontWeight: '500', color: '#1e293b' }}>{item.name}</span>
+                                  </td>
+                                </>
+                              )}
+                              {activeRef === 'agencies' && (
+                                <>
+                                  <td><code style={{ fontSize: '12px', background: '#e0f5ff', color: '#007cb3', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>{item.code}</code></td>
+                                  <td><span style={{ fontWeight: '500', color: '#1e293b' }}>{item.name}</span></td>
+                                  <td style={{ textAlign: 'center' }}>
+                                    {item.logo ? (
+                                      <img src={item.logo} alt={item.code} style={{ width: '36px', height: '36px', objectFit: 'contain', borderRadius: '4px' }} />
+                                    ) : (
+                                      <span style={{ color: '#94a3b8', fontSize: '12px' }}>-</span>
+                                    )}
                                   </td>
                                 </>
                               )}
@@ -559,7 +624,7 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
                                   <td><span style={{ fontWeight: '500', color: '#1e293b' }}>{item.name}</span></td>
                                 </>
                               )}
-                              {activeRef !== 'sdgs' && activeRef !== 'languages' && activeRef !== 'organizations' && (
+                              {activeRef !== 'sdgs' && activeRef !== 'agencies' && activeRef !== 'languages' && activeRef !== 'organizations' && (
                                 <td><span style={{ fontWeight: '500', color: '#1e293b' }}>{item.name}</span></td>
                               )}
                               <td style={{ textAlign: 'center' }}>
@@ -747,18 +812,18 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
                 </div>
               )}
 
-              {((activeRef === 'languages') || (activeRef === 'organizations')) && (
+              {((activeRef === 'languages') || (activeRef === 'organizations') || (activeRef === 'agencies')) && (
                 <div className="cms-form-row" style={{ marginBottom: '16px' }}>
                   <div className="cms-form-group">
                     <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#475569', marginBottom: '6px' }}>
-                      {activeRef === 'languages' ? 'Language ISO Code' : 'Organization Short Code'}
+                      {activeRef === 'languages' ? 'Language ISO Code' : activeRef === 'organizations' ? 'Organization Short Code' : 'Agency Abbreviation (Code)'}
                     </label>
                     <input 
                       type="text" 
                       required 
                       value={formCode} 
                       onChange={(e) => setFormCode(e.target.value)} 
-                      placeholder={activeRef === 'languages' ? 'e.g. es, fr' : 'e.g. unesco, who'}
+                      placeholder={activeRef === 'languages' ? 'e.g. es, fr' : activeRef === 'organizations' ? 'e.g. unesco, who' : 'e.g. FAO, UNDP'}
                       style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', outline: 'none' }}
                     />
                   </div>
@@ -768,14 +833,22 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
               <div className="cms-form-row" style={{ marginBottom: '16px' }}>
                 <div className="cms-form-group">
                   <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#475569', marginBottom: '6px' }}>
-                    {activeMeta.label} Name / Description
+                    {activeRef === 'agencies' 
+                      ? 'Agency Name (Full Name)' 
+                      : activeRef === 'sdgs'
+                      ? 'Goal Name'
+                      : `${activeMeta.label} Name / Description`}
                   </label>
                   <input 
                     type="text" 
                     required 
                     value={formName} 
                     onChange={(e) => setFormName(e.target.value)} 
-                    placeholder={`Enter ${activeMeta.label.toLowerCase()} name`}
+                    placeholder={activeRef === 'agencies' 
+                      ? 'e.g. Food and Agriculture Organization' 
+                      : activeRef === 'sdgs'
+                      ? 'e.g. No Poverty'
+                      : `Enter ${activeMeta.label.toLowerCase()} name`}
                     style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', outline: 'none' }}
                   />
                 </div>
@@ -784,14 +857,110 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
               {activeRef === 'sdgs' && (
                 <div className="cms-form-row" style={{ marginBottom: '16px' }}>
                   <div className="cms-form-group">
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#475569', marginBottom: '6px' }}>Icon Asset Path</label>
-                    <input 
-                      type="text" 
-                      value={formIcon} 
-                      onChange={(e) => setFormIcon(e.target.value)} 
-                      placeholder="e.g. /images/SDG-logos/SDG-1_custom.png"
-                      style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', outline: 'none' }}
-                    />
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#475569', marginBottom: '6px' }}>SDG Icon</label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '4px' }}>
+                      {formIcon && (
+                        <img 
+                          src={formIcon} 
+                          alt="SDG Preview" 
+                          style={{ width: '48px', height: '48px', objectFit: 'contain', borderRadius: '6px', border: '1px solid #cbd5e1', padding: '2px', background: '#f8fafc' }} 
+                        />
+                      )}
+                      <div style={{ flex: 1 }}>
+                        <input 
+                          type="file" 
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (file) {
+                              const reader = new FileReader();
+                              reader.onloadend = () => {
+                                setFormIcon(reader.result);
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }}
+                          style={{ 
+                            width: '100%', 
+                            fontSize: '13px', 
+                            color: '#475569',
+                            padding: '6px 10px',
+                            borderRadius: '6px',
+                            border: '1px solid #cbd5e1',
+                            background: 'white'
+                          }}
+                        />
+                        <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#64748b' }}>Upload an image for the SDG icon (PNG, JPG).</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeRef === 'agencies' && (
+                <div className="cms-form-row" style={{ marginBottom: '16px' }}>
+                  <div className="cms-form-group">
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#475569', marginBottom: '6px' }}>Agency Logo (Optional)</label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '4px' }}>
+                      {formLogo && (
+                        <div style={{ position: 'relative' }}>
+                          <img 
+                            src={formLogo} 
+                            alt="Agency Logo Preview" 
+                            style={{ width: '48px', height: '48px', objectFit: 'contain', borderRadius: '6px', border: '1px solid #cbd5e1', padding: '2px', background: '#f8fafc' }} 
+                          />
+                          <button 
+                            type="button"
+                            onClick={() => setFormLogo(null)}
+                            style={{ 
+                              position: 'absolute', 
+                              top: '-6px', 
+                              right: '-6px', 
+                              background: '#ef4444', 
+                              color: 'white', 
+                              border: 'none', 
+                              borderRadius: '50%', 
+                              width: '16px', 
+                              height: '16px', 
+                              fontSize: '10px', 
+                              cursor: 'pointer', 
+                              display: 'flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'center' 
+                            }}
+                            title="Remove logo"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      )}
+                      <div style={{ flex: 1 }}>
+                        <input 
+                          type="file" 
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (file) {
+                              const reader = new FileReader();
+                              reader.onloadend = () => {
+                                setFormLogo(reader.result);
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }}
+                          style={{ 
+                            width: '100%', 
+                            fontSize: '13px', 
+                            color: '#475569',
+                            padding: '6px 10px',
+                            borderRadius: '6px',
+                            border: '1px solid #cbd5e1',
+                            background: 'white'
+                          }}
+                        />
+                        <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#64748b' }}>Choose a file to upload the agency logo (nullable).</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
