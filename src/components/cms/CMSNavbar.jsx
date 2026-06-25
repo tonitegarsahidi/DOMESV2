@@ -25,6 +25,7 @@ export default function CMSNavbar() {
   const isAnalytics = pathname.includes('/cms/analytics');
   const isReports = pathname.includes('/cms/reports');
   const isUsers = pathname.includes('/cms/users');
+  const isMasterReference = pathname.includes('/cms/masterreference');
   const isSettings = pathname.includes('/cms/settings');
 
   return (
@@ -77,6 +78,12 @@ export default function CMSNavbar() {
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
           Users
+        </a>
+        <a href="/cms/masterreference" className={`cms-nav-link ${isMasterReference ? 'active' : ''}`}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+          </svg>
+          Master Reference
         </a>
         <a href="/cms/settings" className={`cms-nav-link ${isSettings ? 'active' : ''}`}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

@@ -1,0 +1,37 @@
+---
+import CMSMasterReference from '../../../components/cms/CMSMasterReference.jsx';
+import '../../../styles/cms.css';
+
+export function getStaticPaths() {
+  return [
+    { params: { ref: 'sdgs' } },
+    { params: { ref: 'agencies' } },
+    { params: { ref: 'lnobs' } },
+    { params: { ref: 'languages' } },
+    { params: { ref: 'partners' } },
+    { params: { ref: 'organizations' } },
+    { params: { ref: 'jointprogrammes' } },
+    { params: { ref: 'sectors' } },
+    { params: { ref: 'thematics' } },
+  ];
+}
+
+const { ref } = Astro.params;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Master Reference Management - DOMES V2</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;900&display=swap"
+    />
+  </head>
+  <body>
+    <CMSMasterReference client:load activeRef={ref} />
+  </body>
+</html>
