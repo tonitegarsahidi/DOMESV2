@@ -1,4 +1,8 @@
-const API_BASE = 'http://localhost:8080';
+const API_BASE = import.meta.env.PUBLIC_BASE_URL || 
+                 (import.meta.env.BASE_URL && import.meta.env.BASE_URL !== '/' ? import.meta.env.BASE_URL : null) || 
+                 import.meta.env.PUBLIC_API_URL || 
+                 import.meta.env.API_URL || 
+                 'http://localhost:8080';
 
 export function getToken() {
   return typeof window !== 'undefined' ? localStorage.getItem('cms_auth_token') : null;
