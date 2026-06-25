@@ -152,6 +152,10 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('create'); // 'create' | 'edit'
   const [editingItem, setEditingItem] = useState(null);
+
+  // Delete modal states
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
   
   // Notification states
   const [notification, setNotification] = useState(null);
@@ -267,15 +271,21 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
     setIsFormModalOpen(false);
   };
 
-  const handleDelete = (id, name) => {
+  const handleDeleteClick = (item) => {
     if (role !== 'Administrator') return;
-    if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
-      const activeList = data[activeRef] || [];
-      const updatedList = activeList.filter(item => item.id !== id);
-      const updatedData = { ...data, [activeRef]: updatedList };
-      saveReferences(updatedData);
-      triggerNotification(`Item "${name}" has been deleted.`);
-    }
+    setItemToDelete(item);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (!itemToDelete) return;
+    const activeList = data[activeRef] || [];
+    const updatedList = activeList.filter(item => item.id !== itemToDelete.id);
+    const updatedData = { ...data, [activeRef]: updatedList };
+    saveReferences(updatedData);
+    triggerNotification(`Item "${itemToDelete.name}" has been deleted.`);
+    setIsDeleteModalOpen(false);
+    setItemToDelete(null);
   };
 
   const handleToggleStatus = (item) => {
@@ -309,7 +319,7 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
 
   return (
     <CMSLayout>
-      <main className="cms-main">
+      <main className="cms-main" style={{ maxWidth: '90%' }}>
         {/* Header */}
         <header className="cms-settings-header" style={{ marginBottom: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
@@ -378,7 +388,7 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
               </svg>
             </div>
             <div style={{ flex: 1, fontSize: '14px', lineHeight: '1.5' }}>
-              <strong>Read-Only Mode (Restricted):</strong> Your simulated role does not grant system administrator permission to this page. Modification buttons are disabled. Click the "Admin" button above to grant permission.
+              <strong>Access Denied:</strong> This page is restricted to system administrators only. Access to reference data has been blocked.
             </div>
           </div>
         )}
@@ -396,272 +406,300 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
           </div>
         )}
 
-        {/* Settings Content Grid */}
-        <div className="cms-settings-grid">
-          
-          {/* Sidebar Tabs */}
-          <aside className="cms-settings-sidebar">
-            <div style={{ padding: '8px 16px', fontSize: '11px', fontWeight: 'bold', color: '#94a3b8', letterSpacing: '1px', textTransform: 'uppercase' }}>
-              Reference List
-            </div>
-            {referenceTypes.map((ref) => (
-              <a 
-                key={ref.key}
-                href={`/cms/masterreference/${ref.key}`} 
-                className={`cms-settings-tab ${activeRef === ref.key ? 'active' : ''}`}
-                style={{ padding: '12px 16px', fontSize: '13px' }}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '12px'}}>
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M12 8v8M8 12h8"></path>
-                </svg>
-                {ref.label}
-              </a>
-            ))}
-          </aside>
-
-          {/* Form Content Area */}
-          <section className="cms-settings-content">
-            <div className="cms-settings-card">
-              
-              <div className="cms-settings-card-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-                <div>
-                  <h2>{activeMeta.label}</h2>
-                  <p style={{ margin: '4px 0 0 0', fontWeight: 'normal', fontSize: '13px', color: '#64748b' }}>
-                    {activeMeta.desc}
-                  </p>
-                </div>
-                
-                <button 
-                  onClick={handleOpenCreateModal}
-                  disabled={role !== 'Administrator'}
-                  className="cms-btn-primary" 
-                  style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '8px', 
-                    cursor: role === 'Administrator' ? 'pointer' : 'not-allowed',
-                    opacity: role === 'Administrator' ? 1 : 0.55
-                  }}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
-                  New Data
-                </button>
+        {/* GRID OR BLOCKED CONTENT */}
+        {role === 'Administrator' ? (
+          <div className="cms-settings-grid">
+            
+            {/* Sidebar Tabs */}
+            <aside className="cms-settings-sidebar">
+              <div style={{ padding: '8px 16px', fontSize: '11px', fontWeight: 'bold', color: '#94a3b8', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                Reference List
               </div>
+              {referenceTypes.map((ref) => (
+                <a 
+                  key={ref.key}
+                  href={`/cms/masterreference/${ref.key}`} 
+                  className={`cms-settings-tab ${activeRef === ref.key ? 'active' : ''}`}
+                  style={{ padding: '12px 16px', fontSize: '13px' }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '12px'}}>
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M12 8v8M8 12h8"></path>
+                  </svg>
+                  {ref.label}
+                </a>
+              ))}
+            </aside>
 
-              <div className="cms-settings-card-body" style={{ padding: 0 }}>
-                {loading ? (
-                  <div style={{ padding: '40px', textAlignment: 'center', color: '#64748b' }}>Loading records...</div>
-                ) : (
-                  <div className="cms-table-container" style={{ border: 'none', boxShadow: 'none', margin: 0 }}>
-                    
-                    {/* Filter / Search Bar */}
-                    <div className="cms-table-filter-bar" style={{ padding: '16px', background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
-                      <div className="cms-search-input-wrapper" style={{ maxWidth: '300px' }}>
-                        <svg className="cms-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <circle cx="11" cy="11" r="8"></circle>
-                          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                        <input 
-                          type="text" 
-                          placeholder="Search reference data..." 
-                          value={searchTerm}
-                          onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
-                        />
+            {/* Form Content Area */}
+            <section className="cms-settings-content">
+              <div className="cms-settings-card">
+                
+                <div className="cms-settings-card-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+                  <div>
+                    <h2>{activeMeta.label}</h2>
+                    <p style={{ margin: '4px 0 0 0', fontWeight: 'normal', fontSize: '13px', color: '#64748b' }}>
+                      {activeMeta.desc}
+                    </p>
+                  </div>
+                  
+                  <button 
+                    onClick={handleOpenCreateModal}
+                    className="cms-btn-primary" 
+                    style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '8px', 
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    New Data
+                  </button>
+                </div>
+
+                <div className="cms-settings-card-body" style={{ padding: 0 }}>
+                  {loading ? (
+                    <div style={{ padding: '40px', textAlignment: 'center', color: '#64748b' }}>Loading records...</div>
+                  ) : (
+                    <div className="cms-table-container" style={{ border: 'none', boxShadow: 'none', margin: 0 }}>
+                      
+                      {/* Filter / Search Bar */}
+                      <div className="cms-table-filter-bar" style={{ padding: '16px', background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                        <div className="cms-search-input-wrapper" style={{ maxWidth: '300px' }}>
+                          <svg className="cms-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                          </svg>
+                          <input 
+                            type="text" 
+                            placeholder="Search reference data..." 
+                            value={searchTerm}
+                            onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
+                          />
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span style={{ fontSize: '13px', color: '#64748b' }}>Status:</span>
+                          <select 
+                            value={statusFilter} 
+                            onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
+                            style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', cursor: 'pointer', background: 'white' }}
+                          >
+                            <option value="All">All Status</option>
+                            <option value="Published">Published</option>
+                            <option value="Unpublished">Unpublished</option>
+                          </select>
+                        </div>
                       </div>
 
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontSize: '13px', color: '#64748b' }}>Status:</span>
-                        <select 
-                          value={statusFilter} 
-                          onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
-                          style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', cursor: 'pointer', background: 'white' }}
-                        >
-                          <option value="All">All Status</option>
-                          <option value="Published">Published</option>
-                          <option value="Unpublished">Unpublished</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    {/* Table element */}
-                    <table className="cms-table">
-                      <thead>
-                        <tr>
-                          <th style={{ width: '8%', textAlign: 'center' }}>#</th>
-                          {activeRef === 'sdgs' && (
-                            <>
-                              <th style={{ width: '12%', textAlign: 'center' }}>GOAL NO.</th>
-                              <th style={{ width: '15%', textAlign: 'center' }}>COLOR</th>
-                              <th style={{ width: '35%' }}>GOAL NAME</th>
-                            </>
-                          )}
-                          {activeRef === 'languages' && (
-                            <>
-                              <th style={{ width: '20%' }}>CODE (ISO)</th>
-                              <th style={{ width: '42%' }}>LANGUAGE NAME</th>
-                            </>
-                          )}
-                          {activeRef === 'organizations' && (
-                            <>
-                              <th style={{ width: '20%' }}>CODE</th>
-                              <th style={{ width: '42%' }}>ORGANIZATION NAME</th>
-                            </>
-                          )}
-                          {activeRef !== 'sdgs' && activeRef !== 'languages' && activeRef !== 'organizations' && (
-                            <th style={{ width: '62%' }}>NAME</th>
-                          )}
-                          <th style={{ width: '15%', textAlign: 'center' }}>STATUS</th>
-                          <th style={{ width: '15%', textAlign: 'center' }}>ACTIONS</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {currentItems.map((item, index) => (
-                          <tr key={item.id} className={item.status !== 'Published' ? 'cms-row-draft' : ''}>
-                            <td style={{ textAlign: 'center', color: '#64748b', fontWeight: '500' }}>
-                              {indexOfFirstItem + index + 1}
-                            </td>
+                      {/* Table element */}
+                      <table className="cms-table">
+                        <thead>
+                          <tr>
+                            <th style={{ width: '8%', textAlign: 'center' }}>#</th>
                             {activeRef === 'sdgs' && (
                               <>
-                                <td style={{ textAlign: 'center', fontWeight: '700' }}>{item.number}</td>
-                                <td style={{ textAlign: 'center' }}>
-                                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                                    <span style={{ display: 'inline-block', width: '16px', height: '16px', borderRadius: '4px', background: item.color, border: '1px solid #cbd5e1' }} />
-                                    <code style={{ fontSize: '11px' }}>{item.color}</code>
-                                  </div>
-                                </td>
-                                <td>
-                                  <span style={{ fontWeight: '500', color: '#1e293b' }}>{item.name}</span>
-                                </td>
+                                <th style={{ width: '12%', textAlign: 'center' }}>GOAL NO.</th>
+                                <th style={{ width: '15%', textAlign: 'center' }}>COLOR</th>
+                                <th style={{ width: '35%' }}>GOAL NAME</th>
                               </>
                             )}
                             {activeRef === 'languages' && (
                               <>
-                                <td><code style={{ fontSize: '12px', background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>{item.code}</code></td>
-                                <td><span style={{ fontWeight: '500', color: '#1e293b' }}>{item.name}</span></td>
+                                <th style={{ width: '20%' }}>CODE (ISO)</th>
+                                <th style={{ width: '42%' }}>LANGUAGE NAME</th>
                               </>
                             )}
                             {activeRef === 'organizations' && (
                               <>
-                                <td><code style={{ fontSize: '12px', background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>{item.code}</code></td>
-                                <td><span style={{ fontWeight: '500', color: '#1e293b' }}>{item.name}</span></td>
+                                <th style={{ width: '20%' }}>CODE</th>
+                                <th style={{ width: '42%' }}>ORGANIZATION NAME</th>
                               </>
                             )}
                             {activeRef !== 'sdgs' && activeRef !== 'languages' && activeRef !== 'organizations' && (
-                              <td><span style={{ fontWeight: '500', color: '#1e293b' }}>{item.name}</span></td>
+                              <th style={{ width: '62%' }}>NAME</th>
                             )}
-                            <td style={{ textAlign: 'center' }}>
-                              <button 
-                                disabled={role !== 'Administrator'}
-                                onClick={() => handleToggleStatus(item)}
-                                style={{
-                                  background: item.status === 'Published' ? '#dcfce7' : '#f1f5f9',
-                                  color: item.status === 'Published' ? '#15803d' : '#475569',
-                                  border: 'none',
-                                  padding: '4px 10px',
-                                  borderRadius: '6px',
-                                  fontSize: '11px',
-                                  fontWeight: '600',
-                                  cursor: role === 'Administrator' ? 'pointer' : 'not-allowed',
-                                  opacity: role === 'Administrator' ? 1 : 0.8
-                                }}
-                              >
-                                {item.status}
-                              </button>
-                            </td>
-                            <td style={{ textAlign: 'center' }}>
-                              <div className="cms-actions-group" style={{ justifyContent: 'center', gap: '8px' }}>
+                            <th style={{ width: '15%', textAlign: 'center' }}>STATUS</th>
+                            <th style={{ width: '15%', textAlign: 'center' }}>ACTIONS</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {currentItems.map((item, index) => (
+                            <tr key={item.id} className={item.status !== 'Published' ? 'cms-row-draft' : ''}>
+                              <td style={{ textAlign: 'center', color: '#64748b', fontWeight: '500' }}>
+                                {indexOfFirstItem + index + 1}
+                              </td>
+                              {activeRef === 'sdgs' && (
+                                <>
+                                  <td style={{ textAlign: 'center', fontWeight: '700' }}>{item.number}</td>
+                                  <td style={{ textAlign: 'center' }}>
+                                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                                      <span style={{ display: 'inline-block', width: '16px', height: '16px', borderRadius: '4px', background: item.color, border: '1px solid #cbd5e1' }} />
+                                      <code style={{ fontSize: '11px' }}>{item.color}</code>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <span style={{ fontWeight: '500', color: '#1e293b' }}>{item.name}</span>
+                                  </td>
+                                </>
+                              )}
+                              {activeRef === 'languages' && (
+                                <>
+                                  <td><code style={{ fontSize: '12px', background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>{item.code}</code></td>
+                                  <td><span style={{ fontWeight: '500', color: '#1e293b' }}>{item.name}</span></td>
+                                </>
+                              )}
+                              {activeRef === 'organizations' && (
+                                <>
+                                  <td><code style={{ fontSize: '12px', background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>{item.code}</code></td>
+                                  <td><span style={{ fontWeight: '500', color: '#1e293b' }}>{item.name}</span></td>
+                                </>
+                              )}
+                              {activeRef !== 'sdgs' && activeRef !== 'languages' && activeRef !== 'organizations' && (
+                                <td><span style={{ fontWeight: '500', color: '#1e293b' }}>{item.name}</span></td>
+                              )}
+                              <td style={{ textAlign: 'center' }}>
                                 <button 
-                                  onClick={() => handleOpenEditModal(item)}
-                                  disabled={role !== 'Administrator'}
-                                  className="cms-action-btn-icon" 
-                                  aria-label="Edit"
+                                  onClick={() => handleToggleStatus(item)}
                                   style={{
-                                    cursor: role === 'Administrator' ? 'pointer' : 'not-allowed',
-                                    opacity: role === 'Administrator' ? 1 : 0.4
+                                    background: item.status === 'Published' ? '#dcfce7' : '#f1f5f9',
+                                    color: item.status === 'Published' ? '#15803d' : '#475569',
+                                    border: 'none',
+                                    padding: '4px 10px',
+                                    borderRadius: '6px',
+                                    fontSize: '11px',
+                                    fontWeight: '600',
+                                    cursor: 'pointer'
                                   }}
                                 >
-                                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <path d="M12 20h9"></path>
-                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                                  </svg>
+                                  {item.status}
                                 </button>
-                                <button 
-                                  onClick={() => handleDelete(item.id, item.name)}
-                                  disabled={role !== 'Administrator'}
-                                  className="cms-action-btn-icon cms-delete" 
-                                  aria-label="Delete"
-                                  style={{
-                                    cursor: role === 'Administrator' ? 'pointer' : 'not-allowed',
-                                    opacity: role === 'Administrator' ? 1 : 0.4
-                                  }}
-                                >
-                                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                  </svg>
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                        {currentItems.length === 0 && (
-                          <tr>
-                            <td colSpan="6" style={{ textAlign: 'center', padding: '32px', color: '#64748b' }}>
-                              No master references found matching your search.
-                            </td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
+                              </td>
+                              <td style={{ textAlign: 'center' }}>
+                                <div className="cms-actions-group" style={{ justifyContent: 'center', gap: '8px' }}>
+                                  <button 
+                                    onClick={() => handleOpenEditModal(item)}
+                                    className="cms-action-btn-icon" 
+                                    aria-label="Edit"
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                      <path d="M12 20h9"></path>
+                                      <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                                    </svg>
+                                  </button>
+                                  <button 
+                                    onClick={() => handleDeleteClick(item)}
+                                    className="cms-action-btn-icon cms-delete" 
+                                    aria-label="Delete"
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                      <polyline points="3 6 5 6 21 6"></polyline>
+                                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                          {currentItems.length === 0 && (
+                            <tr>
+                              <td colSpan="6" style={{ textAlign: 'center', padding: '32px', color: '#64748b' }}>
+                                No master references found matching your search.
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
 
-                    {/* Footer / Pagination */}
-                    <div className="cms-table-footer" style={{ padding: '16px', borderTop: '1px solid #e2e8f0' }}>
-                      <span className="cms-entries-info">
-                        Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, totalItems)} of {totalItems} entries
-                      </span>
-                      <div className="cms-table-pagination">
-                        <button 
-                          className="cms-pag-nav" 
-                          onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} 
-                          disabled={currentPage === 1}
-                        >
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <polyline points="15 18 9 12 15 6"></polyline>
-                          </svg>
-                        </button>
-                        {Array.from({ length: totalPages }).map((_, i) => (
+                      {/* Footer / Pagination */}
+                      <div className="cms-table-footer" style={{ padding: '16px', borderTop: '1px solid #e2e8f0' }}>
+                        <span className="cms-entries-info">
+                          Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, totalItems)} of {totalItems} entries
+                        </span>
+                        <div className="cms-table-pagination">
                           <button 
-                            key={i} 
-                            className={`cms-pag-num ${currentPage === i + 1 ? 'active' : ''}`}
-                            onClick={() => setCurrentPage(i + 1)}
+                            className="cms-pag-nav" 
+                            onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} 
+                            disabled={currentPage === 1}
                           >
-                            {i + 1}
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
                           </button>
-                        ))}
-                        <button 
-                          className="cms-pag-nav" 
-                          onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} 
-                          disabled={currentPage === totalPages}
-                        >
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                          </svg>
-                        </button>
+                          {Array.from({ length: totalPages }).map((_, i) => (
+                            <button 
+                              key={i} 
+                              className={`cms-pag-num ${currentPage === i + 1 ? 'active' : ''}`}
+                              onClick={() => setCurrentPage(i + 1)}
+                            >
+                              {i + 1}
+                            </button>
+                          ))}
+                          <button 
+                            className="cms-pag-nav" 
+                            onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} 
+                            disabled={currentPage === totalPages}
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                          </button>
+                        </div>
                       </div>
+
                     </div>
+                  )}
+                </div>
 
-                  </div>
-                )}
               </div>
+            </section>
 
+          </div>
+        ) : (
+          /* BLOCKED ACCESS SCREEN FOR NON-ADMINS */
+          <div style={{
+            background: 'white',
+            border: '1px solid #cbd5e1',
+            borderRadius: '12px',
+            padding: '64px 40px',
+            textAlign: 'center',
+            maxWidth: '560px',
+            margin: '60px auto 0 auto',
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
+          }}>
+            <div style={{
+              width: '80px',
+              height: '80px',
+              borderRadius: '50%',
+              background: '#fef2f2',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 24px auto',
+              border: '2px solid #fee2e2'
+            }}>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2.5">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
             </div>
-          </section>
-
-        </div>
+            <h2 style={{ fontSize: '22px', fontWeight: '800', color: '#0f172a', marginBottom: '12px' }}>
+              System Administrator Access Required
+            </h2>
+            <p style={{ color: '#475569', fontSize: '15px', lineHeight: '1.6', marginBottom: '24px' }}>
+              This page contains core configuration references that define input options for other pages. You do not have permissions to view or edit this restricted area.
+            </p>
+            <div style={{ fontSize: '13px', color: '#64748b', background: '#f8fafc', padding: '12px', borderRadius: '8px', border: '1px dashed #cbd5e1' }}>
+              💡 Use the <strong>Access Mode Switcher</strong> in the top-right header to simulate administrator privileges.
+            </div>
+          </div>
+        )}
 
       </main>
 
@@ -790,6 +828,56 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ELEGANT DELETE CONFIRMATION DIALOG MODAL */}
+      {isDeleteModalOpen && itemToDelete && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.4)', backdropFilter: 'blur(4px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: '#fff', padding: '36px', borderRadius: '12px', width: '100%', maxWidth: '540px', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}>
+            <h2 style={{ margin: '0 0 18px 0', fontSize: '22px', color: '#0f172a', fontWeight: '800' }}>
+              Delete Reference Option
+            </h2>
+            <p style={{ margin: '0 0 18px 0', fontSize: '16px', color: '#475569', lineHeight: '1.6' }}>
+              Are you sure you want to delete <strong>"{itemToDelete.name}"</strong>?
+            </p>
+            <div style={{
+              background: '#fffbeb',
+              border: '1px solid #fcd34d',
+              borderRadius: '8px',
+              padding: '16px 20px',
+              marginBottom: '28px',
+              fontSize: '14.5px',
+              color: '#b45309',
+              lineHeight: '1.6',
+              textAlign: 'left'
+            }}>
+              <strong>⚠️ Note:</strong> The data will not be deleted IF there are other data which still using this reference. Instead this will be unpublished and will not be shown to users.
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '14px' }}>
+              <button 
+                onClick={() => { setIsDeleteModalOpen(false); setItemToDelete(null); }}
+                style={{ padding: '12px 24px', background: '#f1f5f9', color: '#475569', border: 'none', borderRadius: '6px', fontSize: '15px', fontWeight: '600', cursor: 'pointer' }}
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={confirmDelete}
+                style={{ 
+                  padding: '12px 24px', 
+                  background: '#ef4444', 
+                  color: '#fff', 
+                  border: 'none', 
+                  borderRadius: '6px', 
+                  fontSize: '15px',
+                  fontWeight: '600', 
+                  cursor: 'pointer' 
+                }}
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       )}
