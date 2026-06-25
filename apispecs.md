@@ -180,6 +180,24 @@ Dokumen ini memetakan setiap halaman/komponen ke daftar endpoint API yang dibutu
 
 ---
 
+## 12. CMS — Master Reference Management
+
+| Halaman | Komponen | Endpoint | Method | Keterangan |
+|---------|----------|----------|--------|------------|
+| Master Reference | `CMSMasterReference.jsx` | `/api/v2/cms/master/{type}` | GET | Mengambil semua item master untuk tipe referensi terpilih (termasuk status aktif/nonaktif) |
+| | | `/api/v2/cms/master/{type}` | POST | Menambahkan item master baru (Admin only) |
+| | | `/api/v2/cms/master/{type}/{code}` | PUT | Memperbarui detail item master berdasarkan kode (Admin only) |
+| | | `/api/v2/cms/master/{type}/{code}` | DELETE | Menghapus item master secara permanen (Admin only) |
+
+### Fitur Kustom Master Reference yang Diimplementasikan:
+1. **Layout Lega**: Desain 90% full-width untuk visualisasi data master yang masif.
+2. **Keamanan Non-Admin**: Alert visual & Restricted Lock Screen jika peran simulated user bukan Administrator.
+3. **Modal Konfirmasi Hapus**: Dialog overlay interaktif dengan pesan peringatan relasi data.
+4. **Upload SDG Icon (Base64)**: Penambahan choose file input dengan preview gambar instan pada form SDG.
+5. **Upload Agency Logo (Base64 opsional)**: Pilihan choose file input opsional dengan preview dan tombol hapus pada form UN Agencies.
+
+---
+
 ## Ringkasan Semua Endpoint
 
 ### Auth (Public)
@@ -279,6 +297,14 @@ Dokumen ini memetakan setiap halaman/komponen ke daftar endpoint API yang dibutu
 | GET | `/api/admin/emails` | ✅ (admin) |
 | POST | `/api/admin/emails` | ✅ (admin) |
 | DELETE | `/api/admin/emails/{email}` | ✅ (admin) |
+
+### CMS — Master Reference
+| Method | Endpoint | Auth |
+|--------|----------|------|
+| GET | `/api/v2/cms/master/{type}` | ✅ |
+| POST | `/api/v2/cms/master/{type}` | ✅ (admin) |
+| PUT | `/api/v2/cms/master/{type}/{code}` | ✅ (admin) |
+| DELETE | `/api/v2/cms/master/{type}/{code}` | ✅ (admin) |
 
 ### Upload
 | Method | Endpoint | Auth |
