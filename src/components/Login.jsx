@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { login } from '../utils/api.js';
 
 export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [showSuccessMsg, setShowSuccessMsg] = useState(false);
   
   useEffect(() => {
@@ -14,9 +19,22 @@ export default function Login() {
     }
   }, []);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    window.location.href = '/cms/dashboard';
+    setLoading(true);
+    setErrorMsg('');
+    try {
+      const res = await login(email, password);
+      if (res.success) {
+        window.location.href = '/cms/dashboard';
+      } else {
+        setErrorMsg(res.message || 'Login failed.');
+      }
+    } catch (err) {
+      setErrorMsg(err.message || 'Server error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -45,16 +63,46 @@ export default function Login() {
             Registrasi sukses, silakan login
           </div>
         )}
+
+        {/* Error notification for login */}
+        {errorMsg && (
+          <div className="error-alert" style={{
+            background: '#fef2f2',
+            border: '1px solid #ef4444',
+            borderRadius: '6px',
+            padding: '12px 16px',
+            marginBottom: '20px',
+            color: '#991b1b',
+            fontSize: '14px'
+          }}>
+            <span style={{ marginRight: '8px' }}>⚠️</span>
+            {errorMsg}
+          </div>
+        )}
         
         <form className="auth-form" onSubmit={handleLogin}>
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
-            <input type="email" id="email" placeholder="name@un.org" />
+            <input 
+              type="email" 
+              id="email" 
+              placeholder="name@un.org" 
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
           
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <input type="password" id="password" placeholder="••••••••" />
+            <input 
+              type="password" 
+              id="password" 
+              placeholder="••••••••" 
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
 
           <div className="form-row flex-between">
@@ -77,7 +125,13 @@ export default function Login() {
             </div>
           </div>
 
-          <button type="submit" className="btn-primary full-width">Sign In</button>
+          <button 
+            type="submit" 
+            className="btn-primary full-width"
+            disabled={loading}
+          >
+            {loading ? 'Signing In...' : 'Sign In'}
+          </button>
         </form>
 
         <div className="auth-footer">

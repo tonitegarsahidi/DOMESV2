@@ -1,5 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import CMSLayout from './CMSLayout.jsx';
+import { 
+  getMasterList, 
+  createMasterItem, 
+  updateMasterItem, 
+  deleteMasterItem 
+} from '../../utils/api.js';
+
+const apiTypeMap = {
+  sdgs: 'sdgs',
+  agencies: 'agencies',
+  lnobs: 'lnobs',
+  languages: 'languages',
+  partners: 'non-un-partners',
+  organizations: 'organizations',
+  jointprogrammes: 'joint-programmes',
+  sectors: 'sectors',
+  thematics: 'thematic-areas'
+};
+
 
 // Initial Mock Data
 const defaultRefData = {
@@ -169,56 +188,61 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
   const [formLogo, setFormLogo] = useState(null);
   const [formStatus, setFormStatus] = useState('Published');
 
-  // Load from localStorage or initialize
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const type = apiTypeMap[activeRef] || activeRef;
+      const res = await getMasterList(type);
+      if (res.success) {
+        const mappedItems = res.data.map(item => {
+          const status = item.is_active ? 'Published' : 'Unpublished';
+          let number = item.number;
+          if (activeRef === 'sdgs') {
+            const match = (item.code || '').match(/\d+/);
+            number = match ? parseInt(match[0]) : 1;
+          }
+          return {
+            id: item.id || item.code,
+            code: item.code,
+            name: item.name,
+            status,
+            color: item.color,
+            icon: item.icon,
+            logo: item.logo_url || item.logo,
+            number
+          };
+        });
+        setData(prev => ({
+          ...prev,
+          [activeRef]: mappedItems
+        }));
+      }
+    } catch (err) {
+      console.error('Failed to load master list from API:', err);
+      triggerNotification('Failed to fetch data from server. Using offline data.', 'error');
+      const savedData = localStorage.getItem('cms_master_references');
+      if (savedData) {
+        try {
+          setData(JSON.parse(savedData));
+        } catch (e) {
+          setData(defaultRefData);
+        }
+      } else {
+        setData(defaultRefData);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     const savedRole = localStorage.getItem('cms_simulated_role') || 'Administrator';
     setRole(savedRole);
-
-    const savedData = localStorage.getItem('cms_master_references');
-    if (savedData) {
-      try {
-        const parsed = JSON.parse(savedData);
-        // Automatic migration of old agencies list to support Code vs Full Name mapping
-        if (parsed.agencies && parsed.agencies.length > 0) {
-          const needsMigration = parsed.agencies.some(item => !item.code);
-          if (needsMigration) {
-            parsed.agencies = parsed.agencies.map(item => {
-              if (!item.code) {
-                // Find matching default agency
-                const matchingDefault = defaultRefData.agencies.find(
-                  d => d.code === item.name || d.name === item.name
-                );
-                if (matchingDefault) {
-                  return {
-                    ...item,
-                    code: matchingDefault.code,
-                    name: matchingDefault.name,
-                    logo: item.logo || matchingDefault.logo
-                  };
-                } else {
-                  return {
-                    ...item,
-                    code: item.name, // The abbreviation was stored under the name field
-                    name: item.name,
-                    logo: item.logo || null
-                  };
-                }
-              }
-              return item;
-            });
-            localStorage.setItem('cms_master_references', JSON.stringify(parsed));
-          }
-        }
-        setData(parsed);
-      } catch (e) {
-        setData(defaultRefData);
-      }
-    } else {
-      setData(defaultRefData);
-      localStorage.setItem('cms_master_references', JSON.stringify(defaultRefData));
-    }
-    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [activeRef]);
 
   const saveReferences = (newData) => {
     setData(newData);
@@ -265,47 +289,85 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
     setIsFormModalOpen(true);
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     if (role !== 'Administrator') return;
 
-    const activeList = data[activeRef] || [];
-    let updatedList;
-
-    if (modalMode === 'create') {
-      const newId = activeList.length > 0 ? Math.max(...activeList.map(i => i.id)) + 1 : 1;
-      const newItem = {
-        id: newId,
-        name: formName,
-        status: formStatus,
-        ...(activeRef === 'sdgs' && { number: parseInt(formNumber) || 1, color: formColor, icon: formIcon || `/images/SDG-logos/SDG-${formNumber || 1}_no-poverty.png` }),
-        ...(activeRef === 'agencies' && { code: formCode, logo: formLogo }),
-        ...(activeRef === 'languages' && { code: formCode }),
-        ...(activeRef === 'organizations' && { code: formCode })
-      };
-      updatedList = [...activeList, newItem];
-      triggerNotification(`New item "${formName}" created successfully.`);
-    } else {
-      updatedList = activeList.map(item => {
-        if (item.id === editingItem.id) {
-          return {
-            ...item,
-            name: formName,
-            status: formStatus,
-            ...(activeRef === 'sdgs' && { number: parseInt(formNumber) || item.number, color: formColor, icon: formIcon }),
-            ...(activeRef === 'agencies' && { code: formCode, logo: formLogo }),
-            ...(activeRef === 'languages' && { code: formCode }),
-            ...(activeRef === 'organizations' && { code: formCode })
-          };
-        }
-        return item;
-      });
-      triggerNotification(`Item "${formName}" updated successfully.`);
+    const type = apiTypeMap[activeRef] || activeRef;
+    let code = formCode;
+    if (activeRef === 'sdgs') {
+      code = `GOAL ${formNumber}`;
+    } else if (!code) {
+      code = formName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     }
 
-    const updatedData = { ...data, [activeRef]: updatedList };
-    saveReferences(updatedData);
-    setIsFormModalOpen(false);
+    const payload = {
+      code,
+      name: formName,
+      is_active: formStatus === 'Published',
+      ...(activeRef === 'sdgs' && { color: formColor, icon: formIcon }),
+      ...(activeRef === 'agencies' && { logo_url: formLogo }),
+    };
+
+    try {
+      if (modalMode === 'create') {
+        await createMasterItem(type, payload);
+        triggerNotification(`New item "${formName}" created successfully on server.`);
+      } else {
+        const itemCode = editingItem.code || editingItem.id;
+        await updateMasterItem(type, itemCode, {
+          name: formName,
+          is_active: formStatus === 'Published',
+          ...(activeRef === 'sdgs' && { color: formColor, icon: formIcon }),
+          ...(activeRef === 'agencies' && { logo_url: formLogo }),
+        });
+        triggerNotification(`Item "${formName}" updated successfully on server.`);
+      }
+      setIsFormModalOpen(false);
+      loadData();
+    } catch (err) {
+      console.error('Failed to save master reference via API:', err);
+      triggerNotification('API save failed. Saving to local storage only.', 'warning');
+      
+      const activeList = data[activeRef] || [];
+      let updatedList;
+
+      if (modalMode === 'create') {
+        const newId = activeList.length > 0 ? Math.max(...activeList.map(i => i.id)) + 1 : 1;
+        const newItem = {
+          id: newId,
+          code,
+          name: formName,
+          status: formStatus,
+          ...(activeRef === 'sdgs' && { number: parseInt(formNumber) || 1, color: formColor, icon: formIcon || `/images/SDG-logos/SDG-${formNumber || 1}_no-poverty.png` }),
+          ...(activeRef === 'agencies' && { code: formCode, logo: formLogo }),
+          ...(activeRef === 'languages' && { code: formCode }),
+          ...(activeRef === 'organizations' && { code: formCode })
+        };
+        updatedList = [...activeList, newItem];
+      } else {
+        updatedList = activeList.map(item => {
+          if (item.id === editingItem.id) {
+            return {
+              ...item,
+              code,
+              name: formName,
+              status: formStatus,
+              ...(activeRef === 'sdgs' && { number: parseInt(formNumber) || item.number, color: formColor, icon: formIcon }),
+              ...(activeRef === 'agencies' && { code: formCode, logo: formLogo }),
+              ...(activeRef === 'languages' && { code: formCode }),
+              ...(activeRef === 'organizations' && { code: formCode })
+            };
+          }
+          return item;
+        });
+      }
+
+      const updatedData = { ...data, [activeRef]: updatedList };
+      setData(updatedData);
+      localStorage.setItem('cms_master_references', JSON.stringify(updatedData));
+      setIsFormModalOpen(false);
+    }
   };
 
   const handleDeleteClick = (item) => {
@@ -314,25 +376,57 @@ export default function CMSMasterReference({ activeRef = 'sdgs' }) {
     setIsDeleteModalOpen(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (!itemToDelete) return;
-    const activeList = data[activeRef] || [];
-    const updatedList = activeList.filter(item => item.id !== itemToDelete.id);
-    const updatedData = { ...data, [activeRef]: updatedList };
-    saveReferences(updatedData);
-    triggerNotification(`Item "${itemToDelete.name}" has been deleted.`);
-    setIsDeleteModalOpen(false);
-    setItemToDelete(null);
+    const type = apiTypeMap[activeRef] || activeRef;
+    const itemCode = itemToDelete.code || itemToDelete.id;
+
+    try {
+      await deleteMasterItem(type, itemCode);
+      triggerNotification(`Item "${itemToDelete.name}" has been deleted from server.`);
+      setIsDeleteModalOpen(false);
+      setItemToDelete(null);
+      loadData();
+    } catch (err) {
+      console.error('Failed to delete master reference via API:', err);
+      triggerNotification('API delete failed. Deleting from local storage only.', 'warning');
+
+      const activeList = data[activeRef] || [];
+      const updatedList = activeList.filter(item => item.id !== itemToDelete.id);
+      const updatedData = { ...data, [activeRef]: updatedList };
+      setData(updatedData);
+      localStorage.setItem('cms_master_references', JSON.stringify(updatedData));
+      setIsDeleteModalOpen(false);
+      setItemToDelete(null);
+    }
   };
 
-  const handleToggleStatus = (item) => {
+  const handleToggleStatus = async (item) => {
     if (role !== 'Administrator') return;
-    const activeList = data[activeRef] || [];
+    const type = apiTypeMap[activeRef] || activeRef;
+    const itemCode = item.code || item.id;
     const newStatus = item.status === 'Published' ? 'Unpublished' : 'Published';
-    const updatedList = activeList.map(i => i.id === item.id ? { ...i, status: newStatus } : i);
-    const updatedData = { ...data, [activeRef]: updatedList };
-    saveReferences(updatedData);
-    triggerNotification(`"${item.name}" status updated to ${newStatus}.`);
+    
+    try {
+      await updateMasterItem(type, itemCode, {
+        name: item.name,
+        is_active: newStatus === 'Published',
+        color: item.color,
+        icon: item.icon,
+        logo_url: item.logo,
+      });
+      triggerNotification(`"${item.name}" status updated to ${newStatus} on server.`);
+      loadData();
+    } catch (err) {
+      console.error('Failed to toggle status via API:', err);
+      triggerNotification('API toggle failed. Updating in local storage only.', 'warning');
+
+      const activeList = data[activeRef] || [];
+      const updatedList = activeList.map(i => i.id === item.id ? { ...i, status: newStatus } : i);
+      const updatedData = { ...data, [activeRef]: updatedList };
+      setData(updatedData);
+      localStorage.setItem('cms_master_references', JSON.stringify(updatedData));
+    }
   };
 
   // Filter & Search computation
