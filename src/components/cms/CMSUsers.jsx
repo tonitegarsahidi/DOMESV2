@@ -1,55 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CMSLayout from './CMSLayout.jsx';
+import { getUsers, createUser, updateUser, deleteUser } from '../../utils/api.js';
+
+const MOCK_USERS = [
+  {
+    id: 1,
+    first_name: 'Admin',
+    last_name: 'User',
+    position: 'System Administrator',
+    organization: 'rco',
+    phone_number: '+62 811 1111 1111',
+    email: 'admin@un.org',
+    role: 'administrator',
+    is_active: true,
+    status: 'active'
+  },
+  {
+    id: 2,
+    first_name: 'Budi',
+    last_name: 'Santoso',
+    position: 'Project Manager',
+    organization: 'undp',
+    phone_number: '+62 812 3456 7890',
+    email: 'b.santoso@undp.org',
+    role: 'editor',
+    is_active: true,
+    status: 'active'
+  },
+  {
+    id: 3,
+    first_name: 'Sarah',
+    last_name: 'Jenkins',
+    position: 'Data Analyst',
+    organization: 'worldbank',
+    phone_number: '+62 813 9876 5432',
+    email: 's.jenkins@worldbank.org',
+    role: 'viewer',
+    is_active: false,
+    status: 'inactive'
+  },
+  {
+    id: 4,
+    first_name: 'Ahmad',
+    last_name: 'Faisal',
+    position: 'Communication Officer',
+    organization: 'unicef',
+    phone_number: '+62 814 5555 4444',
+    email: 'a.faisal@unicef.org',
+    role: 'editor',
+    is_active: true,
+    status: 'active'
+  }
+];
 
 export default function CMSUsers() {
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      firstName: 'Admin',
-      lastName: 'User',
-      position: 'System Administrator',
-      organization: 'rco',
-      phone: '+62 811 1111 1111',
-      email: 'admin@un.org',
-      role: 'Administrator',
-      status: 'Active'
-    },
-    {
-      id: 2,
-      firstName: 'Budi',
-      lastName: 'Santoso',
-      position: 'Project Manager',
-      organization: 'undp',
-      phone: '+62 812 3456 7890',
-      email: 'b.santoso@undp.org',
-      role: 'Editor',
-      status: 'Active'
-    },
-    {
-      id: 3,
-      firstName: 'Sarah',
-      lastName: 'Jenkins',
-      position: 'Data Analyst',
-      organization: 'worldbank',
-      phone: '+62 813 9876 5432',
-      email: 's.jenkins@worldbank.org',
-      role: 'Viewer',
-      status: 'Inactive'
-    },
-    {
-      id: 4,
-      firstName: 'Ahmad',
-      lastName: 'Faisal',
-      position: 'Communication Officer',
-      organization: 'unicef',
-      phone: '+62 814 5555 4444',
-      email: 'a.faisal@unicef.org',
-      role: 'Editor',
-      status: 'Active'
-    }
-  ]);
-
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState(null);
+  const [searchFilter, setSearchFilter] = useState('');
 
   // Modals state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -101,6 +109,63 @@ export default function CMSUsers() {
     { value: "worldbank", label: "World Bank" }
   ];
 
+  const normalizeUser = (raw) => ({
+    id: raw.id,
+    firstName: raw.first_name || '',
+    lastName: raw.last_name || '',
+    position: raw.position || '',
+    organization: raw.organization || '',
+    phone: raw.phone_number || '',
+    email: raw.email || '',
+    role: raw.role ? (raw.role.charAt(0).toUpperCase() + raw.role.slice(1)) : 'Viewer',
+    status: raw.is_active || raw.status === 'active' ? 'Active' : 'Inactive'
+  });
+
+  const serializeUser = (data) => ({
+    first_name: data.firstName,
+    last_name: data.lastName,
+    position: data.position,
+    organization: data.organization,
+    phone_number: data.phone,
+    email: data.email,
+    role: data.role.toLowerCase(),
+    status: data.status.toLowerCase(),
+    is_active: data.status === 'Active',
+    ...(data.password ? { password: data.password, confirm_password: data.password } : {})
+  });
+
+  const loadUsers = async () => {
+    setLoading(true);
+    try {
+      const res = await getUsers({ search: searchFilter });
+      if (res && res.success && res.data) {
+        const list = Array.isArray(res.data) ? res.data : (res.data.items || []);
+        setUsers(list.map(normalizeUser));
+      } else {
+        throw new Error('Unsuccessful payload structure');
+      }
+    } catch (err) {
+      console.warn('CMS Users: backend offline, using mock simulator data.', err.message);
+      // Filter mock users locally
+      const q = searchFilter.toLowerCase();
+      const filtered = MOCK_USERS.filter(u => 
+        (u.first_name + ' ' + u.last_name).toLowerCase().includes(q) ||
+        u.email.toLowerCase().includes(q) ||
+        u.organization.toLowerCase().includes(q)
+      );
+      setUsers(filtered.map(normalizeUser));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      loadUsers();
+    }, 400); // debounce input
+    return () => clearTimeout(handler);
+  }, [searchFilter]);
+
   const handleOpenModal = (mode, user = null) => {
     setModalMode(mode);
     if (mode === 'edit' && user) {
@@ -120,19 +185,47 @@ export default function CMSUsers() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (modalMode === 'create') {
-      const newUser = {
-        ...formData,
-        id: Date.now() // generate dummy ID
-      };
-      setUsers([...users, newUser]);
-      showNotification(`User ${newUser.firstName} ${newUser.lastName} successfully created!`);
-    } else if (modalMode === 'edit') {
-      const updatedUsers = users.map(u => u.id === formData.id ? { ...formData } : u);
-      setUsers(updatedUsers);
-      showNotification(`User ${formData.firstName} ${formData.lastName} successfully updated!`);
+    const payload = serializeUser(formData);
+    try {
+      if (modalMode === 'create') {
+        const res = await createUser(payload);
+        if (res && res.success) {
+          showNotification(`User ${formData.firstName} ${formData.lastName} successfully created!`);
+          loadUsers();
+        } else {
+          throw new Error('Create user failed');
+        }
+      } else {
+        const res = await updateUser(formData.id, payload);
+        if (res && res.success) {
+          showNotification(`User ${formData.firstName} ${formData.lastName} successfully updated!`);
+          loadUsers();
+        } else {
+          throw new Error('Update user failed');
+        }
+      }
+    } catch (err) {
+      console.warn('CMS Users: backend offline, simulating CRUD updates locally.', err.message);
+      if (modalMode === 'create') {
+        const newMock = {
+          ...payload,
+          id: Date.now()
+        };
+        MOCK_USERS.push(newMock);
+        showNotification(`[Simulated] User ${formData.firstName} ${formData.lastName} successfully created!`);
+      } else {
+        const idx = MOCK_USERS.findIndex(u => u.id === formData.id);
+        if (idx !== -1) {
+          MOCK_USERS[idx] = {
+            ...MOCK_USERS[idx],
+            ...payload
+          };
+        }
+        showNotification(`[Simulated] User ${formData.firstName} ${formData.lastName} successfully updated!`);
+      }
+      loadUsers();
     }
     handleCloseModal();
   };
@@ -142,13 +235,27 @@ export default function CMSUsers() {
     setIsDeleteModalOpen(true);
   };
 
-  const handleDelete = () => {
-    if (userToDelete) {
-      setUsers(users.filter(u => u.id !== userToDelete.id));
-      setIsDeleteModalOpen(false);
-      showNotification(`User ${userToDelete.firstName} ${userToDelete.lastName} has been deleted.`);
-      setUserToDelete(null);
+  const handleDelete = async () => {
+    if (!userToDelete) return;
+    try {
+      const res = await deleteUser(userToDelete.id);
+      if (res && res.success) {
+        showNotification(`User ${userToDelete.firstName} ${userToDelete.lastName} has been deleted.`);
+        loadUsers();
+      } else {
+        throw new Error('Delete user failed');
+      }
+    } catch (err) {
+      console.warn('CMS Users: backend offline, simulating delete locally.', err.message);
+      const idx = MOCK_USERS.findIndex(u => u.id === userToDelete.id);
+      if (idx !== -1) {
+        MOCK_USERS.splice(idx, 1);
+      }
+      showNotification(`[Simulated] User ${userToDelete.firstName} ${userToDelete.lastName} has been deleted.`);
+      loadUsers();
     }
+    setIsDeleteModalOpen(false);
+    setUserToDelete(null);
   };
 
   const showNotification = (msg) => {
@@ -198,14 +305,44 @@ export default function CMSUsers() {
           </div>
         )}
 
-        <div className="cms-table-container">
+        <div className="cms-table-container" style={{ position: 'relative' }}>
+          {loading && (
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(255, 255, 255, 0.7)',
+              zIndex: 10,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+              <div className="spinner" style={{
+                width: '32px',
+                height: '32px',
+                border: '3px solid #eff6ff',
+                borderTop: '3px solid #3366cc',
+                borderRadius: '50%',
+                animation: 'spin 1s linear infinite'
+              }}></div>
+              <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+            </div>
+          )}
+
           <div className="cms-table-filter-bar">
             <div className="cms-search-input-wrapper">
               <svg className="cms-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
-              <input type="text" placeholder="Search users by name, email, or org..." />
+              <input 
+                type="text" 
+                placeholder="Search users by name, email, or org..." 
+                value={searchFilter}
+                onChange={(e) => setSearchFilter(e.target.value)}
+              />
             </div>
           </div>
 
@@ -221,81 +358,80 @@ export default function CMSUsers() {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => {
-                const orgLabel = orgOptions.find(o => o.value === user.organization)?.label || 'Other Organization';
-                return (
-                <tr key={user.id} className="cms-table-row-hover">
-                  <td className="cms-col-title">
-                    <span style={{ fontWeight: '500', color: '#0f172a' }}>{user.firstName} {user.lastName}</span>
-                  </td>
-                  <td style={{ color: '#475569', fontSize: '13px' }}>
-                    <div style={{ marginBottom: '2px' }}>{user.email}</div>
-                    <div style={{ color: '#64748b' }}>{user.phone}</div>
-                  </td>
-                  <td style={{ color: '#475569', fontSize: '13px' }}>
-                    <div style={{ fontWeight: '500', color: '#334155', marginBottom: '2px' }}>{orgLabel}</div>
-                    <div style={{ color: '#64748b' }}>{user.position}</div>
-                  </td>
-                  <td>
-                    <span style={{ 
-                      background: '#f1f5f9', 
-                      color: '#475569', 
-                      padding: '4px 8px', 
-                      borderRadius: '4px', 
-                      fontSize: '12px', 
-                      fontWeight: '600' 
-                    }}>
-                      {user.role}
-                    </span>
-                  </td>
-                  <td className="cms-col-status">
-                    <span className={`cms-status-badge ${user.status.toLowerCase()}`} style={{ 
-                      background: user.status === 'Active' ? '#dcfce7' : '#fee2e2',
-                      color: user.status === 'Active' ? '#16a34a' : '#dc2626'
-                    }}>
-                      {user.status}
-                    </span>
-                  </td>
-                  <td style={{textAlign: 'center'}}>
-                    <div className="cms-actions-group" style={{justifyContent: 'center'}}>
-                      <button 
-                        className="cms-action-btn-icon" 
-                        aria-label="Edit User"
-                        onClick={() => handleOpenModal('edit', user)}
-                      >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M12 20h9"></path>
-                          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                        </svg>
-                      </button>
-                      <button 
-                        className="cms-action-btn-icon cms-delete" 
-                        aria-label="Delete User"
-                        onClick={() => confirmDelete(user)}
-                      >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <polyline points="3 6 5 6 21 6"></polyline>
-                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                );
-              })}
-              {users.length === 0 && (
+              {users.length > 0 ? (
+                users.map((user) => {
+                  const orgLabel = orgOptions.find(o => o.value === user.organization)?.label || 'Other Organization';
+                  return (
+                    <tr key={user.id} className="cms-table-row-hover">
+                      <td className="cms-col-title">
+                        <span style={{ fontWeight: '500', color: '#0f172a' }}>{user.firstName} {user.lastName}</span>
+                      </td>
+                      <td style={{ color: '#475569', fontSize: '13px' }}>
+                        <div style={{ marginBottom: '2px' }}>{user.email}</div>
+                        <div style={{ color: '#64748b' }}>{user.phone}</div>
+                      </td>
+                      <td style={{ color: '#475569', fontSize: '13px' }}>
+                        <div style={{ fontWeight: '500', color: '#334155', marginBottom: '2px' }}>{orgLabel}</div>
+                        <div style={{ color: '#64748b' }}>{user.position}</div>
+                      </td>
+                      <td>
+                        <span style={{ 
+                          background: '#f1f5f9', 
+                          color: '#475569', 
+                          padding: '4px 8px', 
+                          borderRadius: '4px', 
+                          fontSize: '12px', 
+                          fontWeight: '600' 
+                        }}>
+                          {user.role}
+                        </span>
+                      </td>
+                      <td>
+                        <span className={`cms-status-badge ${user.status.toLowerCase()}`} style={{
+                          background: user.status === 'Active' ? '#dcfce7' : '#fee2e2',
+                          color: user.status === 'Active' ? '#16a34a' : '#dc2626'
+                        }}>
+                          {user.status}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="cms-action-buttons">
+                          <button 
+                            className="cms-btn-icon" 
+                            title="Edit User" 
+                            onClick={() => handleOpenModal('edit', user)}
+                          >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                              <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                          </button>
+                          <button 
+                            className="cms-btn-icon delete" 
+                            title="Delete User" 
+                            onClick={() => confirmDelete(user)}
+                          >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <polyline points="3 6 5 6 21 6"></polyline>
+                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                              <line x1="10" y1="11" x2="10" y2="17"></line>
+                              <line x1="14" y1="11" x2="14" y2="17"></line>
+                            </svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
                 <tr>
-                  <td colSpan="6" style={{ textAlign: 'center', padding: '32px', color: '#64748b' }}>
+                  <td colSpan="6" style={{ textAlign: 'center', padding: '40px 20px', color: '#64748b' }}>
                     No users found.
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
-
-          <div className="cms-table-footer">
-            <span className="cms-entries-info">Showing {users.length} entries</span>
-          </div>
         </div>
       </main>
 
@@ -487,7 +623,6 @@ export default function CMSUsers() {
           </div>
         </div>
       )}
-
     </CMSLayout>
   );
 }

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DocumentCard from './DocumentCard';
+import { getDocuments } from '../utils/api.js';
 
 const documents = [
   {
@@ -177,27 +178,263 @@ const climateChangeDocuments = [
 
 export default function DocumentList({ searchQuery }) {
   const [viewMode, setViewMode] = useState('list');
-  
-  const isClimateSearch = searchQuery && searchQuery.toLowerCase().includes('climate');
-  
-  let displayDocuments = documents;
-  if (searchQuery) {
-    if (isClimateSearch) {
-      displayDocuments = climateChangeDocuments;
-    } else {
-      displayDocuments = []; // Simulate empty state for any other query
+  const [displayDocuments, setDisplayDocuments] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(12);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [sortBy, setSortBy] = useState('newest');
+
+  const normalizeDoc = (item) => {
+    const tags = [];
+    if (item.sdgs) {
+      const sdgList = Array.isArray(item.sdgs) ? item.sdgs : [];
+      sdgList.forEach(s => {
+        const code = typeof s === 'object' ? s.code : s;
+        tags.push({ label: code, type: 'sdg' });
+      });
     }
-  }
+    tags.push({ label: item.agency || 'UN', type: 'agency' });
+    if (item.year) {
+      tags.push({ label: String(item.year), type: 'date' });
+    }
+    
+    return {
+      id: item.id,
+      image: item.cover_image || '/images/doc-cover-sdg.png',
+      tags: tags,
+      title: item.title,
+      description: item.description || item.abstract || '',
+      agency: item.agency,
+      pages: `PDF, ${item.total_pages || 0} pages`,
+      file_url: item.file_url || '#'
+    };
+  };
+
+  const getFallbackDocs = (params) => {
+    const q = params.q ? params.q.toLowerCase() : '';
+    let list = q.includes('climate') ? climateChangeDocuments : documents;
+    
+    // Fallback search
+    if (q && !q.includes('climate')) {
+      list = documents.filter(d => 
+        d.title.toLowerCase().includes(q) || 
+        d.description.toLowerCase().includes(q)
+      );
+    }
+
+    // Fallback agency filtering
+    if (params.agencies) {
+      const selectedAgencies = params.agencies.split(',');
+      list = list.filter(d => 
+        selectedAgencies.some(slug => {
+          const matchAgency = d.tags.find(t => t.type === 'agency');
+          return matchAgency && matchAgency.label.toLowerCase().replace(/[^a-z0-9]+/g, '') === slug;
+        })
+      );
+    }
+
+    // Fallback SDG filtering
+    if (params.sdgs) {
+      const selectedSdgs = params.sdgs.split(',');
+      list = list.filter(d => 
+        selectedSdgs.some(sdgCode => {
+          const matchSdg = d.tags.find(t => t.type === 'sdg');
+          if (!matchSdg) return false;
+          const match = sdgCode.match(/\d+/);
+          const goalNum = match ? match[0] : '';
+          return matchSdg.label.toLowerCase().includes(goalNum) || matchSdg.label.toLowerCase() === 'sdg';
+        })
+      );
+    }
+
+    // Fallback sort
+    if (params.sort === 'oldest') {
+      list = [...list].sort((a, b) => a.id - b.id);
+    } else if (params.sort === 'newest') {
+      list = [...list].sort((a, b) => b.id - a.id);
+    }
+
+    const pageNum = parseInt(params.page) || 1;
+    const limitNum = parseInt(params.limit) || 12;
+    const start = (pageNum - 1) * limitNum;
+    const items = list.slice(start, start + limitNum);
+
+    return {
+      items: items.map(d => normalizeDoc({
+        id: String(d.id),
+        title: d.title,
+        description: d.description,
+        agency: d.agency,
+        total_pages: parseInt(d.pages.replace(/[^0-9]/g, '')) || 100,
+        cover_image: d.image,
+        year: d.tags.find(t => t.type === 'date')?.label.includes('2023') ? 2023 : 2024,
+        sdgs: d.tags.filter(t => t.type === 'sdg').map(t => t.label)
+      })),
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        totalItems: list.length,
+        totalPages: Math.max(1, Math.ceil(list.length / limitNum))
+      }
+    };
+  };
+
+  const loadDocuments = async () => {
+    setLoading(true);
+    const params = new URLSearchParams(window.location.search);
+    const queryParams = {};
+    params.forEach((value, key) => {
+      queryParams[key] = value;
+    });
+
+    setPage(parseInt(queryParams.page) || 1);
+    setLimit(parseInt(queryParams.limit) || 12);
+    setSortBy(queryParams.sort || 'newest');
+
+    try {
+      const res = await getDocuments(queryParams);
+      if (res && res.success && res.data) {
+        const normalized = (res.data.items || []).map(item => normalizeDoc(item));
+        setDisplayDocuments(normalized);
+        if (res.data.pagination) {
+          setPage(res.data.pagination.page || 1);
+          setLimit(res.data.pagination.limit || 12);
+          setTotalPages(res.data.pagination.totalPages || 1);
+          setTotalItems(res.data.pagination.totalItems || 0);
+        }
+      } else {
+        throw new Error('API request failed');
+      }
+    } catch (err) {
+      console.warn('Backend offline, using fallback static simulation:', err.message);
+      const fallback = getFallbackDocs(queryParams);
+      setDisplayDocuments(fallback.items);
+      setPage(fallback.pagination.page);
+      setLimit(fallback.pagination.limit);
+      setTotalPages(fallback.pagination.totalPages);
+      setTotalItems(fallback.pagination.totalItems);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadDocuments();
+    window.addEventListener('urlchange', loadDocuments);
+    window.addEventListener('popstate', loadDocuments);
+    return () => {
+      window.removeEventListener('urlchange', loadDocuments);
+      window.removeEventListener('popstate', loadDocuments);
+    };
+  }, []);
+
+  const updateUrlParam = (key, value) => {
+    const params = new URLSearchParams(window.location.search);
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+    if (key !== 'page') {
+      params.delete('page');
+    }
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.pushState({}, '', newUrl);
+    window.dispatchEvent(new Event('urlchange'));
+  };
+
+  const handlePageChange = (pageNum) => {
+    if (pageNum >= 1 && pageNum <= totalPages) {
+      updateUrlParam('page', pageNum);
+    }
+  };
+
+  const handleLimitChange = (limitNum) => {
+    updateUrlParam('limit', limitNum);
+  };
+
+  const handleSortChange = (sortVal) => {
+    updateUrlParam('sort', sortVal);
+  };
+
+  const renderPaginationButtons = () => {
+    const buttons = [];
+    const maxVisible = 5;
+    let start = Math.max(1, page - 2);
+    let end = Math.min(totalPages, start + maxVisible - 1);
+    
+    if (end - start < maxVisible - 1) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    if (start > 1) {
+      buttons.push(
+        <button key={1} className={page === 1 ? 'active' : ''} onClick={() => handlePageChange(1)}>1</button>
+      );
+      if (start > 2) {
+        buttons.push(<span key="dots-start" style={{ padding: '0 8px', color: '#64748b' }}>...</span>);
+      }
+    }
+
+    for (let i = start; i <= end; i++) {
+      buttons.push(
+        <button key={i} className={page === i ? 'active' : ''} onClick={() => handlePageChange(i)}>{i}</button>
+      );
+    }
+
+    if (end < totalPages) {
+      if (end < totalPages - 1) {
+        buttons.push(<span key="dots-end" style={{ padding: '0 8px', color: '#64748b' }}>...</span>);
+      }
+      buttons.push(
+        <button key={totalPages} className={page === totalPages ? 'active' : ''} onClick={() => handlePageChange(totalPages)}>{totalPages}</button>
+      );
+    }
+
+    return buttons;
+  };
+
+  const startItem = (page - 1) * limit + 1;
+  const endItem = Math.min(page * limit, totalItems);
 
   return (
-    <div className="document-list-area" id="document-list">
+    <div className="document-list-area" id="document-list" style={{ position: 'relative' }}>
+      {loading && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(255, 255, 255, 0.7)',
+          zIndex: 100,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: '12px',
+          backdropFilter: 'blur(1px)'
+        }}>
+          <div className="spinner" style={{
+            width: '40px',
+            height: '40px',
+            border: '3px solid #eff6ff',
+            borderTop: '3px solid #3366cc',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite'
+          }}></div>
+          <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+        </div>
+      )}
+
       <div className="document-list-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div className="document-list-header-left">
           <h2 className="document-list-title">
             {searchQuery ? `Search Results` : 'Latest Document'}
           </h2>
           <span className="document-list-count">
-            Showing {displayDocuments.length > 0 ? `1-${displayDocuments.length} of ${displayDocuments.length}` : '0'} documents
+            Showing {totalItems > 0 ? `${startItem}-${endItem} of ${totalItems}` : '0'} documents
           </span>
         </div>
         
@@ -205,20 +442,24 @@ export default function DocumentList({ searchQuery }) {
           {/* Sort Dropdown */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ fontSize: '13px', color: '#64748b' }}>Sort by:</span>
-            <select style={{ 
-              padding: '6px 12px', 
-              borderRadius: '6px', 
-              border: '1px solid #cbd5e1', 
-              color: '#334155',
-              fontSize: '14px',
-              outline: 'none',
-              cursor: 'pointer',
-              background: 'white'
-            }}>
-              <option>Relevance</option>
-              <option>Newest First</option>
-              <option>Oldest First</option>
-              <option>Most Popular</option>
+            <select 
+              value={sortBy}
+              onChange={(e) => handleSortChange(e.target.value)}
+              style={{ 
+                padding: '6px 12px', 
+                borderRadius: '6px', 
+                border: '1px solid #cbd5e1', 
+                color: '#334155',
+                fontSize: '14px',
+                outline: 'none',
+                cursor: 'pointer',
+                background: 'white'
+              }}
+            >
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="views">Most Views</option>
+              <option value="downloads">Most Downloads</option>
             </select>
           </div>
 
@@ -261,25 +502,37 @@ export default function DocumentList({ searchQuery }) {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '30px', flexWrap: 'wrap', gap: '16px' }}>
             <div style={{ fontSize: '14px', color: '#64748b' }}>
               Items per page: 
-              <select style={{ marginLeft: '8px', padding: '4px 8px', borderRadius: '4px', border: '1px solid #cbd5e1', outline: 'none', cursor: 'pointer', background: 'white' }}>
-                <option>12</option>
-                <option>24</option>
-                <option>48</option>
+              <select 
+                value={limit}
+                onChange={(e) => handleLimitChange(Number(e.target.value))}
+                style={{ marginLeft: '8px', padding: '4px 8px', borderRadius: '4px', border: '1px solid #cbd5e1', outline: 'none', cursor: 'pointer', background: 'white' }}
+              >
+                <option value={12}>12</option>
+                <option value={24}>24</option>
+                <option value={48}>48</option>
               </select>
             </div>
             {/* Pagination */}
             <div className="pagination" id="pagination" style={{ marginTop: 0 }}>
-              <button className="nav-btn" aria-label="Previous">
+              <button 
+                className="nav-btn" 
+                aria-label="Previous" 
+                onClick={() => handlePageChange(page - 1)}
+                disabled={page <= 1}
+              >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
                 </svg>
               </button>
-              <button className="active">1</button>
-              <button>2</button>
-              <button>3</button>
-              <button>...</button>
-              <button>25</button>
-              <button className="nav-btn" aria-label="Next">
+              
+              {renderPaginationButtons()}
+              
+              <button 
+                className="nav-btn" 
+                aria-label="Next" 
+                onClick={() => handlePageChange(page + 1)}
+                disabled={page >= totalPages}
+              >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
                 </svg>
@@ -306,21 +559,26 @@ export default function DocumentList({ searchQuery }) {
           <p style={{ color: '#64748b', fontSize: '15px', maxWidth: '400px', marginBottom: '24px' }}>
             Try adjusting your keywords, checking for typos, or clearing some filters to see more results.
           </p>
-          <a href="/search-results" style={{
-            background: '#eff6ff',
-            color: '#3366cc',
-            padding: '10px 24px',
-            borderRadius: '8px',
-            fontWeight: '600',
-            textDecoration: 'none',
-            border: '1px solid #bfdbfe',
-            transition: 'all 0.2s'
-          }}
-          onMouseOver={(e) => { e.currentTarget.style.background = '#dbeafe'; }}
-          onMouseOut={(e) => { e.currentTarget.style.background = '#eff6ff'; }}
+          <button 
+            onClick={() => {
+              window.history.pushState({}, '', window.location.pathname);
+              window.dispatchEvent(new Event('urlchange'));
+            }}
+            style={{
+              background: '#eff6ff',
+              color: '#3366cc',
+              padding: '10px 24px',
+              borderRadius: '8px',
+              fontWeight: '600',
+              border: '1px solid #bfdbfe',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+            onMouseOver={(e) => { e.currentTarget.style.background = '#dbeafe'; }}
+            onMouseOut={(e) => { e.currentTarget.style.background = '#eff6ff'; }}
           >
             Clear all filters
-          </a>
+          </button>
         </div>
       )}
     </div>

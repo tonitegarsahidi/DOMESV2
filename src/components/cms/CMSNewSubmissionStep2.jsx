@@ -69,6 +69,12 @@ export default function CMSNewSubmissionStep2() {
   const [shortSummary, setShortSummary] = useState('This comprehensive report analyzes the rapid expansion of digital financial services across rural Indonesia. It highlights the profound impact of mobile banking and fintech solutions on local micro-economies, emphasizing significant improvements in women\'s financial independence and empowerment.');
   const [tags, setTags] = useState(['digital economy', 'financial inclusion', 'rural development', 'fintech', 'women empowerment']);
   const [tagInput, setTagInput] = useState('');
+  const [pubStatus, setPubStatus] = useState('published');
+  
+  const [focalName, setFocalName] = useState('Budi Santoso');
+  const [focalEmail, setFocalEmail] = useState('b.santoso@undp.org');
+  const [focalPhone, setFocalPhone] = useState('+62 812 3456 7890');
+  const [focalDept, setFocalDept] = useState('Inclusive Growth Unit');
 
   const handleTagKeyDown = (e) => {
     if (e.key === ',' || e.key === 'Enter') {
@@ -87,12 +93,69 @@ export default function CMSNewSubmissionStep2() {
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
-  const [pubStatus, setPubStatus] = useState('published');
-  
-  const [focalName, setFocalName] = useState('Budi Santoso');
-  const [focalEmail, setFocalEmail] = useState('b.santoso@undp.org');
-  const [focalPhone, setFocalPhone] = useState('+62 812 3456 7890');
-  const [focalDept, setFocalDept] = useState('Inclusive Growth Unit');
+  useEffect(() => {
+    const saved = sessionStorage.getItem('domes_submission_step2');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        setTitle(data.title ?? 'Digital Economy and Financial Inclusion in Rural Indonesia');
+        setLanguages(data.languages ?? { english: true, bahasa: true, others: false });
+        setPubDate(data.pubDate ?? '2024-05-15');
+        setTotalPages(data.totalPages ?? '120');
+        setSummary(data.summary ?? '');
+        setShortSummary(data.shortSummary ?? '');
+        setTags(data.tags ?? ['digital economy', 'financial inclusion', 'rural development', 'fintech', 'women empowerment']);
+        setPubStatus(data.pubStatus ?? 'published');
+        setFocalName(data.focalName ?? 'Budi Santoso');
+        setFocalEmail(data.focalEmail ?? 'b.santoso@undp.org');
+        setFocalPhone(data.focalPhone ?? '+62 812 3456 7890');
+        setFocalDept(data.focalDept ?? 'Inclusive Growth Unit');
+      } catch (err) {
+        console.error('Error loading step2 draft:', err);
+      }
+    }
+  }, []);
+
+  const handleNext = (e) => {
+    e.preventDefault();
+    const data = {
+      title,
+      languages,
+      pubDate,
+      totalPages,
+      summary,
+      shortSummary,
+      tags,
+      pubStatus,
+      focalName,
+      focalEmail,
+      focalPhone,
+      focalDept
+    };
+    sessionStorage.setItem('domes_submission_step2', JSON.stringify(data));
+    window.location.href = '/cms/submissions/new/step-3';
+  };
+
+  const handleBack = (e) => {
+    e.preventDefault();
+    const data = {
+      title,
+      languages,
+      pubDate,
+      totalPages,
+      summary,
+      shortSummary,
+      tags,
+      pubStatus,
+      focalName,
+      focalEmail,
+      focalPhone,
+      focalDept
+    };
+    sessionStorage.setItem('domes_submission_step2', JSON.stringify(data));
+    window.location.href = '/cms/submissions/new/step-1';
+  };
+
 
   const progressSteps = [
     { num: 1, label: 'Files' },
@@ -416,14 +479,14 @@ export default function CMSNewSubmissionStep2() {
 
           {/* Footer */}
           <div className="wiz-footer">
-            <a href="/cms/submissions/new/step-1" className="wiz-btn-back">
+            <a href="/cms/submissions/new/step-1" className="wiz-btn-back" onClick={handleBack}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <line x1="19" y1="12" x2="5" y2="12" />
                 <polyline points="12 19 5 12 12 5" />
               </svg>
               Back
             </a>
-            <a href="/cms/submissions/new/step-3" className="wiz-btn-next">
+            <a href="/cms/submissions/new/step-3" className="wiz-btn-next" onClick={handleNext}>
               Next Step
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <line x1="5" y1="12" x2="19" y2="12" />

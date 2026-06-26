@@ -1,6 +1,91 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { getPublicMasterList } from '../utils/api.js';
+
+const DEFAULT_AGENCIES = [
+  'FAO', 'Global Pulse/ PLJ', 'IFAD', 'ILO', 'IMF', 'IOM', 'ITU', 'RCO',
+  'UNAIDS', 'UN Women', 'UNDP', 'UNEP', 'UNESCO', 'UNFPA', 'UN-HABITAT',
+  'UNHCR', 'UNICEF', 'UNIDO', 'UNOCHA', 'UNODC', 'UNOPS', 'WFP', 'WHO', 'World Bank'
+];
+
+const DEFAULT_SECTORS = [
+  'Agriculture and Food', 'Business and Investment', 'Conflict, Violence, and Radicalism',
+  'COVID-19', 'Disability and Vulnerability and Social Welfare', 'Disaster and Emergency',
+  'Economic Development', 'Education and Culture', 'Energy and Natural Resources',
+  'Environment and Climate Change', 'Fishery and Maritime', 'Gender and Child Protection',
+  'Governance and Corruption', 'Health and Nutrition', 'Infrastructure Development',
+  'Innovation and Technology', 'Livelihood and Employment', 'Population and Migration',
+  'Poverty and Social Exclusion', 'Public Finance, Tax, and Fiscal Policy',
+  'Rural and Regional Development', 'Social Security and Protection', 'Urban Development', 'Water and Sanitation'
+];
+
+const DEFAULT_JOINT_PROGRAMMES = [
+  "Advancing Indonesia’s Lighting Market to High Efficient Technologies (ADLIGHT)",
+  "Better Reproductive Health and Rights for All in Indonesia (BERANI)",
+  "Better Sexual and Reproductive Rights for All in Indonesia (BERANI II)",
+  "Building a safer South-East Asia by preventing and responding to the use of chemical weapons by terrorists and other non-state actors in Indonesia (Chemical Weapons Terrorism Project)",
+  "Climate Village Project (PROKLIM)",
+  "Driving Public and Private Capital Towards Green and Social Investments in Indonesia / Accelerating SDGs Investments in Indonesia (ASSIST)",
+  "EmPower: Women for Climate-Resilient Societies",
+  "Employment and Livelihood: An Inclusive Approach to Economic Empowerment of Women and Vulnerable Populations in Indonesia (ELJP, COVID-19)",
+  "Food Systems, Land Use and Restoration (FOLUR) Impact Program",
+  "Global IOM-UNDP Seed Funding Round I",
+  "Global IOM-UNDP Seed Funding Round II",
+  "Global Peatlands Initiative (GPI)",
+  "HIV/AIDS Joint Programme",
+  "Leaving No One Behind: Adaptive Social Protection (ASP) for All in Indonesia",
+  "Migration Governance for Sustainable Development in Indonesia",
+  "Net Zero Nature Positive Accelerator",
+  "Partnership for Action on Green Economy (PAGE)",
+  "Preventing Violent Extremism through Promoting Tolerance and Respect for Diversity (PROTECT) Project",
+  "Project Unwaste: tackling waste trafficking to support a circular economy",
+  "RESPECT - Preventing Violence against Women",
+  "Safe and Fair Migration: Realizing women migrant workers’ rights and opportunities in the ASEAN region (SPOTLIGHT)",
+  "Ship to Shore Rights Project",
+  "Strengthening Resilience Against Violent Extremism in Asia (STRIVE Asia)",
+  "Supporting the Government of Indonesia and Key Stakeholders to Scale-Up Inclusive Social Protection Programmes in Response to COVID-19",
+  "Sustainable, Healthy and Inclusive Food Systems Transformation (SHIFT) Indonesia",
+  "Tackling the threat of violent extremism and its impact on human securities in East Java (The Guyub Project)",
+  "UN Joint Violent Extremist Prisoners (VEPs) Parole and Probation Project",
+  "UN-REDD ASEAN Social Forestry initiative (UN-REDD)"
+];
+
+const DEFAULT_LNOB = [
+  'Women and Girls', 'Youth and Children', 'Persons with Disabilities', 'Others'
+];
+
+const DEFAULT_NON_UN_PARTNERS = [
+  'Government', 'Universities', 'Billateral Agency', 'Consulting Firm',
+  'Think Tank / Research Institute', 'International NGO', 'Local NGO', 'Others'
+];
+
+const DEFAULT_SDGS = [
+  { id: 'g1', key: 'g1', number: 1, name: 'No Poverty', icon: '/images/SDG-logos/SDG-1_no-poverty.png' },
+  { id: 'g2', key: 'g2', number: 2, name: 'Zero Hunger', icon: '/images/SDG-logos/SDG-2_zero-hunger.png' },
+  { id: 'g3', key: 'g3', number: 3, name: 'Good Health', icon: '/images/SDG-logos/SDG-3_good-health-and-well-being.png' },
+  { id: 'g4', key: 'g4', number: 4, name: 'Quality Education', icon: '/images/SDG-logos/SDG-4_quality-education.png' },
+  { id: 'g5', key: 'g5', number: 5, name: 'Gender Equality', icon: '/images/SDG-logos/SDG-5_gender-equality.png' },
+  { id: 'g6', key: 'g6', number: 6, name: 'Clean Water', icon: '/images/SDG-logos/SDG-6_clean-water-and-sanitation.png' },
+  { id: 'g7', key: 'g7', number: 7, name: 'Affordable Clean Energy', icon: '/images/SDG-logos/SDG-7_affordable-and-clean-energy.png' },
+  { id: 'g8', key: 'g8', number: 8, name: 'Decent Work', icon: '/images/SDG-logos/SDG-8_decent-work-and-economic-growth.png' },
+  { id: 'g9', key: 'g9', number: 9, name: 'Industry Innovation', icon: '/images/SDG-logos/SDG-9_industry-innovation-and-infrastructure.png' },
+  { id: 'g10', key: 'g10', number: 10, name: 'Reduced Inequalities', icon: '/images/SDG-logos/SDG-10_reduced-inequalities.png' },
+  { id: 'g11', key: 'g11', number: 11, name: 'Sustainable Cities', icon: '/images/SDG-logos/SDG-11_sustainable-cities-and-communities.png' },
+  { id: 'g12', key: 'g12', number: 12, name: 'Responsible Consumption', icon: '/images/SDG-logos/SDG-12_responsible-consumption-and-production.png' },
+  { id: 'g13', key: 'g13', number: 13, name: 'Climate Action', icon: '/images/SDG-logos/SDG-13_climate-action.png' },
+  { id: 'g14', key: 'g14', number: 14, name: 'Life Below Water', icon: '/images/SDG-logos/SDG-14_life-below-water.png' },
+  { id: 'g15', key: 'g15', number: 15, name: 'Life on Land', icon: '/images/SDG-logos/SDG-15_life-on-land.png' },
+  { id: 'g16', key: 'g16', number: 16, name: 'Peace & Justice', icon: '/images/SDG-logos/SDG-16_peace-justice-and-strong-institutions.png' },
+  { id: 'g17', key: 'g17', number: 17, name: 'Partnerships', icon: '/images/SDG-logos/SDG-17_partnership-for-the-goals.png' },
+];
 
 export default function FilterSidebar() {
+  const [agenciesList, setAgenciesList] = useState(DEFAULT_AGENCIES);
+  const [sectorsList, setSectorsList] = useState(DEFAULT_SECTORS);
+  const [jointProgrammesList, setJointProgrammesList] = useState(DEFAULT_JOINT_PROGRAMMES);
+  const [lnobList, setLnobList] = useState(DEFAULT_LNOB);
+  const [nonUnPartnersList, setNonUnPartnersList] = useState(DEFAULT_NON_UN_PARTNERS);
+  const [sdgList, setSdgList] = useState(DEFAULT_SDGS);
+
   const [agenciesExpanded, setAgenciesExpanded] = useState(true);
   const [sdgExpanded, setSdgExpanded] = useState(true);
   const [sdgShowAll, setSdgShowAll] = useState(false);
@@ -9,111 +94,6 @@ export default function FilterSidebar() {
   const [yearExpanded, setYearExpanded] = useState(true);
   const [langExpanded, setLangExpanded] = useState(true);
   const [sectorExpanded, setSectorExpanded] = useState(true);
-
-  // Full list of agencies from CMS step-3
-  const agenciesList = [
-    'FAO',
-    'Global Pulse/ PLJ',
-    'IFAD',
-    'ILO',
-    'IMF',
-    'IOM',
-    'ITU',
-    'RCO',
-    'UNAIDS',
-    'UN Women',
-    'UNDP',
-    'UNEP',
-    'UNESCO',
-    'UNFPA',
-    'UN-HABITAT',
-    'UNHCR',
-    'UNICEF',
-    'UNIDO',
-    'UNOCHA',
-    'UNODC',
-    'UNOPS',
-    'WFP',
-    'WHO',
-    'World Bank'
-  ];
-
-  // Full list of sectors from CMS step-3
-  const sectorsList = [
-    'Agriculture and Food',
-    'Business and Investment',
-    'Conflict, Violence, and Radicalism',
-    'COVID-19',
-    'Disability and Vulnerability and Social Welfare',
-    'Disaster and Emergency',
-    'Economic Development',
-    'Education and Culture',
-    'Energy and Natural Resources',
-    'Environment and Climate Change',
-    'Fishery and Maritime',
-    'Gender and Child Protection',
-    'Governance and Corruption',
-    'Health and Nutrition',
-    'Infrastructure Development',
-    'Innovation and Technology',
-    'Livelihood and Employment',
-    'Population and Migration',
-    'Poverty and Social Exclusion',
-    'Public Finance, Tax, and Fiscal Policy',
-    'Rural and Regional Development',
-    'Social Security and Protection',
-    'Urban Development',
-    'Water and Sanitation'
-  ];
-
-  const jointProgrammesList = [
-    "Advancing Indonesia’s Lighting Market to High Efficient Technologies (ADLIGHT)",
-    "Better Reproductive Health and Rights for All in Indonesia (BERANI)",
-    "Better Sexual and Reproductive Rights for All in Indonesia (BERANI II)",
-    "Building a safer South-East Asia by preventing and responding to the use of chemical weapons by terrorists and other non-state actors in Indonesia (Chemical Weapons Terrorism Project)",
-    "Climate Village Project (PROKLIM)",
-    "Driving Public and Private Capital Towards Green and Social Investments in Indonesia / Accelerating SDGs Investments in Indonesia (ASSIST)",
-    "EmPower: Women for Climate-Resilient Societies",
-    "Employment and Livelihood: An Inclusive Approach to Economic Empowerment of Women and Vulnerable Populations in Indonesia (ELJP, COVID-19)",
-    "Food Systems, Land Use and Restoration (FOLUR) Impact Program",
-    "Global IOM-UNDP Seed Funding Round I",
-    "Global IOM-UNDP Seed Funding Round II",
-    "Global Peatlands Initiative (GPI)",
-    "HIV/AIDS Joint Programme",
-    "Leaving No One Behind: Adaptive Social Protection (ASP) for All in Indonesia",
-    "Migration Governance for Sustainable Development in Indonesia",
-    "Net Zero Nature Positive Accelerator",
-    "Partnership for Action on Green Economy (PAGE)",
-    "Preventing Violent Extremism through Promoting Tolerance and Respect for Diversity (PROTECT) Project",
-    "Project Unwaste: tackling waste trafficking to support a circular economy",
-    "RESPECT - Preventing Violence against Women",
-    "Safe and Fair Migration: Realizing women migrant workers’ rights and opportunities in the ASEAN region (SPOTLIGHT)",
-    "Ship to Shore Rights Project",
-    "Strengthening Resilience Against Violent Extremism in Asia (STRIVE Asia)",
-    "Supporting the Government of Indonesia and Key Stakeholders to Scale-Up Inclusive Social Protection Programmes in Response to COVID-19",
-    "Sustainable, Healthy and Inclusive Food Systems Transformation (SHIFT) Indonesia",
-    "Tackling the threat of violent extremism and its impact on human securities in East Java (The Guyub Project)",
-    "UN Joint Violent Extremist Prisoners (VEPs) Parole and Probation Project",
-    "UN-REDD ASEAN Social Forestry initiative (UN-REDD)"
-  ];
-
-  const lnobList = [
-    'Women and Girls',
-    'Youth and Children',
-    'Persons with Disabilities',
-    'Others'
-  ];
-
-  const nonUnPartnersList = [
-    'Government',
-    'Universities',
-    'Billateral Agency',
-    'Consulting Firm',
-    'Think Tank / Research Institute',
-    'International NGO',
-    'Local NGO',
-    'Others'
-  ];
 
   const [isRefining, setIsRefining] = useState(false);
   const isInitialMount = useRef(true);
@@ -135,6 +115,55 @@ export default function FilterSidebar() {
   const [jointProgrammesShowAll, setJointProgrammesShowAll] = useState(false);
   const [lnobExpanded, setLnobExpanded] = useState(true);
   const [nonUnPartnersExpanded, setNonUnPartnersExpanded] = useState(true);
+
+  // Fetch filter options from server on mount
+  useEffect(() => {
+    async function loadFilterOptions() {
+      try {
+        const [agenciesRes, sectorsRes, jpRes, lnobRes, partnersRes, sdgsRes] = await Promise.all([
+          getPublicMasterList('agencies').catch(() => null),
+          getPublicMasterList('sectors').catch(() => null),
+          getPublicMasterList('joint-programmes').catch(() => null),
+          getPublicMasterList('lnobs').catch(() => null),
+          getPublicMasterList('non-un-partners').catch(() => null),
+          getPublicMasterList('sdgs').catch(() => null),
+        ]);
+
+        if (agenciesRes?.success && agenciesRes.data) {
+          setAgenciesList(agenciesRes.data.map(item => item.code || item.name));
+        }
+        if (sectorsRes?.success && sectorsRes.data) {
+          setSectorsList(sectorsRes.data.map(item => item.name));
+        }
+        if (jpRes?.success && jpRes.data) {
+          setJointProgrammesList(jpRes.data.map(item => item.name));
+        }
+        if (lnobRes?.success && lnobRes.data) {
+          setLnobList(lnobRes.data.map(item => item.name));
+        }
+        if (partnersRes?.success && partnersRes.data) {
+          setNonUnPartnersList(partnersRes.data.map(item => item.name));
+        }
+        if (sdgsRes?.success && sdgsRes.data) {
+          const mappedSdgs = sdgsRes.data.map(item => {
+            const match = (item.code || '').match(/\d+/);
+            const num = match ? parseInt(match[0]) : 1;
+            return {
+              id: item.id || `g${num}`,
+              key: item.id || `g${num}`,
+              number: num,
+              name: item.name,
+              icon: item.icon || `/images/SDG-logos/SDG-${num}_no-poverty.png`
+            };
+          });
+          setSdgList(mappedSdgs);
+        }
+      } catch (err) {
+        console.error('Failed to load dynamic filter sidebar options:', err);
+      }
+    }
+    loadFilterOptions();
+  }, []);
 
   const loadFromUrl = () => {
     const params = new URLSearchParams(window.location.search);
@@ -299,26 +328,7 @@ export default function FilterSidebar() {
     return () => clearTimeout(handler);
   }, [selectedAgencies, selectedSdgs, selectedSectors, selectedLangs, yearFrom, yearTo, selectedJointProgrammes, selectedLnob, selectedNonUnPartners, isReady]);
 
-  // SDG Full list with icons
-  const sdgList = [
-    { id: 'g1', key: 'g1', number: 1, name: 'No Poverty', icon: '/images/SDG-logos/SDG-1_no-poverty.png' },
-    { id: 'g2', key: 'g2', number: 2, name: 'Zero Hunger', icon: '/images/SDG-logos/SDG-2_zero-hunger.png' },
-    { id: 'g3', key: 'g3', number: 3, name: 'Good Health', icon: '/images/SDG-logos/SDG-3_good-health-and-well-being.png' },
-    { id: 'g4', key: 'g4', number: 4, name: 'Quality Education', icon: '/images/SDG-logos/SDG-4_quality-education.png' },
-    { id: 'g5', key: 'g5', number: 5, name: 'Gender Equality', icon: '/images/SDG-logos/SDG-5_gender-equality.png' },
-    { id: 'g6', key: 'g6', number: 6, name: 'Clean Water', icon: '/images/SDG-logos/SDG-6_clean-water-and-sanitation.png' },
-    { id: 'g7', key: 'g7', number: 7, name: 'Affordable Clean Energy', icon: '/images/SDG-logos/SDG-7_affordable-and-clean-energy.png' },
-    { id: 'g8', key: 'g8', number: 8, name: 'Decent Work', icon: '/images/SDG-logos/SDG-8_decent-work-and-economic-growth.png' },
-    { id: 'g9', key: 'g9', number: 9, name: 'Industry Innovation', icon: '/images/SDG-logos/SDG-9_industry-innovation-and-infrastructure.png' },
-    { id: 'g10', key: 'g10', number: 10, name: 'Reduced Inequalities', icon: '/images/SDG-logos/SDG-10_reduced-inequalities.png' },
-    { id: 'g11', key: 'g11', number: 11, name: 'Sustainable Cities', icon: '/images/SDG-logos/SDG-11_sustainable-cities-and-communities.png' },
-    { id: 'g12', key: 'g12', number: 12, name: 'Responsible Consumption', icon: '/images/SDG-logos/SDG-12_responsible-consumption-and-production.png' },
-    { id: 'g13', key: 'g13', number: 13, name: 'Climate Action', icon: '/images/SDG-logos/SDG-13_climate-action.png' },
-    { id: 'g14', key: 'g14', number: 14, name: 'Life Below Water', icon: '/images/SDG-logos/SDG-14_life-below-water.png' },
-    { id: 'g15', key: 'g15', number: 15, name: 'Life on Land', icon: '/images/SDG-logos/SDG-15_life-on-land.png' },
-    { id: 'g16', key: 'g16', number: 16, name: 'Peace & Justice', icon: '/images/SDG-logos/SDG-16_peace-justice-and-strong-institutions.png' },
-    { id: 'g17', key: 'g17', number: 17, name: 'Partnerships', icon: '/images/SDG-logos/SDG-17_partnership-for-the-goals.png' },
-  ];
+  // SDG list state is loaded dynamically from server, using DEFAULT_SDGS as default.
 
   // Range Slider States
   // (Moved yearFrom and yearTo up to avoid ReferenceError)

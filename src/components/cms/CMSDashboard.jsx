@@ -1,12 +1,110 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import CMSLayout from './CMSLayout.jsx';
+import { getCMSDashboardStats, getCMSActivity } from '../../utils/api.js';
 
 export default function CMSDashboard() {
+  const [userName, setUserName] = useState('Editor');
+  const [stats, setStats] = useState({
+    total_documents: { value: 1248, change: 12.5, trend: 'up' },
+    total_views: { value: 45200, change: 8.3, trend: 'up' },
+    total_downloads: { value: 8930, change: -2.1, trend: 'down' }
+  });
+  const [activities, setActivities] = useState([
+    { id: 1, type: 'submission', action: 'created', description: 'Annual Report 2023 was uploaded successfully.', time_ago: '2 hours ago' },
+    { id: 2, type: 'submission', action: 'updated', description: 'Metadata updated for Education Strategy Framework.', time_ago: '5 hours ago' },
+    { id: 3, type: 'download', action: 'milestone', description: 'UNICEF Guidelines reached 1,000 downloads.', time_ago: 'Yesterday' }
+  ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Load user name
+    if (typeof window !== 'undefined') {
+      const userStr = localStorage.getItem('cms_user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          if (user && user.first_name) {
+            setUserName(`${user.first_name} ${user.last_name || ''}`);
+          }
+        } catch (e) {
+          console.error('Failed to parse cms_user:', e);
+        }
+      }
+    }
+
+    async function loadDashboardData() {
+      try {
+        const [statsRes, activityRes] = await Promise.all([
+          getCMSDashboardStats(),
+          getCMSActivity(5)
+        ]);
+
+        if (statsRes && statsRes.success && statsRes.data) {
+          setStats(statsRes.data);
+        }
+        if (activityRes && activityRes.success && activityRes.data) {
+          setActivities(activityRes.data);
+        }
+      } catch (err) {
+        console.warn('CMS Dashboard: backend offline, using mock simulator data.', err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadDashboardData();
+  }, []);
+
+  const formatNumber = (num) => {
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1) + 'k';
+    }
+    return num.toLocaleString();
+  };
+
+  const getActivityIcon = (type) => {
+    switch (type) {
+      case 'download':
+        return (
+          <div className="cms-activity-icon download">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          </div>
+        );
+      case 'update':
+      case 'updated':
+        return (
+          <div className="cms-activity-icon update">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 2v6h-6"></path>
+              <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
+              <path d="M3 22v-6h6"></path>
+              <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+            </svg>
+          </div>
+        );
+      default:
+        return (
+          <div className="cms-activity-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+        );
+    }
+  };
+
   return (
     <CMSLayout>
       <main className="cms-main">
         <header className="cms-header">
-          <h1>Welcome back, Aldi Taher</h1>
+          <h1>Welcome back, {userName}</h1>
           <p>Here is what's happening with your submissions today.</p>
         </header>
 
@@ -15,39 +113,72 @@ export default function CMSDashboard() {
           <div className="cms-stat-card">
             <div className="cms-stat-title">TOTAL DOCUMENTS UPLOADED</div>
             <div className="cms-stat-row">
-              <span className="cms-stat-value">1,248</span>
-              <span className="cms-stat-trend positive">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                  <polyline points="17 6 23 6 23 12"></polyline>
-                </svg>
-                +12% this month
+              <span className="cms-stat-value">{formatNumber(stats.total_documents?.value || 0)}</span>
+              <span className={`cms-stat-trend ${stats.total_documents?.trend || 'up'}`}>
+                {stats.total_documents?.trend !== 'neutral' && (
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    {stats.total_documents?.trend === 'up' ? (
+                      <>
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                        <polyline points="17 6 23 6 23 12"></polyline>
+                      </>
+                    ) : (
+                      <>
+                        <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+                        <polyline points="17 18 23 18 23 12"></polyline>
+                      </>
+                    )}
+                  </svg>
+                )}
+                {stats.total_documents?.change > 0 ? `+${stats.total_documents?.change}` : stats.total_documents?.change}% this month
               </span>
             </div>
           </div>
           <div className="cms-stat-card">
             <div className="cms-stat-title">TOTAL VIEWS</div>
             <div className="cms-stat-row">
-              <span className="cms-stat-value">45.2k</span>
-              <span className="cms-stat-trend positive">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                  <polyline points="17 6 23 6 23 12"></polyline>
-                </svg>
-                +5% this week
+              <span className="cms-stat-value">{formatNumber(stats.total_views?.value || 0)}</span>
+              <span className={`cms-stat-trend ${stats.total_views?.trend || 'up'}`}>
+                {stats.total_views?.trend !== 'neutral' && (
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    {stats.total_views?.trend === 'up' ? (
+                      <>
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                        <polyline points="17 6 23 6 23 12"></polyline>
+                      </>
+                    ) : (
+                      <>
+                        <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+                        <polyline points="17 18 23 18 23 12"></polyline>
+                      </>
+                    )}
+                  </svg>
+                )}
+                {stats.total_views?.change > 0 ? `+${stats.total_views?.change}` : stats.total_views?.change}% this week
               </span>
             </div>
           </div>
           <div className="cms-stat-card">
             <div className="cms-stat-title">TOTAL DOWNLOADS</div>
             <div className="cms-stat-row">
-              <span className="cms-stat-value">8,930</span>
-              <span className="cms-stat-trend negative">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
-                  <polyline points="17 18 23 18 23 12"></polyline>
-                </svg>
-                -2% this week
+              <span className="cms-stat-value">{formatNumber(stats.total_downloads?.value || 0)}</span>
+              <span className={`cms-stat-trend ${stats.total_downloads?.trend || 'down'}`}>
+                {stats.total_downloads?.trend !== 'neutral' && (
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    {stats.total_downloads?.trend === 'up' ? (
+                      <>
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                        <polyline points="17 6 23 6 23 12"></polyline>
+                      </>
+                    ) : (
+                      <>
+                        <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+                        <polyline points="17 18 23 18 23 12"></polyline>
+                      </>
+                    )}
+                  </svg>
+                )}
+                {stats.total_downloads?.change > 0 ? `+${stats.total_downloads?.change}` : stats.total_downloads?.change}% this week
               </span>
             </div>
           </div>
@@ -63,7 +194,6 @@ export default function CMSDashboard() {
                 <polyline points="14 2 14 8 20 8"></polyline>
                 <line x1="16" y1="13" x2="8" y2="13"></line>
                 <line x1="16" y1="17" x2="8" y2="17"></line>
-                <polyline points="10 9 9 9 8 9"></polyline>
               </svg>
             </div>
             <div className="cms-qa-content">
@@ -104,51 +234,17 @@ export default function CMSDashboard() {
         <div className="cms-activity-box">
           <div className="cms-activity-header">
             <h2>Recent Activity</h2>
-            <a href="#" className="cms-view-all">View All</a>
           </div>
           <ul className="cms-activity-list">
-            <li className="cms-activity-item">
-              <div className="cms-activity-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="16" y1="13" x2="8" y2="13"></line>
-                  <line x1="16" y1="17" x2="8" y2="17"></line>
-                  <polyline points="10 9 9 9 8 9"></polyline>
-                </svg>
-              </div>
-              <div className="cms-activity-text">
-                <h4>Annual Report 2023 was uploaded successfully.</h4>
-                <p>2 hours ago</p>
-              </div>
-            </li>
-            <li className="cms-activity-item">
-              <div className="cms-activity-icon update">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 2v6h-6"></path>
-                  <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
-                  <path d="M3 22v-6h6"></path>
-                  <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
-                </svg>
-              </div>
-              <div className="cms-activity-text">
-                <h4>Metadata updated for Education Strategy Framework.</h4>
-                <p>5 hours ago</p>
-              </div>
-            </li>
-            <li className="cms-activity-item">
-              <div className="cms-activity-icon download">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-              </div>
-              <div className="cms-activity-text">
-                <h4>UNICEF Guidelines reached 1,000 downloads.</h4>
-                <p>Yesterday</p>
-              </div>
-            </li>
+            {activities.map((act) => (
+              <li key={act.id} className="cms-activity-item">
+                {getActivityIcon(act.type)}
+                <div className="cms-activity-text">
+                  <h4>{act.description}</h4>
+                  <p>{act.time_ago || 'recently'}</p>
+                </div>
+              </li>
+            ))}
           </ul>
         </div>
       </main>

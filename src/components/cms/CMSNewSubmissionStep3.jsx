@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CMSLayout from './CMSLayout.jsx';
 import AgricultureIcon from '@mui/icons-material/Agriculture';
 import BusinessIcon from '@mui/icons-material/Business';
@@ -230,6 +230,67 @@ export default function CMSNewSubmissionStep3() {
   const [selectedJointProgrammes, setSelectedJointProgrammes] = useState(['Climate Village Project (PROKLIM)']);
   const [customJointProgramme, setCustomJointProgramme] = useState('');
   const [jointProgrammeSearch, setJointProgrammeSearch] = useState('');
+
+  useEffect(() => {
+    const saved = sessionStorage.getItem('domes_submission_step3');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        setSelectedSectors(data.selectedSectors ?? ['Economic Development', 'Innovation and Technology', 'Rural and Regional Development']);
+        setSelectedSDGs(data.selectedSDGs ?? [1, 5, 8, 10]);
+        setSelectedAgencies(data.selectedAgencies ?? ['UNDP', 'World Bank']);
+        setWorksWithNonUNPartners(data.worksWithNonUNPartners ?? 'yes');
+        setNonUNPartners(data.nonUNPartners ?? [
+          { type: 'Government', name: 'Ministry of Villages' },
+          { type: 'Consulting Firm', name: 'GoTo Group' }
+        ]);
+        setSelectedThematic(data.selectedThematic ?? ['Inclusive Economic Transformation']);
+        setSelectedLNOB(data.selectedLNOB ?? ['Women and Girls']);
+        setOtherLNOB(data.otherLNOB ?? 'Rural populations');
+        setSelectedJointProgrammes(data.selectedJointProgrammes ?? ['Climate Village Project (PROKLIM)']);
+        setCustomJointProgramme(data.customJointProgramme ?? '');
+      } catch (err) {
+        console.error('Error loading step3 draft:', err);
+      }
+    }
+  }, []);
+
+  const handleNext = (e) => {
+    e.preventDefault();
+    const data = {
+      selectedSectors,
+      selectedSDGs,
+      selectedAgencies,
+      worksWithNonUNPartners,
+      nonUNPartners,
+      selectedThematic,
+      selectedLNOB,
+      otherLNOB,
+      selectedJointProgrammes,
+      customJointProgramme
+    };
+    sessionStorage.setItem('domes_submission_step3', JSON.stringify(data));
+    window.location.href = '/cms/submissions/new/step-4';
+  };
+
+  const handleBack = (e) => {
+    e.preventDefault();
+    const data = {
+      selectedSectors,
+      selectedSDGs,
+      selectedAgencies,
+      worksWithNonUNPartners,
+      nonUNPartners,
+      selectedThematic,
+      selectedLNOB,
+      otherLNOB,
+      selectedJointProgrammes,
+      customJointProgramme
+    };
+    sessionStorage.setItem('domes_submission_step3', JSON.stringify(data));
+    window.location.href = '/cms/submissions/new/step-2';
+  };
+
 
   /* helpers */
   const toggleItem = (arr, setter, item) => {
@@ -591,14 +652,14 @@ export default function CMSNewSubmissionStep3() {
 
           {/* Footer */}
           <div className="wiz-footer">
-            <a href="/cms/submissions/new/step-2" className="wiz-btn-back">
+            <a href="/cms/submissions/new/step-2" className="wiz-btn-back" onClick={handleBack}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <line x1="19" y1="12" x2="5" y2="12" />
                 <polyline points="12 19 5 12 12 5" />
               </svg>
               Back
             </a>
-            <a href="/cms/submissions/new/step-4" className="wiz-btn-next">
+            <a href="/cms/submissions/new/step-4" className="wiz-btn-next" onClick={handleNext}>
               Next Step
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <line x1="5" y1="12" x2="19" y2="12" />

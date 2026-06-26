@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import CMSLayout from './CMSLayout.jsx';
+import { getUserProfile, updateUserProfile } from '../../utils/api.js';
 
 export default function CMSSettingsProfile() {
   const [pathname, setPathname] = useState('');
@@ -13,14 +14,162 @@ export default function CMSSettingsProfile() {
   const isNotifications = pathname.includes('/settings/notifications');
   const isSystem = pathname.includes('/settings/system');
 
+  // Profile Form States
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState('Editor');
+  const [position, setPosition] = useState('');
+  const [organization, setOrganization] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [notification, setNotification] = useState(null);
+
+  useEffect(() => {
+    async function loadProfile() {
+      try {
+        const res = await getUserProfile();
+        if (res && res.success && res.data) {
+          setFirstName(res.data.first_name || '');
+          setLastName(res.data.last_name || '');
+          setEmail(res.data.email || '');
+          setPosition(res.data.position || '');
+          setOrganization(res.data.organization || '');
+          setPhoneNumber(res.data.phone_number || '');
+          if (res.data.role) {
+            setRole(res.data.role.charAt(0).toUpperCase() + res.data.role.slice(1));
+          }
+        }
+      } catch (err) {
+        console.warn('Profile Settings: backend offline, loading from localStorage user data.', err.message);
+        if (typeof window !== 'undefined') {
+          const userStr = localStorage.getItem('cms_user');
+          if (userStr) {
+            try {
+              const user = JSON.parse(userStr);
+              setFirstName(user.first_name || '');
+              setLastName(user.last_name || '');
+              setEmail(user.email || '');
+              setPosition(user.position || '');
+              setOrganization(user.organization || '');
+              setPhoneNumber(user.phone_number || '');
+              if (user.role) {
+                setRole(user.role.charAt(0).toUpperCase() + user.role.slice(1));
+              }
+            } catch (e) {
+              console.error('Failed to parse localStorage cms_user:', e);
+            }
+          }
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadProfile();
+  }, []);
+
+  const showNotification = (msg) => {
+    setNotification(msg);
+    setTimeout(() => {
+      setNotification(null);
+    }, 4000);
+  };
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    const payload = {
+      first_name: firstName,
+      last_name: lastName,
+      position: position,
+      organization: organization,
+      phone_number: phoneNumber
+    };
+
+    try {
+      const res = await updateUserProfile(payload);
+      if (res && res.success) {
+        showNotification('Profile updated successfully!');
+        // Update localStorage user cache
+        if (typeof window !== 'undefined' && res.data) {
+          const userStr = localStorage.getItem('cms_user');
+          const current = userStr ? JSON.parse(userStr) : {};
+          localStorage.setItem('cms_user', JSON.stringify({ ...current, ...res.data }));
+        }
+      } else {
+        throw new Error('Save response unsuccessful');
+      }
+    } catch (err) {
+      console.warn('Profile Settings: backend offline, simulated save locally.', err.message);
+      if (typeof window !== 'undefined') {
+        const userStr = localStorage.getItem('cms_user');
+        const current = userStr ? JSON.parse(userStr) : {};
+        const updatedUser = {
+          ...current,
+          first_name: firstName,
+          last_name: lastName,
+          position: position,
+          organization: organization,
+          phone_number: phoneNumber
+        };
+        localStorage.setItem('cms_user', JSON.stringify(updatedUser));
+      }
+      showNotification('[Simulated] Profile saved locally!');
+    }
+  };
+
   return (
     <CMSLayout>
-      <main className="cms-main">
+      <main className="cms-main" style={{ position: 'relative' }}>
+        {loading && (
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(255, 255, 255, 0.7)',
+            zIndex: 10,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+            <div className="spinner" style={{
+              width: '32px',
+              height: '32px',
+              border: '3px solid #eff6ff',
+              borderTop: '3px solid #3366cc',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite'
+            }}></div>
+            <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+          </div>
+        )}
+
         {/* Header */}
         <header className="cms-settings-header">
           <h1>Settings</h1>
           <p>Manage your account settings and portal configurations.</p>
         </header>
+
+        {notification && (
+          <div className="cms-notification-success" style={{ marginBottom: '20px' }}>
+            <div className="cms-notification-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <div className="cms-notification-content">
+              {notification}
+            </div>
+            <button className="cms-notification-close" onClick={() => setNotification(null)}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        )}
 
         {/* Settings Content Grid */}
         <div className="cms-settings-grid">
@@ -77,44 +226,98 @@ export default function CMSSettingsProfile() {
                 {/* Avatar Uploader Section */}
                 <div className="cms-avatar-uploader">
                   <div className="cms-avatar-preview-lg">
-                    <img src="https://i.pravatar.cc/150?img=11" alt="Avatar Preview" />
+                    <img src="/images/avatar_placeholder.png" alt="Avatar" onError={(e) => { e.target.src = "https://i.pravatar.cc/150?img=11"; }} />
                   </div>
                   <div className="cms-avatar-uploader-info">
                     <h3>Profile Photo</h3>
                     <p>PNG, JPG or JPEG. Max 2MB.</p>
                     <div className="cms-avatar-uploader-actions">
-                      <button className="cms-btn-secondary">Upload New</button>
-                      <button className="cms-btn-text-delete">Remove</button>
+                      <button className="cms-btn-secondary" style={{ cursor: 'pointer' }} onClick={() => alert('Photo upload is simulated.')}>Upload New</button>
                     </div>
                   </div>
                 </div>
 
                 {/* Form fields */}
-                <form className="cms-settings-form" onSubmit={(e) => e.preventDefault()}>
-                  <div className="cms-form-row">
+                <form className="cms-settings-form" onSubmit={handleSave}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
                     <div className="cms-form-group">
-                      <label htmlFor="fullname">Full Name</label>
-                      <input type="text" id="fullname" defaultValue="Aldi Taher" />
+                      <label htmlFor="firstname">First Name</label>
+                      <input 
+                        type="text" 
+                        id="firstname" 
+                        required 
+                        value={firstName} 
+                        onChange={(e) => setFirstName(e.target.value)} 
+                      />
+                    </div>
+                    <div className="cms-form-group">
+                      <label htmlFor="lastname">Last Name</label>
+                      <input 
+                        type="text" 
+                        id="lastname" 
+                        required 
+                        value={lastName} 
+                        onChange={(e) => setLastName(e.target.value)} 
+                      />
                     </div>
                   </div>
 
                   <div className="cms-form-row">
                     <div className="cms-form-group">
                       <label htmlFor="email">Email Address</label>
-                      <input type="email" id="email" defaultValue="aldi.taher@un.or.id" />
+                      <input 
+                        type="email" 
+                        id="email" 
+                        disabled 
+                        value={email} 
+                        style={{ background: '#f1f5f9', cursor: 'not-allowed' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="cms-form-row">
+                    <div className="cms-form-group">
+                      <label htmlFor="organization">Organization</label>
+                      <input 
+                        type="text" 
+                        id="organization" 
+                        value={organization} 
+                        onChange={(e) => setOrganization(e.target.value)} 
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                    <div className="cms-form-group">
+                      <label htmlFor="position">Position</label>
+                      <input 
+                        type="text" 
+                        id="position" 
+                        value={position} 
+                        onChange={(e) => setPosition(e.target.value)} 
+                      />
+                    </div>
+                    <div className="cms-form-group">
+                      <label htmlFor="phone">Phone Number</label>
+                      <input 
+                        type="text" 
+                        id="phone" 
+                        value={phoneNumber} 
+                        onChange={(e) => setPhoneNumber(e.target.value)} 
+                      />
                     </div>
                   </div>
 
                   <div className="cms-form-row">
                     <div className="cms-form-group">
                       <label htmlFor="role">User Role</label>
-                      <input type="text" id="role" defaultValue="Administrator" disabled />
+                      <input type="text" id="role" value={role} disabled style={{ background: '#f1f5f9', cursor: 'not-allowed' }} />
                     </div>
                   </div>
 
                   <div className="cms-form-actions">
                     <button type="submit" className="cms-btn-primary">Save Changes</button>
-                    <button type="button" className="cms-btn-secondary">Cancel</button>
+                    <button type="button" className="cms-btn-secondary" onClick={() => window.location.reload()}>Cancel</button>
                   </div>
                 </form>
 

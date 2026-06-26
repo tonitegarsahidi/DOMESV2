@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import CMSLayout from './CMSLayout.jsx';
 
 export default function CMSNewSubmissionStep1() {
@@ -19,6 +19,54 @@ export default function CMSNewSubmissionStep1() {
   const supportingInputRef = useRef(null);
 
   const currentStep = 1;
+
+  useEffect(() => {
+    const saved = sessionStorage.getItem('domes_submission_step1');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        if (data.primaryFileName) {
+          setPrimaryFile({ name: data.primaryFileName, size: data.primaryFileSize || 0 });
+        }
+        setExternalUrl(data.externalUrl || '');
+        if (data.coverFileName) {
+          setCoverFile({ name: data.coverFileName, size: data.coverFileSize || 0 });
+        }
+        setCoverUrl(data.coverUrl || '');
+        setPrimaryUrlChecked(!!data.primaryUrlChecked);
+        setCoverUrlChecked(!!data.coverUrlChecked);
+        setSupportingFiles(data.supportingFiles || []);
+      } catch (err) {
+        console.error('Error loading step1 draft:', err);
+      }
+    }
+  }, []);
+
+  const handleNext = (e) => {
+    e.preventDefault();
+    const data = {
+      primaryFileName: primaryFile ? primaryFile.name : null,
+      primaryFileSize: primaryFile ? primaryFile.size : null,
+      externalUrl,
+      coverFileName: coverFile ? coverFile.name : null,
+      coverFileSize: coverFile ? coverFile.size : null,
+      coverUrl,
+      primaryUrlChecked,
+      coverUrlChecked,
+      supportingFiles: supportingFiles.map(sf => ({
+        file: {
+          name: sf.file.name,
+          size: sf.file.size,
+          isUrl: sf.file.isUrl
+        },
+        type: sf.type,
+        description: sf.description
+      }))
+    };
+    sessionStorage.setItem('domes_submission_step1', JSON.stringify(data));
+    window.location.href = '/cms/submissions/new/step-2';
+  };
+
 
   const progressSteps = [
     { num: 1, label: 'Files' },
@@ -542,7 +590,7 @@ export default function CMSNewSubmissionStep1() {
           {/* Footer */}
           <div className="wiz-footer">
             <a href="/cms/submissions" className="wiz-btn-cancel">Cancel</a>
-            <a href="/cms/submissions/new/step-2" className="wiz-btn-next">
+            <a href="/cms/submissions/new/step-2" className="wiz-btn-next" onClick={handleNext}>
               NEXT
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <line x1="5" y1="12" x2="19" y2="12" />

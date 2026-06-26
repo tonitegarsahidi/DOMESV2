@@ -64,7 +64,7 @@ export default function HeroSection() {
             <span 
               key={tag} 
               className="hero-tag"
-              onClick={() => window.location.href = `/search-results?q=Climate%20Change`}
+              onClick={() => window.location.href = `/search-results?q=${encodeURIComponent(tag)}`}
             >
               {tag}
             </span>

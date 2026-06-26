@@ -1,74 +1,136 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CMSLayout from './CMSLayout.jsx';
+import { getReports, updateReportStatus } from '../../utils/api.js';
+
+const MOCK_REPORTS = [
+  {
+    id: '1',
+    document_title: 'Digital Economy and Financial Inclusion in Rural Indonesia',
+    reporter_name: 'John Doe',
+    reporter_email: 'john.doe@example.com',
+    created_at: '2026-06-11T12:00:00+07:00',
+    details: 'The PDF link throws a 404 error when clicked.',
+    status: 'open'
+  },
+  {
+    id: '2',
+    document_title: 'Sustainable Development Goals Report 2025',
+    reporter_name: 'Jane Smith',
+    reporter_email: 'jane.smith@ngocorp.org',
+    created_at: '2026-06-10T15:30:00+07:00',
+    details: 'The file downloaded is corrupted and cannot be opened by Adobe Reader.',
+    status: 'open'
+  },
+  {
+    id: '3',
+    document_title: 'Climate Action Plan 2024',
+    reporter_name: 'Budi Santoso',
+    reporter_email: 'b.santoso@undp.org',
+    created_at: '2026-06-08T09:15:00+07:00',
+    details: 'Link redirects to the homepage instead of the document details.',
+    status: 'resolved'
+  },
+  {
+    id: '4',
+    document_title: 'Global International Waters Assessment',
+    reporter_name: 'Alice Johnson',
+    reporter_email: 'alice.j@water.org',
+    created_at: '2026-06-05T16:45:00+07:00',
+    details: 'The document link is missing entirely from the action button.',
+    status: 'open'
+  },
+  {
+    id: '5',
+    document_title: 'Humanitarian Aid Guidelines',
+    reporter_name: 'Carlos Ray',
+    reporter_email: 'carlos.ray@relief.net',
+    created_at: '2026-06-01T11:00:00+07:00',
+    details: 'The PDF opens, but it seems to be an outdated version from 2020.',
+    status: 'in_progress'
+  }
+];
 
 export default function CMSReports() {
-  const [reportsData, setReportsData] = useState([
-    {
-      id: 1,
-      docTitle: 'Digital Economy and Financial Inclusion in Rural Indonesia',
-      reporterName: 'John Doe',
-      reporterEmail: 'john.doe@example.com',
-      dateReported: '2026-06-11',
-      details: 'The PDF link throws a 404 error when clicked.',
-      status: 'Open'
-    },
-    {
-      id: 2,
-      docTitle: 'Sustainable Development Goals Report 2025',
-      reporterName: 'Jane Smith',
-      reporterEmail: 'jane.smith@ngocorp.org',
-      dateReported: '2026-06-10',
-      details: 'The file downloaded is corrupted and cannot be opened by Adobe Reader.',
-      status: 'Open'
-    },
-    {
-      id: 3,
-      docTitle: 'Climate Action Plan 2024',
-      reporterName: 'Budi Santoso',
-      reporterEmail: 'b.santoso@undp.org',
-      dateReported: '2026-06-08',
-      details: 'Link redirects to the homepage instead of the document details.',
-      status: 'Resolved'
-    },
-    {
-      id: 4,
-      docTitle: 'Global International Waters Assessment',
-      reporterName: 'Alice Johnson',
-      reporterEmail: 'alice.j@water.org',
-      dateReported: '2026-06-05',
-      details: 'The document link is missing entirely from the action button.',
-      status: 'Open'
-    },
-    {
-      id: 5,
-      docTitle: 'Humanitarian Aid Guidelines',
-      reporterName: 'Carlos Ray',
-      reporterEmail: 'carlos.ray@relief.net',
-      dateReported: '2026-06-01',
-      details: 'The PDF opens, but it seems to be an outdated version from 2020.',
-      status: 'In Progress'
-    },
-    {
-      id: 6,
-      docTitle: 'Gender Equality Strategy',
-      reporterName: 'Siti Aminah',
-      reporterEmail: 'siti.a@womenempowerment.id',
-      dateReported: '2026-05-28',
-      details: 'The link leads to a login page requiring admin access.',
-      status: 'Resolved'
-    },
-    {
-      id: 7,
-      docTitle: 'Emergency Response Protocol v2',
-      reporterName: 'Michael Chang',
-      reporterEmail: 'm.chang@disaster-response.com',
-      dateReported: '2026-05-20',
-      details: 'Download button is unresponsive on mobile devices.',
-      status: 'Resolved'
-    }
-  ]);
-  
+  const [reportsData, setReportsData] = useState([]);
   const [selectedReport, setSelectedReport] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [searchFilter, setSearchFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+
+  const normalizeReport = (raw) => ({
+    id: String(raw.id),
+    docTitle: raw.document_title || 'Unknown Document',
+    reporterName: raw.reporter_name || 'Anonymous',
+    reporterEmail: raw.reporter_email || '',
+    dateReported: raw.created_at || new Date().toISOString(),
+    details: raw.details || '',
+    status: raw.status || 'open'
+  });
+
+  const loadReports = async () => {
+    setLoading(true);
+    try {
+      const res = await getReports();
+      if (res && res.success && res.data) {
+        // Depending on backend design, res.data might be a paginated object or raw list
+        const list = Array.isArray(res.data) ? res.data : (res.data.items || []);
+        setReportsData(list.map(normalizeReport));
+      } else {
+        throw new Error('Invalid response format');
+      }
+    } catch (err) {
+      console.warn('CMS Reports: backend offline, using mock simulator data.', err.message);
+      setReportsData(MOCK_REPORTS.map(normalizeReport));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadReports();
+  }, []);
+
+  const handleStatusChange = async (reportId, newStatus) => {
+    try {
+      const res = await updateReportStatus(reportId, newStatus.toLowerCase().replace(/\s+/g, '_'));
+      if (res && res.success) {
+        // update local reportsData list
+        setReportsData(prev => prev.map(r => r.id === reportId ? { ...r, status: newStatus } : r));
+        if (selectedReport && selectedReport.id === reportId) {
+          setSelectedReport(prev => ({ ...prev, status: newStatus }));
+        }
+      } else {
+        throw new Error('Failed to update status on server');
+      }
+    } catch (err) {
+      console.warn('CMS Reports: backend offline. Simulating status update locally.', err.message);
+      setReportsData(prev => prev.map(r => r.id === reportId ? { ...r, status: newStatus } : r));
+      if (selectedReport && selectedReport.id === reportId) {
+        setSelectedReport(prev => ({ ...prev, status: newStatus }));
+      }
+    }
+  };
+
+  const getStatusLabel = (status) => {
+    // maps api status code to user-friendly label
+    const clean = (status || '').toLowerCase().replace(/_/g, ' ');
+    if (clean === 'open') return 'Open';
+    if (clean === 'in progress' || clean === 'in_progress') return 'In Progress';
+    if (clean === 'resolved') return 'Resolved';
+    if (clean === 'on hold' || clean === 'on_hold') return 'On Hold';
+    return status || 'Open';
+  };
+
+  // Filter reports locally
+  const filteredReports = reportsData.filter(r => {
+    const matchesSearch = r.docTitle.toLowerCase().includes(searchFilter.toLowerCase()) ||
+                          r.reporterName.toLowerCase().includes(searchFilter.toLowerCase()) ||
+                          r.reporterEmail.toLowerCase().includes(searchFilter.toLowerCase()) ||
+                          r.details.toLowerCase().includes(searchFilter.toLowerCase());
+    
+    if (statusFilter === 'all') return matchesSearch;
+    return matchesSearch && r.status.toLowerCase().replace(/\s+/g, '_') === statusFilter.toLowerCase().replace(/\s+/g, '_');
+  });
 
   return (
     <CMSLayout>
@@ -80,78 +142,124 @@ export default function CMSReports() {
           </div>
         </header>
 
-        <div className="cms-table-container">
+        <div className="cms-table-container" style={{ position: 'relative' }}>
+          {loading && (
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(255, 255, 255, 0.7)',
+              zIndex: 10,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+              <div className="spinner" style={{
+                width: '32px',
+                height: '32px',
+                border: '3px solid #eff6ff',
+                borderTop: '3px solid #3366cc',
+                borderRadius: '50%',
+                animation: 'spin 1s linear infinite'
+              }}></div>
+              <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+            </div>
+          )}
+
           {/* Filter Bar */}
-          <div className="cms-table-filter-bar">
-            <div className="cms-search-input-wrapper">
+          <div className="cms-table-filter-bar" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <div className="cms-search-input-wrapper" style={{ flex: 1 }}>
               <svg className="cms-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
-              <input type="text" placeholder="Filter reports..." />
+              <input 
+                type="text" 
+                placeholder="Search reports..." 
+                value={searchFilter}
+                onChange={(e) => setSearchFilter(e.target.value)}
+              />
             </div>
-            <button className="cms-btn-filter">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px'}}>
-                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-              </svg>
-              Filters
-            </button>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '13px', color: '#64748b' }}>Status:</span>
+              <select 
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: '6px',
+                  border: '1px solid #cbd5e1',
+                  fontSize: '14px',
+                  background: 'white',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="all">All Statuses</option>
+                <option value="open">Open</option>
+                <option value="in_progress">In Progress</option>
+                <option value="resolved">Resolved</option>
+                <option value="on_hold">On Hold</option>
+              </select>
+            </div>
           </div>
 
           {/* Table */}
           <table className="cms-table">
             <thead>
               <tr>
-                <th style={{width: '60%'}}>DOCUMENT TITLE</th>
-                <th style={{width: '20%'}}>DATE REPORTED</th>
-                <th style={{width: '20%'}}>STATUS</th>
+                <th style={{width: '50%'}}>DOCUMENT TITLE</th>
+                <th style={{width: '20%'}}>REPORTER</th>
+                <th style={{width: '15%'}}>DATE REPORTED</th>
+                <th style={{width: '15%'}}>STATUS</th>
               </tr>
             </thead>
             <tbody>
-              {reportsData.map((row) => (
-                <tr 
-                  key={row.id} 
-                  onClick={() => setSelectedReport(row)}
-                  style={{ cursor: 'pointer' }}
-                  className="cms-table-row-hover"
-                  onMouseOver={(e) => e.currentTarget.style.background = '#f8fafc'}
-                  onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
-                >
-                  <td className="cms-col-title">
-                    <span className="cms-doc-title-link" style={{ color: 'var(--un-primary, #006699)' }}>{row.docTitle}</span>
-                  </td>
-                  <td className="cms-col-pubdate">
-                    {new Date(row.dateReported).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                  </td>
-                  <td className="cms-col-status">
-                    <span className={`cms-status-badge ${row.status.toLowerCase().replace(/\s+/g, '-')}`} style={{ 
-                      background: row.status === 'Resolved' ? '#dcfce7' : row.status === 'In Progress' ? '#fef9c3' : row.status === 'On Hold' ? '#e5e7eb' : '#fee2e2',
-                      color: row.status === 'Resolved' ? '#16a34a' : row.status === 'In Progress' ? '#ca8a04' : row.status === 'On Hold' ? '#4b5563' : '#dc2626'
-                    }}>
-                      {row.status}
-                    </span>
+              {filteredReports.length > 0 ? (
+                filteredReports.map((row) => (
+                  <tr 
+                    key={row.id} 
+                    onClick={() => setSelectedReport(row)}
+                    style={{ cursor: 'pointer' }}
+                    className="cms-table-row-hover"
+                    onMouseOver={(e) => e.currentTarget.style.background = '#f8fafc'}
+                    onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                  >
+                    <td className="cms-col-title">
+                      <span className="cms-doc-title-link" style={{ color: 'var(--un-primary, #006699)', fontWeight: '600' }}>{row.docTitle}</span>
+                    </td>
+                    <td>
+                      <div style={{ fontSize: '13px', fontWeight: '500', color: '#334155' }}>{row.reporterName}</div>
+                      <div style={{ fontSize: '11px', color: '#64748b' }}>{row.reporterEmail}</div>
+                    </td>
+                    <td className="cms-col-pubdate">
+                      {new Date(row.dateReported).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                    </td>
+                    <td className="cms-col-status">
+                      <span className={`cms-status-badge ${row.status.toLowerCase().replace(/\s+/g, '-')}`} style={{ 
+                        background: row.status.toLowerCase() === 'resolved' ? '#dcfce7' : row.status.toLowerCase() === 'in_progress' ? '#fef9c3' : row.status.toLowerCase() === 'on_hold' ? '#e5e7eb' : '#fee2e2',
+                        color: row.status.toLowerCase() === 'resolved' ? '#16a34a' : row.status.toLowerCase() === 'in_progress' ? '#ca8a04' : row.status.toLowerCase() === 'on_hold' ? '#4b5563' : '#dc2626'
+                      }}>
+                        {getStatusLabel(row.status)}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" style={{ textAlign: 'center', padding: '40px 20px', color: '#64748b' }}>
+                    No broken link reports found matching the criteria.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
 
           {/* Table Footer */}
           <div className="cms-table-footer">
-            <span className="cms-entries-info">Showing 1 to {reportsData.length} of {reportsData.length} entries</span>
-            <div className="cms-table-pagination">
-              <button className="cms-pag-nav" aria-label="Previous" disabled>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-              </button>
-              <button className="cms-pag-num active">1</button>
-              <button className="cms-pag-nav" aria-label="Next" disabled>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-              </button>
-            </div>
+            <span className="cms-entries-info">Showing {filteredReports.length} entries</span>
           </div>
         </div>
       </main>
@@ -203,18 +311,13 @@ export default function CMSReports() {
               <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#64748b', marginBottom: '8px' }}>UPDATE STATUS</label>
               <select 
                 value={selectedReport.status}
-                onChange={(e) => {
-                  const newStatus = e.target.value;
-                  const updatedData = reportsData.map(r => r.id === selectedReport.id ? { ...r, status: newStatus } : r);
-                  setReportsData(updatedData);
-                  setSelectedReport({ ...selectedReport, status: newStatus });
-                }}
+                onChange={(e) => handleStatusChange(selectedReport.id, e.target.value)}
                 style={{ width: '100%', padding: '10px 14px', border: '1px solid #cbd5e1', borderRadius: '6px', fontSize: '15px', color: '#0f172a', cursor: 'pointer', background: '#fff' }}
               >
-                <option value="Open">Open</option>
-                <option value="In Progress">In Progress</option>
-                <option value="On Hold">On Hold</option>
-                <option value="Resolved">Resolved</option>
+                <option value="open">Open</option>
+                <option value="in_progress">In Progress</option>
+                <option value="on_hold">On Hold</option>
+                <option value="resolved">Resolved</option>
               </select>
             </div>
             

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import CMSLayout from './CMSLayout.jsx';
+import { getNotificationPreferences, updateNotificationPreferences } from '../../utils/api.js';
 
 export default function CMSSettingsNotifications() {
   const [pathname, setPathname] = useState('');
@@ -17,15 +18,110 @@ export default function CMSSettingsNotifications() {
   const [documentApprovals, setDocumentApprovals] = useState(true);
   const [brokenLinkReports, setBrokenLinkReports] = useState(true);
   const [systemUpdates, setSystemUpdates] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [notification, setNotification] = useState(null);
+
+  useEffect(() => {
+    async function loadPreferences() {
+      try {
+        const res = await getNotificationPreferences();
+        if (res && res.success && res.data) {
+          setEmailNotifications(res.data.email_notifications ?? true);
+          setDocumentApprovals(res.data.document_approvals ?? true);
+          setBrokenLinkReports(res.data.broken_link_reports ?? true);
+          setSystemUpdates(res.data.system_updates ?? false);
+        }
+      } catch (err) {
+        console.warn('Notification Settings: backend offline, using local states.', err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadPreferences();
+  }, []);
+
+  const showNotification = (msg) => {
+    setNotification(msg);
+    setTimeout(() => {
+      setNotification(null);
+    }, 4000);
+  };
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    const payload = {
+      document_approvals: documentApprovals,
+      broken_link_reports: brokenLinkReports,
+      system_updates: systemUpdates,
+      email_notifications: emailNotifications
+    };
+
+    try {
+      const res = await updateNotificationPreferences(payload);
+      if (res && res.success) {
+        showNotification('Notification preferences successfully saved!');
+      } else {
+        throw new Error('Save response unsuccessful');
+      }
+    } catch (err) {
+      console.warn('Notification Settings: backend offline, simulated save locally.', err.message);
+      showNotification('[Simulated] Notification preferences saved locally!');
+    }
+  };
 
   return (
     <CMSLayout>
-      <main className="cms-main">
+      <main className="cms-main" style={{ position: 'relative' }}>
+        {loading && (
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(255, 255, 255, 0.7)',
+            zIndex: 10,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+            <div className="spinner" style={{
+              width: '32px',
+              height: '32px',
+              border: '3px solid #eff6ff',
+              borderTop: '3px solid #3366cc',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite'
+            }}></div>
+            <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+          </div>
+        )}
+
         {/* Header */}
         <header className="cms-settings-header">
           <h1>Settings</h1>
           <p>Manage your account settings and portal configurations.</p>
         </header>
+
+        {notification && (
+          <div className="cms-notification-success" style={{ marginBottom: '20px' }}>
+            <div className="cms-notification-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <div className="cms-notification-content">
+              {notification}
+            </div>
+            <button className="cms-notification-close" onClick={() => setNotification(null)}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        )}
 
         {/* Settings Content Grid */}
         <div className="cms-settings-grid">
@@ -78,7 +174,7 @@ export default function CMSSettingsNotifications() {
             <div className="cms-settings-card">
               <h2 className="cms-settings-card-title">Notification Preferences</h2>
               <div className="cms-settings-card-body">
-                <form className="cms-settings-form" onSubmit={(e) => e.preventDefault()}>
+                <form className="cms-settings-form" onSubmit={handleSave}>
                   {/* Document Approvals */}
                   <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 0', borderBottom: '1px solid #e2e8f0'}}>
                     <div>
@@ -129,7 +225,7 @@ export default function CMSSettingsNotifications() {
 
                   <div className="cms-form-actions" style={{marginTop: '24px'}}>
                     <button type="submit" className="cms-btn-primary">Save Preferences</button>
-                    <button type="button" className="cms-btn-secondary">Cancel</button>
+                    <button type="button" className="cms-btn-secondary" onClick={() => window.location.reload()}>Cancel</button>
                   </div>
                 </form>
               </div>
